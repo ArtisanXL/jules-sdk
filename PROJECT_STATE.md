@@ -144,7 +144,7 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 ### High Priority
 
 * [x] Initialize the Cargo workspace.
-* [ ] Implement crate structure.
+* [x] Implement crate structure.
 * [ ] Configure feature flags.
 * [ ] Configure CI workflows.
 * [ ] Establish testing pipelines.
@@ -170,11 +170,11 @@ Task priorities MAY change throughout development.
 
 | Crate        | Status  |
 | ------------ | ------- |
-| jules-sdk    | Planned |
-| jules-core   | Planned |
-| jules-api    | Planned |
-| jules-macros | Planned |
-| jules-cli    | Planned |
+| jules-sdk    | In Progress |
+| jules-core   | In Progress |
+| jules-api    | In Progress |
+| jules-macros | In Progress |
+| jules-cli    | In Progress |
 
 Crate statuses should be updated whenever implementation milestones are completed.
 
@@ -313,7 +313,7 @@ Release targets MAY evolve as development progresses.
 ## Last Updated
 
 ```text
-2026-07-31
+2026-07-30
 ```
 
 This document SHOULD be updated whenever:
