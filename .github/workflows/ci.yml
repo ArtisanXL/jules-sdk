@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-Dwarnings"
+
+jobs:
+  validate:
+    name: Validation
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt, clippy
+
+    - name: Cache dependencies
+      uses: Swatinem/rust-cache@v2
+
+    - name: Formatting Checks
+      run: cargo fmt --all --check
+
+    - name: Compilation Checks
+      run: cargo check --workspace --all-features
+
+    - name: Clippy Validation
+      run: cargo clippy --workspace --all-features -- -D warnings
+
+    - name: Unit and Integration Tests
+      run: cargo test --workspace --all-features

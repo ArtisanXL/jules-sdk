@@ -146,7 +146,7 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 * [x] Initialize the Cargo workspace.
 * [x] Implement crate structure.
 * [x] Configure feature flags.
-* [ ] Configure CI workflows.
+* [x] Configure CI workflows.
 * [ ] Establish testing pipelines.
 
 ### Medium Priority
