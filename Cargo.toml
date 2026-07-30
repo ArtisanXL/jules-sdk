@@ -1,0 +1,38 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/jules-sdk",
+    "crates/jules-core",
+    "crates/jules-api",
+    "crates/jules-macros",
+    "crates/jules-cli",
+]
+
+[workspace.package]
+version = "0.1.0-dev"
+edition = "2021"
+rust-version = "1.90.0"
+authors = ["ArtisanXL"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ArtisanXL/jules-sdk"
+homepage = "https://github.com/ArtisanXL/jules-sdk"
+documentation = "https://docs.rs/jules-sdk"
+description = "Production-ready, async-first and idiomatic Rust implementation of Google's Jules SDK"
+
+[workspace.lints.rust]
+future-incompatible = { level = "warn", priority = -1 }
+nonstandard-style = { level = "deny", priority = -2 }
+rust_2018_idioms = { level = "deny", priority = -3 }
+unused_variables = "warn"
+
+[workspace.lints.clippy]
+all = { level = "deny", priority = 10 }
+redundant_clone = { level = "deny", priority = 9 }
+pedantic = { level = "warn", priority = 3 }
+
+[workspace.dependencies]
+jules-sdk = { path = "crates/jules-sdk", version = "0.1.0-dev" }
+jules-core = { path = "crates/jules-core", version = "0.1.0-dev" }
+jules-api = { path = "crates/jules-api", version = "0.1.0-dev" }
+jules-macros = { path = "crates/jules-macros", version = "0.1.0-dev" }
+jules-cli = { path = "crates/jules-cli", version = "0.1.0-dev" }

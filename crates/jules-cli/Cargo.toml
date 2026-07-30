@@ -1,0 +1,16 @@
+[package]
+name = "jules-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Command line interface for Jules-SDK"
+
+[lints]
+workspace = true
+
+[dependencies]
+jules-sdk = { workspace = true }

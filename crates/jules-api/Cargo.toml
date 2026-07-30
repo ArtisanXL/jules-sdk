@@ -1,0 +1,16 @@
+[package]
+name = "jules-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "API integrations and client implementation for Jules-SDK"
+
+[lints]
+workspace = true
+
+[dependencies]
+jules-core = { workspace = true }

@@ -1,0 +1,18 @@
+[package]
+name = "jules-sdk"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+documentation.workspace = true
+description = "Facade crate for Google's Jules SDK"
+
+[lints]
+workspace = true
+
+[dependencies]
+jules-core = { workspace = true }
+jules-api = { workspace = true }
+jules-macros = { workspace = true }
