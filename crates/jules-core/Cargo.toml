@@ -13,3 +13,28 @@ description = "Core abstractions and traits for Jules-SDK"
 workspace = true
 
 [dependencies]
+
+[features]
+# The default feature set provides the recommended experience for most users.
+default = ["streaming", "tools"]
+
+# Streaming APIs, stream event handling, async stream abstractions, incremental responses.
+streaming = []
+
+# Tool calling support, tool abstractions, tool execution APIs, tool response handling.
+tools = []
+
+# Request middleware, response middleware, middleware composition, request interception.
+middleware = []
+
+# Metrics support, tracing integrations, diagnostics capabilities, performance instrumentation.
+telemetry = []
+
+# Official CLI support, interactive commands, configuration management, diagnostic tooling.
+cli = []
+
+# WebAssembly support, browser compatibility, WASM-specific abstractions.
+wasm = []
+
+# Experimental functionality, preview APIs, prototype implementations. (Not considered stable)
+experimental = []
