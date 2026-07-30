@@ -74,6 +74,7 @@ For more information, please refer to:
 #### Documentation
 
 * README.md
+* PROJECT_STATE.md
 * ROADMAP.md
 * ARCHITECTURE.md
 * CONTRIBUTING.md
@@ -82,6 +83,11 @@ For more information, please refer to:
 * RELEASE.md
 * TESTING.md
 * CHANGELOG.md
+* SECURITY.md
+* FEATURES.md
+* SUPPORT.md
+* MSRV.md
+* AGENTS.md
 
 #### Development Tooling
 

@@ -4,7 +4,7 @@
 >
 > Repository: `jules-sdk`
 >
-> Version: Draft v1
+> Version: Draft v1 (For live crate status and current priorities, see [PROJECT_STATE.md](PROJECT_STATE.md))
 >
 > MSRV: Rust 1.90+
 
@@ -856,5 +856,7 @@ New capabilities should preferably be implemented through feature flags before i
 The Jules-SDK project intentionally adopts a facade-crate architecture. Only `jules-sdk` is exposed as the primary public dependency, while all other crates remain implementation details. This approach minimizes the public API surface, simplifies dependency management and provides the flexibility required to evolve the internal architecture throughout the `0.x` development lifecycle.
 
 The project favors adding modules and feature flags over introducing new crates. Additional crates should only be created when they provide clear architectural or maintenance benefits.
+
+Before proposing architectural changes, contributors and AI coding agents should verify the repository priorities and blockers in [PROJECT_STATE.md](PROJECT_STATE.md).
 
 > Jules-SDK follows the Rust philosophy of releasing early, iterating during the `0.x` lifecycle and committing to API stability only when the project reaches `v1.0.0`.

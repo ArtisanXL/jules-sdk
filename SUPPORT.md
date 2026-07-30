@@ -4,11 +4,12 @@
 
 Before requesting support, please consider checking:
 
-* README.md
-* CHANGELOG.md
-* FEATURES.md
-* TESTING.md
-* SECURITY.md
+* [README.md](README.md)
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [CHANGELOG.md](CHANGELOG.md)
+* [FEATURES.md](FEATURES.md)
+* [TESTING.md](TESTING.md)
+* [SECURITY.md](SECURITY.md)
 * Existing GitHub Issues and Discussions
 
 Many common questions are already addressed through the project's documentation.
@@ -154,25 +155,13 @@ Responsible disclosure practices are greatly appreciated.
 
 For contribution-related questions, contributors are encouraged to review:
 
-```text
-CONTRIBUTING.md
-
-↓
-
-TESTING.md
-
-↓
-
-VERSIONING.md
-
-↓
-
-RELEASE.md
-
-↓
-
-MSRV.md
-```
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [AGENTS.md](AGENTS.md)
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [TESTING.md](TESTING.md)
+* [VERSIONING.md](VERSIONING.md)
+* [RELEASE.md](RELEASE.md)
+* [MSRV.md](MSRV.md)
 
 These documents describe the project's expectations regarding:
 

@@ -261,17 +261,12 @@ When a feature flag requires a newer Rust version, the requirement MUST be clear
 
 Whenever the MSRV changes, the following documentation SHOULD be updated:
 
-```text
-README.md
-
-MSRV.md
-
-CHANGELOG.md
-
-VERSIONING.md
-
-Release Notes
-```
+* [README.md](README.md)
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [MSRV.md](MSRV.md)
+* [CHANGELOG.md](CHANGELOG.md)
+* [VERSIONING.md](VERSIONING.md)
+* Release Notes
 
 Documentation updates MUST clearly communicate:
 

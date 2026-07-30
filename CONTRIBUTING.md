@@ -43,6 +43,7 @@ Before opening a Pull Request, please ensure that:
 
 * The issue has not already been reported.
 * Existing discussions have been reviewed.
+* The repository's current status and active development priorities in [PROJECT_STATE.md](PROJECT_STATE.md) have been reviewed.
 * Your changes align with the project's architecture and goals.
 * Documentation has been updated when necessary.
 * Appropriate tests have been added or updated.
@@ -471,13 +472,10 @@ Before introducing:
 
 Please consider whether the proposed changes align with:
 
-```text
-ARCHITECTURE.md
-
-ROADMAP.md
-
-VERSIONING.md
-```
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [ARCHITECTURE.md](ARCHITECTURE.md)
+* [ROADMAP.md](ROADMAP.md)
+* [VERSIONING.md](VERSIONING.md)
 
 The project intentionally favors simplicity over unnecessary abstractions. New crates should only be introduced when they provide clear architectural benefits.
 

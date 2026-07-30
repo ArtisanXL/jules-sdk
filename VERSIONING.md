@@ -641,15 +641,11 @@ Before introducing:
 
 Contributors should review:
 
-```text
-ROADMAP.md
-
-ARCHITECTURE.md
-
-CONTRIBUTING.md
-
-CHANGELOG.md
-```
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [ROADMAP.md](ROADMAP.md)
+* [ARCHITECTURE.md](ARCHITECTURE.md)
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [CHANGELOG.md](CHANGELOG.md)
 
 All changes affecting the public API should be carefully evaluated for backwards compatibility and long-term maintainability.
 

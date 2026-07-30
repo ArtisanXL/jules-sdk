@@ -211,23 +211,15 @@ Requirements:
 
 The following documentation MUST be reviewed when appropriate:
 
-```text
-README.md
-
-ROADMAP.md
-
-ARCHITECTURE.md
-
-CHANGELOG.md
-
-VERSIONING.md
-
-CONTRIBUTING.md
-
-TESTING.md
-
-FEATURES.md
-```
+* [README.md](README.md)
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [ROADMAP.md](ROADMAP.md)
+* [ARCHITECTURE.md](ARCHITECTURE.md)
+* [CHANGELOG.md](CHANGELOG.md)
+* [VERSIONING.md](VERSIONING.md)
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [TESTING.md](TESTING.md)
+* [FEATURES.md](FEATURES.md)
 
 Documentation changes are required whenever:
 

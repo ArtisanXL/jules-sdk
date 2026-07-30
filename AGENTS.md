@@ -42,6 +42,25 @@ No implementation should sacrifice maintainability for short-term convenience.
 
 ---
 
+## Repository Context Priority
+
+AI coding agents MUST review the following documents before making significant changes:
+
+1. [PROJECT_STATE.md](PROJECT_STATE.md)
+2. [AGENTS.md](AGENTS.md)
+3. [ROADMAP.md](ROADMAP.md)
+4. [ARCHITECTURE.md](ARCHITECTURE.md)
+5. [FEATURES.md](FEATURES.md)
+6. [TESTING.md](TESTING.md)
+7. [RELEASE.md](RELEASE.md)
+8. [VERSIONING.md](VERSIONING.md)
+9. Relevant crate documentation.
+
+PROJECT_STATE.md MUST be treated as the authoritative source for the repository's current development status and priorities.
+
+---
+
+
 ## AI Development Skills
 
 Additional repository-specific AI development skills may be provided under:
@@ -74,6 +93,7 @@ General AI Coding Practices
 ```
 
 If conflicts exist between an installed skill and repository policies, repository policies MUST take precedence.
+
 ---
 
 ## Repository Structure
@@ -223,21 +243,14 @@ Documentation is considered part of every contribution.
 
 The following files SHOULD be updated whenever appropriate:
 
-```text
-README.md
-
-CHANGELOG.md
-
-FEATURES.md
-
-TESTING.md
-
-VERSIONING.md
-
-RELEASE.md
-
-SECURITY.md
-```
+* [README.md](README.md)
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [CHANGELOG.md](CHANGELOG.md)
+* [FEATURES.md](FEATURES.md)
+* [TESTING.md](TESTING.md)
+* [VERSIONING.md](VERSIONING.md)
+* [RELEASE.md](RELEASE.md)
+* [SECURITY.md](SECURITY.md)
 
 Examples requiring documentation updates include:
 
@@ -458,6 +471,7 @@ Release policies are defined in:
 AI coding agents SHOULD:
 
 * Read existing documentation before implementing changes.
+* Review the active development goals, priorities, and blockers in [PROJECT_STATE.md](PROJECT_STATE.md).
 * Respect established architectural decisions.
 * Preserve API consistency.
 * Prefer incremental improvements.

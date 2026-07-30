@@ -244,9 +244,10 @@ Jules-SDK is currently under active development.
 
 For additional details, please see:
 
-* `ROADMAP.md`
-* `ARCHITECTURE.md`
-* `VERSIONING.md`
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [ROADMAP.md](ROADMAP.md)
+* [ARCHITECTURE.md](ARCHITECTURE.md)
+* [VERSIONING.md](VERSIONING.md)
 
 ---
 
@@ -296,18 +297,21 @@ cargo build --workspace --all-features
 
 Project documentation includes:
 
-```text
-README.md
-ROADMAP.md
-ARCHITECTURE.md
-CHANGELOG.md
-CONTRIBUTING.md
-SECURITY.md
-VERSIONING.md
-RELEASE.md
-TESTING.md
-FEATURES.md
-```
+* [README.md](README.md)
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [ROADMAP.md](ROADMAP.md)
+* [ARCHITECTURE.md](ARCHITECTURE.md)
+* [CHANGELOG.md](CHANGELOG.md)
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+* [SECURITY.md](SECURITY.md)
+* [VERSIONING.md](VERSIONING.md)
+* [RELEASE.md](RELEASE.md)
+* [TESTING.md](TESTING.md)
+* [FEATURES.md](FEATURES.md)
+* [SUPPORT.md](SUPPORT.md)
+* [MSRV.md](MSRV.md)
+* [AGENTS.md](AGENTS.md)
 
 Additional examples and guides will be provided inside:
 
@@ -325,11 +329,10 @@ Contributions are welcome.
 
 Before opening a pull request, please read:
 
-```text
-CONTRIBUTING.md
-CODE_OF_CONDUCT.md
-SECURITY.md
-```
+* [PROJECT_STATE.md](PROJECT_STATE.md)
+* [CONTRIBUTING.md](CONTRIBUTING.md)
+* [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+* [SECURITY.md](SECURITY.md)
 
 Bug reports, documentation improvements and feature proposals are highly appreciated.
 

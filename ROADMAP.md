@@ -8,7 +8,7 @@
 >
 > MSRV: Rust 1.90+
 >
-> Current Status: Planning
+> Current Status: Planning (For the live project state and active tasks, see [PROJECT_STATE.md](PROJECT_STATE.md))
 
 ---
 
