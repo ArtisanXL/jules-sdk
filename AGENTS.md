@@ -42,6 +42,40 @@ No implementation should sacrifice maintainability for short-term convenience.
 
 ---
 
+## AI Development Skills
+
+Additional repository-specific AI development skills may be provided under:
+
+```text
+.agents/skills/
+```
+
+AI coding agents SHOULD:
+
+- Discover available skills automatically.
+- Apply relevant skills when appropriate.
+- Follow repository-specific development requirements.
+- Preserve architectural consistency throughout the workspace.
+
+The following priority order MUST be respected:
+
+```text
+Repository Requirements
+        ↓
+AGENTS.md
+        ↓
+Repository Documentation
+        ↓
+AI Development Skills
+        ↓
+General Language Best Practices
+        ↓
+General AI Coding Practices
+```
+
+If conflicts exist between an installed skill and repository policies, repository policies MUST take precedence.
+---
+
 ## Repository Structure
 
 ```text
