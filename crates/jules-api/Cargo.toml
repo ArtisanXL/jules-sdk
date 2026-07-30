@@ -14,3 +14,13 @@ workspace = true
 
 [dependencies]
 jules-core = { workspace = true }
+
+[features]
+default = ["streaming", "tools"]
+streaming = ["jules-core/streaming"]
+tools = ["jules-core/tools"]
+middleware = ["jules-core/middleware"]
+telemetry = ["jules-core/telemetry"]
+cli = ["jules-core/cli"]
+wasm = ["jules-core/wasm"]
+experimental = ["jules-core/experimental"]
