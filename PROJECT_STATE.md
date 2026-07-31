@@ -26,11 +26,11 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 17 parent tasks / 77 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 17 parent tasks / 76 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | 🟨 In Progress (WS-02, WS-04 remaining) |
-| Last Updated         | 2026-08-02                          |
+| Last Updated         | 2026-07-31                          |
 
 ---
 
@@ -118,7 +118,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | ID       | Subtask                                                              | Status |
 | -------- | ----------------------------------------------------------------------- | ------ |
 | WS-02.1  | Define crate directory layout (jules-sdk, jules-core, jules-api, jules-macros, jules-cli) | ✅ |
-| WS-02.2  | Add workspace members to root `Cargo.toml`                                 | ⬜ |
+| WS-02.2  | Add workspace members to root `Cargo.toml`                                 | ✅ |
 | WS-02.3  | Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md      | ⬜ |
 | WS-02.4  | Define inter-crate dependency graph (which crate depends on which)           | ⬜ |
 | WS-02.5  | Add placeholder `lib.rs`/`main.rs` with crate-level doc comment per crate     | ⬜ |
@@ -438,6 +438,7 @@ Release targets MAY evolve as development progresses.
 | 2026-07-31 | Synced task states with latest checklist                                                                  |
 | 2026-07-31 | Replaced High/Medium/Low priority split with a single phased, ordered Pending Tasks list; added Completed Tasks Log |
 | 2026-07-31 | Broke down all 17 pending parent tasks into 77 granular subtasks for finer-grained tracking                    |
+| 2026-07-31 | Marked WS-02.2 complete as workspace members are already defined in Cargo.toml |
 
 This document SHOULD be updated whenever:
 
