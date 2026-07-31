@@ -30,7 +30,7 @@
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | 🟨 In Progress (WS-02, WS-04 remaining) |
-| Last Updated         | 2026-08-01                          |
+| Last Updated         | 2026-07-31                          |
 
 ---
 
@@ -118,7 +118,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | ID       | Subtask                                                              | Status |
 | -------- | ----------------------------------------------------------------------- | ------ |
 | WS-02.1  | Define crate directory layout (jules-sdk, jules-core, jules-api, jules-macros, jules-cli) | ✅ |
-| WS-02.2  | Add workspace members to root `Cargo.toml`                                 | ⬜ |
+| WS-02.2  | Add workspace members to root `Cargo.toml`                                 | ✅ |
 | WS-02.3  | Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md      | ⬜ |
 | WS-02.4  | Define inter-crate dependency graph (which crate depends on which)           | ⬜ |
 | WS-02.5  | Add placeholder `lib.rs`/`main.rs` with crate-level doc comment per crate     | ⬜ |
