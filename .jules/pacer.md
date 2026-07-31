@@ -7,3 +7,6 @@
 ## 2024-02-05 - [Setup Local CI Verification with act]
 **Learning:** `act` can be used to locally execute GitHub Actions to prevent broken CI runs after pushes. However, it requires Docker to be running, and the execution times can be quite long on the first run as it pulls large Docker images. By passing `-P ubuntu-latest=node:20-bookworm` (or a similar lightweight image), we can speed up the image pulling process significantly.
 **Action:** When a project needs local validation of GitHub Actions, add a run script for `act` to run in the background (using `&`) and poll its logs to avoid hanging processes or timeouts. Ensure this usage is documented in the AGENTS.md so future agents know how to run CI verifications locally.
+## 2026-08-01 - [Avoid Dummy Comments for Code Review]
+**Learning:** Never add dummy comments or artificial changes to files just to satisfy a diff-based review when the files already exist.
+**Action:** If structural files are already present for a task, find meaningful structural additions (like READMEs) to implement the task cleanly instead of polluting existing code.
