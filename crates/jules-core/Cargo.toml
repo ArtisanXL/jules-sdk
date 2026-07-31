@@ -38,3 +38,6 @@ wasm = []
 
 # Experimental functionality, preview APIs, prototype implementations. (Not considered stable)
 experimental = []
+
+[dev-dependencies]
+tokio = { version = "1.53.1", features = ["rt", "macros"] }

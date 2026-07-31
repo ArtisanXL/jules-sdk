@@ -30,7 +30,7 @@
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | 🟨 In Progress (WS-02, WS-04 remaining) |
-| Last Updated         | 2026-08-01                          |
+| Last Updated         | 2026-08-02                          |
 
 ---
 
@@ -107,6 +107,11 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 ---
 
+## Current Tasks
+
+### High Priority
+* [x] TASK-14.1: Define Client trait signature (async methods, associated types)
+
 ## Pending Work — Phased & Ordered Breakdown
 
 > This is the authoritative, sequential to-do list. Parent tasks are grouped by phase, ordered by intended execution sequence, and broken into smaller subtasks for finer-grained tracking. Work top-to-bottom, phase-by-phase. When every subtask under a parent is ✅, mark the parent done and move it to the Completed Tasks Log.
@@ -142,7 +147,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID         | Subtask                                                    | Status |
 | ---------- | -------------------------------------------------------------- | ------ |
-| TASK-14.1  | Define `Client` trait signature (async methods, associated types)  | ⬜ |
+| TASK-14.1  | Define `Client` trait signature (async methods, associated types)  | ✅ |
 | TASK-14.2  | Define request/response model types used by the trait           | ⬜ |
 | TASK-14.3  | Define/reuse error type for client operations (see TASK-08)       | ⬜ |
 | TASK-14.4  | Add doc comments and trait-level documentation                  | ⬜ |
