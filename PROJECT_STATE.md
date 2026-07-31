@@ -154,7 +154,7 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 * [x] Implement SessionBuilder.
 * [x] Implement configuration management.
 * [x] Implement core error types.
-* [ ] Add initial examples.
+* [x] Add initial examples.
 
 ### Low Priority
 
@@ -313,7 +313,7 @@ Release targets MAY evolve as development progresses.
 ## Last Updated
 
 ```text
-2025-02-14
+2026-07-31
 ```
 
 This document SHOULD be updated whenever:
