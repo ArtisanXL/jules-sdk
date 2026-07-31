@@ -29,6 +29,9 @@ jobs:
     - name: Install cargo-audit
       uses: taiki-e/install-action@cargo-audit
 
+    - name: Install cargo-deny
+      uses: taiki-e/install-action@cargo-deny
+
     - name: Cache dependencies
       uses: Swatinem/rust-cache@v2
 
@@ -43,6 +46,9 @@ jobs:
 
     - name: Security Validation
       run: cargo audit
+
+    - name: Dependency Validation
+      run: cargo deny check
 
     - name: Unit and Integration Tests
       run: cargo nextest run --workspace --all-features
