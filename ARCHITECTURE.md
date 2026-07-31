@@ -244,6 +244,17 @@ The facade crate is responsible for exposing the entire public API.
 
 # Crate Responsibilities
 
+## Ownership Boundaries
+
+To maintain a clean facade-crate architecture, strictly adhere to the following ownership boundaries:
+
+* **`jules-core`** owns all primitive abstractions. It defines the core types, builder structures, domain models (Messages, Conversations, Tools), configuration objects, and standard traits. It must not depend on any network layers or API specifics.
+* **`jules-api`** owns the communication boundary. It implements the actual HTTP clients, request/response parsing, session management, streaming protocols, retry policies, and authentication handling.
+* **`jules-sdk`** owns the public API surface. It is responsible for orchestrating the feature flags, providing ergonomic re-exports of `jules-core` and `jules-api`, and ensuring the external developer experience remains unified.
+* **`jules-macros`** owns all code-generation and procedural macros, minimizing boilerplate for the end user.
+* **`jules-cli`** owns the terminal-based user interface, orchestrating the SDK for command-line interactions.
+
+
 ## jules-sdk
 
 ### Responsibilities

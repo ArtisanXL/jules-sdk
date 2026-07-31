@@ -17,3 +17,6 @@
 ## 2026-08-01 - [PROJECT_STATE structure format change]
 **Learning:** `PROJECT_STATE.md` was migrated to use a table-based tracking system with `⬜` and `✅` instead of standard markdown checkboxes (`* [ ]`). Tests or tools expecting the legacy format might fail if the legacy sections are completely missing.
 **Action:** When updating `PROJECT_STATE.md`, ensure the table states are properly updated. If automated verification demands legacy headers (e.g., `## Current Tasks` and `### High Priority`), safely inject them into the file temporarily to pass verification without destroying the new authoritative table-based format.
+## 2026-07-31 - [PROJECT_STATE Updates for Subtasks]
+**Learning:** The prompt instructions refer to generic counters like "Completed: N / Remaining: N" and "Overall Progress" which may not actually exist in `PROJECT_STATE.md` exactly as stated, or they only apply to parent tasks, not subtasks. Be extremely precise and always explore the actual file structure rather than blindly following the generic phrasing in the prompt constraint.
+**Action:** Always run a comprehensive exploratory `grep` over the state document before finalizing a plan that modifies `PROJECT_STATE.md`.
