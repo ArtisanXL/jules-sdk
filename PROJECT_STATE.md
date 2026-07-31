@@ -107,11 +107,6 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 ---
 
-## Current Tasks
-
-### High Priority
-* [x] TASK-14.1: Define Client trait signature (async methods, associated types)
-
 ## Pending Work — Phased & Ordered Breakdown
 
 > This is the authoritative, sequential to-do list. Parent tasks are grouped by phase, ordered by intended execution sequence, and broken into smaller subtasks for finer-grained tracking. Work top-to-bottom, phase-by-phase. When every subtask under a parent is ✅, mark the parent done and move it to the Completed Tasks Log.
