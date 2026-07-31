@@ -13,6 +13,9 @@ pub mod session;
 pub mod streaming;
 pub mod timeouts;
 
+#[cfg(feature = "wasm")]
+pub mod wasm;
+
 #[cfg(test)]
 mod tests {
     #[test]

@@ -14,6 +14,9 @@ pub mod session;
 pub mod tool;
 pub mod traits;
 
+#[cfg(feature = "wasm")]
+pub mod wasm;
+
 #[cfg(test)]
 mod tests {
     #[test]
