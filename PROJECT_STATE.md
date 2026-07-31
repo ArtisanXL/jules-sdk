@@ -147,7 +147,7 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 * [x] Implement crate structure.
 * [x] Configure feature flags.
 * [x] Configure CI workflows.
-* [ ] Establish testing pipelines.
+* [x] Establish testing pipelines.
 
 ### Medium Priority
 
@@ -313,7 +313,7 @@ Release targets MAY evolve as development progresses.
 ## Last Updated
 
 ```text
-2026-07-30
+2026-07-31
 ```
 
 This document SHOULD be updated whenever:
