@@ -160,7 +160,7 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 
 * [x] WASM integrations.
 * [x] Additional tooling support.
-* [ ] Performance optimizations.
+* [x] Performance optimizations.
 
 Task priorities MAY change throughout development.
 
@@ -313,7 +313,7 @@ Release targets MAY evolve as development progresses.
 ## Last Updated
 
 ```text
-2024-02-05
+2026-07-31
 ```
 
 This document SHOULD be updated whenever:
