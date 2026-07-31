@@ -7,4 +7,7 @@
 
 pub use jules_api;
 pub use jules_core;
-pub use jules_macros::*;
+
+pub use jules_core::session::{Session, SessionBuilder};
+
+pub use jules_macros::Placeholder;
