@@ -4,3 +4,6 @@
 ## 2024-02-05 - [Additional tooling support (cargo-deny)]
 **Learning:** `cargo-deny` requires an explicit configuration to accept common licenses like MIT and Apache-2.0, otherwise it treats everything as a failure.
 **Action:** When adding `cargo deny` to any future project or workspace, ensure `deny.toml` explicitly sets up `allow = ["MIT", "Apache-2.0"]` and other dependencies' valid licenses.
+## 2024-02-05 - [Setup Local CI Verification with act]
+**Learning:** `act` can be used to locally execute GitHub Actions to prevent broken CI runs after pushes. However, it requires Docker to be running, and the execution times can be quite long on the first run as it pulls large Docker images. By passing `-P ubuntu-latest=node:20-bookworm` (or a similar lightweight image), we can speed up the image pulling process significantly.
+**Action:** When a project needs local validation of GitHub Actions, add a run script for `act` to run in the background (using `&`) and poll its logs to avoid hanging processes or timeouts. Ensure this usage is documented in the AGENTS.md so future agents know how to run CI verifications locally.
