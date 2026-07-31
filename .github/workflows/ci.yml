@@ -23,6 +23,12 @@ jobs:
       with:
         components: rustfmt, clippy
 
+    - name: Install nextest
+      uses: taiki-e/install-action@nextest
+
+    - name: Install cargo-audit
+      uses: taiki-e/install-action@cargo-audit
+
     - name: Cache dependencies
       uses: Swatinem/rust-cache@v2
 
@@ -35,5 +41,11 @@ jobs:
     - name: Clippy Validation
       run: cargo clippy --workspace --all-features -- -D warnings
 
+    - name: Security Validation
+      run: cargo audit
+
     - name: Unit and Integration Tests
-      run: cargo test --workspace --all-features
+      run: cargo nextest run --workspace --all-features
+
+    - name: Doc Tests
+      run: cargo test --doc --workspace --all-features
