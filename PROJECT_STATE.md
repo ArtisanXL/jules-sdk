@@ -70,7 +70,6 @@
 
 * [x] Cargo workspace initialization.
 * [ ] Crate organization.
-* [ ] Feature flag implementation.
 * [ ] CI pipeline implementation.
 
 ### Crates
@@ -143,6 +142,7 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 
 ### High Priority
 
+* [x] Feature flag implementation.
 * [x] Initialize the Cargo workspace.
 * [x] Implement crate structure.
 * [x] Configure feature flags.
