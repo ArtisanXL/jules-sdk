@@ -1,20 +1,36 @@
 # Project State
 
 > This document describes the current development status, priorities and milestones of Jules-SDK. Contributors and AI coding agents SHOULD review this document before making significant changes to the repository.
+>
+> **Trackability note:** Every task and subtask below has a stable ID (e.g. `WS-02.3`, `PH2-01.4`). Reference these IDs in commit messages, PR titles, and issue trackers (e.g. `git commit -m "WS-02.2: add workspace members to Cargo.toml"`) so progress in this file stays traceable to actual repository history.
+
+---
+
+## Status Legend
+
+| Symbol | Meaning                        |
+| ------ | ------------------------------ |
+| ⬜      | Not started                    |
+| 🟨      | In progress                    |
+| ✅      | Done                           |
+| 🚫      | Blocked                        |
+| ⏸️      | Paused / deprioritized         |
 
 ---
 
 ## Current Status
 
-| Field             | Value                           |
-| ----------------- | ------------------------------- |
-| Project Name      | Jules-SDK                       |
-| Current Version   | v0.1.0-dev                      |
-| Development Stage | Pre-Alpha                       |
-| Current Phase     | Phase 0 - Repository Foundation |
-| Status            | In Progress                     |
-| MSRV              | Rust 1.90+                      |
-| Workspace Status  | In Progress                     |
+| Field              | Value                              |
+| ------------------ | ------------------------------------ |
+| Project Name        | Jules-SDK                           |
+| Current Version      | v0.1.0-dev                          |
+| Development Stage     | Pre-Alpha                           |
+| Current Phase        | Phase 0 — Repository Foundation      |
+| Pending Work         | 17 parent tasks / 77 subtasks remaining (see phased breakdown below) |
+| Status              | 🟨 In Progress                       |
+| MSRV                | Rust 1.90+                          |
+| Workspace Status      | 🟨 In Progress (WS-02, WS-04 remaining) |
+| Last Updated         | 2026-07-31                          |
 
 ---
 
@@ -22,197 +38,291 @@
 
 > Establish the project's foundations before implementing public APIs.
 
-### Milestone Goals
+### Milestone Goals — Progress: 6 / 8 (75%)
 
-* Production-ready repository structure
-* Cargo workspace initialization
-* Documentation foundations
-* CI/CD foundations
-* Testing infrastructure
-* Release management policies
-* Security policies
-* AI development guidelines
-
----
-
-## Completed
-
-### Documentation
-
-* [x] [README.md](README.md)
-* [x] [ROADMAP.md](ROADMAP.md)
-* [x] [ARCHITECTURE.md](ARCHITECTURE.md)
-* [x] [CONTRIBUTING.md](CONTRIBUTING.md)
-* [x] [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-* [x] [VERSIONING.md](VERSIONING.md)
-* [x] [RELEASE.md](RELEASE.md)
-* [x] [TESTING.md](TESTING.md)
-* [x] [CHANGELOG.md](CHANGELOG.md)
-* [x] [SECURITY.md](SECURITY.md)
-* [x] [FEATURES.md](FEATURES.md)
-* [x] [SUPPORT.md](SUPPORT.md)
-* [x] [MSRV.md](MSRV.md)
-* [x] [AGENTS.md](AGENTS.md)
-
-### Repository Policies
-
-* [x] License policies established.
-* [x] Versioning policies established.
-* [x] Testing policies established.
-* [x] Security policies established.
-* [x] Release policies established.
+| ID     | Goal                          | Status |
+| ------ | ------------------------------- | ------ |
+| MG-01  | Production-ready repository structure | ✅ |
+| MG-02  | Cargo workspace initialization     | 🟨 |
+| MG-03  | Documentation foundations        | ✅ |
+| MG-04  | CI/CD foundations              | 🟨 |
+| MG-05  | Testing infrastructure          | ✅ |
+| MG-06  | Release management policies      | ✅ |
+| MG-07  | Security policies              | ✅ |
+| MG-08  | AI development guidelines        | ✅ |
 
 ---
 
-## In Progress
+## Documentation — Progress: 14 / 14 (100%) ✅
 
-### Workspace
+| ID     | Document                             | Status |
+| ------ | -------------------------------------- | ------ |
+| DOC-01 | [README.md](README.md)                 | ✅ |
+| DOC-02 | [ROADMAP.md](ROADMAP.md)               | ✅ |
+| DOC-03 | [ARCHITECTURE.md](ARCHITECTURE.md)       | ✅ |
+| DOC-04 | [CONTRIBUTING.md](CONTRIBUTING.md)       | ✅ |
+| DOC-05 | [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | ✅ |
+| DOC-06 | [VERSIONING.md](VERSIONING.md)          | ✅ |
+| DOC-07 | [RELEASE.md](RELEASE.md)               | ✅ |
+| DOC-08 | [TESTING.md](TESTING.md)               | ✅ |
+| DOC-09 | [CHANGELOG.md](CHANGELOG.md)            | ✅ |
+| DOC-10 | [SECURITY.md](SECURITY.md)             | ✅ |
+| DOC-11 | [FEATURES.md](FEATURES.md)             | ✅ |
+| DOC-12 | [SUPPORT.md](SUPPORT.md)               | ✅ |
+| DOC-13 | [MSRV.md](MSRV.md)                    | ✅ |
+| DOC-14 | [AGENTS.md](AGENTS.md)                 | ✅ |
 
-* [x] Cargo workspace initialization.
-* [ ] Crate organization.
-* [ ] CI pipeline implementation.
+## Repository Policies — Progress: 5 / 5 (100%) ✅
 
-### Crates
-
-* [ ] jules-sdk
-* [ ] jules-core
-* [ ] jules-api
-* [ ] jules-macros
-* [ ] jules-cli
-
----
-
-## Planned
-
-### Phase 1
-
-* Core abstractions
-* Session management
-* Configuration management
-* Error handling
-
-### Phase 2
-
-* API integrations
-* Streaming support
-* Conversations
-* Builders
-
-### Phase 3
-
-* Tool calling support
-* Middleware support
-* CLI support
-* Additional examples
-
-### Phase 4
-
-* WASM support
-* Platform integrations
-* Performance improvements
-* Stability validations
-
-### Phase 5
-
-* API freeze preparations
-* Compatibility validations
-* Documentation finalization
-* Release candidate preparations
+| ID     | Policy                        | Status |
+| ------ | -------------------------------- | ------ |
+| POL-01 | License policies established      | ✅ |
+| POL-02 | Versioning policies established    | ✅ |
+| POL-03 | Testing policies established      | ✅ |
+| POL-04 | Security policies established     | ✅ |
+| POL-05 | Release policies established      | ✅ |
 
 ---
 
-## Current Priorities
+## Workspace — Progress: 2 / 4 (50%)
 
-The following items SHOULD receive the highest development priority.
+| ID    | Task                        | Status | Notes |
+| ----- | ------------------------------ | ------ | ----- |
+| WS-01 | Cargo workspace initialization   | ✅ | — |
+| WS-02 | Crate organization             | ⬜ | Broken down below |
+| WS-03 | Feature flag implementation      | ✅ | Also tracked as TASK-03 |
+| WS-04 | CI pipeline implementation       | ⬜ | ⚠️ Conflicts with TASK-04, which is marked done — reconcile before closing. Broken down below. |
 
-1. Cargo workspace implementation.
-2. Core crate architecture.
-3. Testing infrastructure.
-4. CI/CD pipelines.
-5. Public API foundations.
-6. Session abstractions.
-7. Streaming abstractions.
-8. Documentation improvements.
+## Crates — Progress: In Progress (0 / 5 fully implemented)
 
-Contributors SHOULD prioritize existing milestones before introducing new functionality.
-
----
-
-## Current Tasks
-
-### High Priority
-
-* [x] Implement Message and Conversation models in jules-core.
-* [ ] Implement core Client traits in jules-core.
-* [ ] Implement ClientBuilder in jules-core.
-
-* [x] Feature flag implementation.
-* [x] Initialize the Cargo workspace.
-* [x] Implement crate structure.
-* [x] Configure feature flags.
-* [x] Configure CI workflows.
-* [x] Establish testing pipelines.
-
-### Medium Priority
-
-* [x] Implement SessionBuilder.
-* [x] Implement configuration management.
-* [x] Implement core error types.
-* [x] Add initial examples.
-
-### Low Priority
-
-* [x] WASM integrations.
-* [x] Additional tooling support.
-* [x] Performance optimizations.
-
-Task priorities MAY change throughout development.
-
----
-
-## Current Crate Status
-
-| Crate        | Status  |
-| ------------ | ------- |
-| jules-sdk    | In Progress |
-| jules-core   | In Progress |
-| jules-api    | In Progress |
-| jules-macros | In Progress |
-| jules-cli    | In Progress |
+| ID    | Crate         | Status      |
+| ----- | -------------- | ----------- |
+| CR-01 | jules-sdk      | 🟨 In Progress |
+| CR-02 | jules-core     | 🟨 In Progress |
+| CR-03 | jules-api      | 🟨 In Progress |
+| CR-04 | jules-macros   | 🟨 In Progress |
+| CR-05 | jules-cli      | 🟨 In Progress |
 
 Crate statuses should be updated whenever implementation milestones are completed.
 
 ---
 
+## Pending Work — Phased & Ordered Breakdown
+
+> This is the authoritative, sequential to-do list. Parent tasks are grouped by phase, ordered by intended execution sequence, and broken into smaller subtasks for finer-grained tracking. Work top-to-bottom, phase-by-phase. When every subtask under a parent is ✅, mark the parent done and move it to the Completed Tasks Log.
+
+### Phase 0 — Repository Foundation (2 parent tasks / 13 subtasks)
+
+**Order 1 — `WS-02` Crate organization** — High priority
+
+| ID       | Subtask                                                              | Status |
+| -------- | ----------------------------------------------------------------------- | ------ |
+| WS-02.1  | Define crate directory layout (jules-sdk, jules-core, jules-api, jules-macros, jules-cli) | ⬜ |
+| WS-02.2  | Add workspace members to root `Cargo.toml`                                 | ⬜ |
+| WS-02.3  | Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md      | ⬜ |
+| WS-02.4  | Define inter-crate dependency graph (which crate depends on which)           | ⬜ |
+| WS-02.5  | Add placeholder `lib.rs`/`main.rs` with crate-level doc comment per crate     | ⬜ |
+
+**Order 2 — `WS-04` CI pipeline implementation** — High priority ⚠️ reconcile with TASK-04 first
+
+| ID       | Subtask                                                | Status |
+| -------- | ---------------------------------------------------------- | ------ |
+| WS-04.1  | Choose CI provider and workflow file location (e.g. GitHub Actions) | ⬜ |
+| WS-04.2  | Add build workflow (`cargo build --workspace`)                | ⬜ |
+| WS-04.3  | Add test workflow (`cargo test --workspace`)                 | ⬜ |
+| WS-04.4  | Add lint workflow (`cargo clippy -- -D warnings`)             | ⬜ |
+| WS-04.5  | Add format-check workflow (`cargo fmt --check`)               | ⬜ |
+| WS-04.6  | Add MSRV check workflow (Rust 1.90+)                       | ⬜ |
+| WS-04.7  | Add dependency/build caching                              | ⬜ |
+| WS-04.8  | Reconcile this task's status against TASK-04 and remove the flag | ⬜ |
+
+### Phase 1 — Core Abstractions (2 parent tasks / 10 subtasks)
+
+**Order 3 — `TASK-14` Implement core Client traits in jules-core** — High priority
+
+| ID         | Subtask                                                    | Status |
+| ---------- | -------------------------------------------------------------- | ------ |
+| TASK-14.1  | Define `Client` trait signature (async methods, associated types)  | ⬜ |
+| TASK-14.2  | Define request/response model types used by the trait           | ⬜ |
+| TASK-14.3  | Define/reuse error type for client operations (see TASK-08)       | ⬜ |
+| TASK-14.4  | Add doc comments and trait-level documentation                  | ⬜ |
+| TASK-14.5  | Write unit tests / mock implementation of the trait               | ⬜ |
+
+**Order 4 — `TASK-15` Implement ClientBuilder in jules-core** — High priority, depends on TASK-14
+
+| ID         | Subtask                                                        | Status |
+| ---------- | ------------------------------------------------------------------ | ------ |
+| TASK-15.1  | Define `ClientBuilder` struct (base URL, timeout, auth, etc.)        | ⬜ |
+| TASK-15.2  | Implement setter methods (builder pattern)                       | ⬜ |
+| TASK-15.3  | Implement validation logic in `build()`                          | ⬜ |
+| TASK-15.4  | Wire builder output to the `Client` trait (TASK-14)                | ⬜ |
+| TASK-15.5  | Write unit tests for defaults and validation errors                | ⬜ |
+
+### Phase 2 — API Integrations & Streaming (3 parent tasks / 14 subtasks)
+
+**Order 5 — `PH2-01` API integrations** — Medium priority
+
+| ID        | Subtask                                          | Status |
+| --------- | ----------------------------------------------------- | ------ |
+| PH2-01.1  | Define HTTP transport layer abstraction                  | ⬜ |
+| PH2-01.2  | Implement authentication handling (API keys/tokens)         | ⬜ |
+| PH2-01.3  | Implement endpoint request construction                  | ⬜ |
+| PH2-01.4  | Implement response deserialization and error mapping        | ⬜ |
+| PH2-01.5  | Add rate-limit / retry handling                          | ⬜ |
+
+**Order 6 — `PH2-02` Streaming support** — Medium priority
+
+| ID        | Subtask                                      | Status |
+| --------- | -------------------------------------------------- | ------ |
+| PH2-02.1  | Define stream abstraction for incremental responses    | ⬜ |
+| PH2-02.2  | Implement SSE (server-sent events) parsing              | ⬜ |
+| PH2-02.3  | Implement backpressure / chunk buffering                | ⬜ |
+| PH2-02.4  | Implement stream error handling and reconnection          | ⬜ |
+| PH2-02.5  | Write streaming integration tests                       | ⬜ |
+
+**Order 7 — `PH2-03` Builders (general, beyond ClientBuilder)** — Medium priority
+
+| ID        | Subtask                                          | Status |
+| --------- | ----------------------------------------------------- | ------ |
+| PH2-03.1  | Implement `RequestBuilder`                              | ⬜ |
+| PH2-03.2  | Implement `ConversationBuilder`                          | ⬜ |
+| PH2-03.3  | Implement `MessageBuilder`                              | ⬜ |
+| PH2-03.4  | Ensure builders integrate cleanly with `ClientBuilder`      | ⬜ |
+
+### Phase 3 — Tooling & CLI (4 parent tasks / 19 subtasks)
+
+**Order 8 — `PH3-01` Tool calling support** — Medium priority
+
+| ID        | Subtask                                              | Status |
+| --------- | ----------------------------------------------------------- | ------ |
+| PH3-01.1  | Define `Tool` trait                                          | ⬜ |
+| PH3-01.2  | Implement tool registry / registration mechanism                 | ⬜ |
+| PH3-01.3  | Implement tool-call parsing from model responses                 | ⬜ |
+| PH3-01.4  | Implement tool result serialization back into conversation          | ⬜ |
+| PH3-01.5  | Write tool-calling integration tests                             | ⬜ |
+
+**Order 9 — `PH3-02` Middleware support** — Medium priority
+
+| ID        | Subtask                                | Status |
+| --------- | --------------------------------------------- | ------ |
+| PH3-02.1  | Define `Middleware` trait                        | ⬜ |
+| PH3-02.2  | Implement middleware chaining/execution pipeline    | ⬜ |
+| PH3-02.3  | Implement built-in logging middleware              | ⬜ |
+| PH3-02.4  | Implement built-in retry middleware                | ⬜ |
+| PH3-02.5  | Write middleware tests                            | ⬜ |
+
+**Order 10 — `PH3-03` CLI support** — Medium priority
+
+| ID        | Subtask                                    | Status |
+| --------- | ------------------------------------------------ | ------ |
+| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ⬜ |
+| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ⬜ |
+| PH3-03.3  | Implement config file loading/overrides                | ⬜ |
+| PH3-03.4  | Implement output formatting (plain/JSON)               | ⬜ |
+| PH3-03.5  | Write CLI smoke tests                                 | ⬜ |
+
+**Order 11 — `PH3-04` Additional examples** — Low priority (initial examples already done via TASK-09)
+
+| ID        | Subtask                        | Status |
+| --------- | ------------------------------------ | ------ |
+| PH3-04.1  | Add streaming example                  | ⬜ |
+| PH3-04.2  | Add tool-calling example                | ⬜ |
+| PH3-04.3  | Add middleware example                 | ⬜ |
+| PH3-04.4  | Add CLI usage example                  | ⬜ |
+
+### Phase 4 — Platform & Performance (2 parent tasks / 7 subtasks)
+
+**Order 12 — `PH4-02` Platform integrations** — Low priority
+
+| ID        | Subtask                                                   | Status |
+| --------- | ---------------------------------------------------------------- | ------ |
+| PH4-02.1  | Validate/finalize WASM target build (cross-check TASK-10 flag)         | ⬜ |
+| PH4-02.2  | Validate native target support across OSes (Linux/macOS/Windows)          | ⬜ |
+| PH4-02.3  | Document platform-specific caveats                                 | ⬜ |
+
+**Order 13 — `PH4-04` Stability validations** — Low priority
+
+| ID        | Subtask                                       | Status |
+| --------- | --------------------------------------------------- | ------ |
+| PH4-04.1  | Run fuzz testing on core parsing paths                 | ⬜ |
+| PH4-04.2  | Run load/soak testing on client                       | ⬜ |
+| PH4-04.3  | Review public API for stability guarantees               | ⬜ |
+| PH4-04.4  | Fix issues found and document results                   | ⬜ |
+
+⚠️ **Flag for review:** `PH4-01` (WASM support) and `PH4-03` (Performance improvements) were marked done via TASK-10 and TASK-12 despite belonging to Phase 4, while the project is still in Phase 0. Verify against actual commits/PRs before trusting them as complete; if unverified, re-open and insert broken-down subtasks here.
+
+### Phase 5 — Release Preparation (4 parent tasks / 14 subtasks)
+
+**Order 14 — `PH5-01` API freeze preparations** — Low priority
+
+| ID        | Subtask                                       | Status |
+| --------- | --------------------------------------------------- | ------ |
+| PH5-01.1  | Audit full public API surface                          | ⬜ |
+| PH5-01.2  | Mark unstable/experimental items explicitly              | ⬜ |
+| PH5-01.3  | Finalize semver commitments in VERSIONING.md              | ⬜ |
+
+**Order 15 — `PH5-02` Compatibility validations** — Low priority
+
+| ID        | Subtask                                       | Status |
+| --------- | --------------------------------------------------- | ------ |
+| PH5-02.1  | Validate MSRV compliance across workspace                | ⬜ |
+| PH5-02.2  | Run cross-platform CI matrix                          | ⬜ |
+| PH5-02.3  | Validate backward compatibility against v0.1.0 API          | ⬜ |
+
+**Order 16 — `PH5-03` Documentation finalization** — Low priority
+
+| ID        | Subtask                          | Status |
+| --------- | --------------------------------------- | ------ |
+| PH5-03.1  | Review and update README.md               | ⬜ |
+| PH5-03.2  | Review and update ARCHITECTURE.md          | ⬜ |
+| PH5-03.3  | Finalize CHANGELOG.md entries              | ⬜ |
+| PH5-03.4  | Proofread all crate-level docs             | ⬜ |
+
+**Order 17 — `PH5-04` Release candidate preparations** — Low priority
+
+| ID        | Subtask                          | Status |
+| --------- | --------------------------------------- | ------ |
+| PH5-04.1  | Bump version numbers across workspace      | ⬜ |
+| PH5-04.2  | Draft release notes                      | ⬜ |
+| PH5-04.3  | Tag RC build                            | ⬜ |
+| PH5-04.4  | Publish RC for community testing           | ⬜ |
+
+---
+
+## Completed Tasks Log
+
+| ID      | Phase   | Task                                          |
+| ------- | ------- | ---------------------------------------------- |
+| WS-01   | Phase 0 | Cargo workspace initialization                    |
+| WS-03   | Phase 0 | Feature flag implementation                      |
+| TASK-01 | Phase 0 | Initialize the Cargo workspace                    |
+| TASK-02 | Phase 0 | Implement crate structure                        |
+| TASK-03 | Phase 0 | Configure feature flags                          |
+| TASK-04 | Phase 0 | Configure CI workflows *(⚠️ see WS-04 conflict)*   |
+| TASK-05 | Phase 0 | Establish testing pipelines                      |
+| TASK-06 | Phase 1 | Implement SessionBuilder                         |
+| TASK-07 | Phase 1 | Implement configuration management                 |
+| TASK-08 | Phase 1 | Implement core error types                       |
+| TASK-09 | Phase 3 | Add initial examples                            |
+| TASK-13 | Phase 2 | Implement Message and Conversation models in jules-core |
+| TASK-10 | Phase 4 | WASM integrations *(⚠️ needs verification)*        |
+| TASK-11 | —       | Additional tooling support                       |
+| TASK-12 | Phase 4 | Performance optimizations *(⚠️ needs verification)* |
+
+---
+
 ## Supported Features
 
-### Stable
-
-```text
-None
-```
-
-### In Development
-
-```text
-streaming
-
-tools
-
-middleware
-
-telemetry
-
-cli
-
-wasm
-```
-
-### Experimental
-
-```text
-experimental
-```
+| Feature      | Status              |
+| ------------- | --------------------- |
+| —            | **Stable:** None       |
+| streaming     | In Development         |
+| tools        | In Development         |
+| middleware    | In Development         |
+| telemetry     | In Development         |
+| cli          | In Development         |
+| wasm         | In Development         |
+| experimental   | Experimental           |
 
 No feature should be considered production-ready until explicitly documented otherwise.
 
@@ -224,19 +334,16 @@ No feature should be considered production-ready until explicitly documented oth
 None
 ```
 
-When blockers exist, contributors SHOULD document:
+When blockers exist, contributors SHOULD document them here with an ID (e.g. `BLK-01`), including:
 
-* The affected functionality.
+* The affected functionality (linked task/subtask ID).
 * The reason for the blocker.
 * Potential mitigation strategies.
 * Relevant dependencies.
 
-Examples include:
-
-* Dependency limitations.
-* Platform compatibility issues.
-* Architectural redesign requirements.
-* API changes.
+| ID     | Affected ID | Reason | Mitigation | Status |
+| ------ | ------------ | ------ | ----------- | ------ |
+| —      | —            | —      | —           | —      |
 
 ---
 
@@ -246,12 +353,16 @@ Examples include:
 None
 ```
 
-Breaking changes SHOULD include:
+Breaking changes SHOULD be logged here with an ID (e.g. `BC-01`) and include:
 
 * Affected versions.
 * Migration considerations.
 * Related documentation updates.
 * Relevant release notes.
+
+| ID    | Affected Versions | Migration Notes | Docs Updated | Release Notes |
+| ----- | ------------------ | ----------------- | -------------- | --------------- |
+| —     | —                  | —                 | —              | —               |
 
 For additional information, please refer to:
 
@@ -284,10 +395,13 @@ Repository-specific policies ALWAYS take precedence over external development sk
 AI coding agents SHOULD:
 
 * Review the current project state before implementation.
+* Work the **Pending Work — Phased & Ordered Breakdown** section top-to-bottom, subtask by subtask, unless a documented blocker requires reordering.
+* Reference subtask IDs (e.g. `WS-02.2`) in commits/PRs so changes trace back to this document.
 * Respect milestone priorities.
 * Preserve architectural consistency.
 * Avoid introducing undocumented functionality.
-* Prefer incremental and well-tested changes.
+* Prefer incremental and well-tested changes — one subtask at a time.
+* Mark a parent task done only once every one of its subtasks is ✅, then move it to the Completed Tasks Log.
 
 AI coding agents MUST NOT:
 
@@ -295,6 +409,8 @@ AI coding agents MUST NOT:
 * Ignore repository policies.
 * Modify unrelated functionality unnecessarily.
 * Claim successful validation without verification.
+* Mark a subtask or parent task ✅ without corresponding verifiable work (commit, test, or PR reference).
+* Skip ahead in the phased order without recording a reason.
 
 When uncertainty exists, contributors SHOULD prioritize clarification over architectural assumptions.
 
@@ -304,21 +420,24 @@ When uncertainty exists, contributors SHOULD prioritize clarification over archi
 
 | Version | Status      |
 | ------- | ----------- |
-| v0.1.0  | In Progress |
-| v0.2.0  | Planned     |
-| v0.5.0  | Planned     |
-| v0.9.0  | Planned     |
-| v1.0.0  | Planned     |
+| v0.1.0  | 🟨 In Progress |
+| v0.2.0  | ⬜ Planned     |
+| v0.5.0  | ⬜ Planned     |
+| v0.9.0  | ⬜ Planned     |
+| v1.0.0  | ⬜ Planned     |
 
 Release targets MAY evolve as development progresses.
 
 ---
 
-## Last Updated
+## Change Log for This File
 
-```text
-2026-07-31
-```
+| Date       | Change                                                                                                  |
+| ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-07-31 | Restructured into trackable format with task IDs and progress counters                                       |
+| 2026-07-31 | Synced task states with latest checklist                                                                  |
+| 2026-07-31 | Replaced High/Medium/Low priority split with a single phased, ordered Pending Tasks list; added Completed Tasks Log |
+| 2026-07-31 | Broke down all 17 pending parent tasks into 77 granular subtasks for finer-grained tracking                    |
 
 This document SHOULD be updated whenever:
 
@@ -328,11 +447,13 @@ This document SHOULD be updated whenever:
 * Releases are published.
 * Architectural changes occur.
 
+Each update SHOULD add a row to the Change Log above.
+
 ---
 
 ## Final Notes
 
-`PROJECT_STATE.md` exists to provide a concise and authoritative overview of the repository's current state.
+`PROJECT_STATE.md` exists to provide a concise, authoritative, and **traceable** overview of the repository's current state. Every checkbox has an ID; every ID should be traceable to a commit, PR, or issue.
 
 Contributors are encouraged to prioritize:
 
