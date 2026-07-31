@@ -151,7 +151,7 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 
 ### Medium Priority
 
-* [ ] Implement SessionBuilder.
+* [x] Implement SessionBuilder.
 * [ ] Implement configuration management.
 * [ ] Implement core error types.
 * [ ] Add initial examples.
