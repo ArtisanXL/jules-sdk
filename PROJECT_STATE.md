@@ -142,6 +142,10 @@ Contributors SHOULD prioritize existing milestones before introducing new functi
 
 ### High Priority
 
+* [x] Implement Message and Conversation models in jules-core.
+* [ ] Implement core Client traits in jules-core.
+* [ ] Implement ClientBuilder in jules-core.
+
 * [x] Feature flag implementation.
 * [x] Initialize the Cargo workspace.
 * [x] Implement crate structure.
