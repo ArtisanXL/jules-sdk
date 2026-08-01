@@ -32,3 +32,9 @@
 ## 2026-08-01 - [Applying HTTP configurations dynamically]
 **Learning:** For tasks involving configurations and building options (like `AuthType`), implementing methods that consume configurations (such as an `apply` method on the `AuthType` enum that modifies an `HttpRequest`) allows for decoupled and testable designs without adding state logic directly inside the structures handling transport.
 **Action:** Utilize the builder or direct application patterns when extending configurations like authentication, retry handlers, and timeouts onto requests.
+
+## 2026-08-01 - Doc comment attributes
+
+**Learning:** When adding modules to a file that starts with `//!` (module-level inner doc comments), ensure that `pub mod` or other statements do not inadvertently cause outer/inner doc comment errors. E.g., `//!` must be the first thing in the file, but putting code right after without a proper blank line can sometimes confuse the Rust parser about whether the comment applies to the module or the next statement.
+
+**Action:** Be careful when using `sed` to insert at the top of a rust file. It's often safer to rebuild the file structure with a bash script instead of blindly prepending, taking into account `//!` module comments. Always append to pacer.md using `>>` instead of `>`.
