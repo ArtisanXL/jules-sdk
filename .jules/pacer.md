@@ -20,3 +20,6 @@
 ## 2026-07-31 - [PROJECT_STATE Updates for Subtasks]
 **Learning:** The prompt instructions refer to generic counters like "Completed: N / Remaining: N" and "Overall Progress" which may not actually exist in `PROJECT_STATE.md` exactly as stated, or they only apply to parent tasks, not subtasks. Be extremely precise and always explore the actual file structure rather than blindly following the generic phrasing in the prompt constraint.
 **Action:** Always run a comprehensive exploratory `grep` over the state document before finalizing a plan that modifies `PROJECT_STATE.md`.
+## 2026-08-01 - [Enforcing Architecture via Tests]
+**Learning:** We can define and enforce an inter-crate dependency graph in a Rust workspace programmatically by parsing `Cargo.toml` files in a unit test (e.g. `architecture_test.rs`). This is a lightweight alternative to setting up `cargo-deny` bans or relying solely on human review to prevent architectural violations.
+**Action:** When a task asks to "define inter-crate dependency graph", writing a test that verifies `Cargo.toml` dependencies against the intended `ARCHITECTURE.md` rules is a solid, deliverable artifact that proves completion.
