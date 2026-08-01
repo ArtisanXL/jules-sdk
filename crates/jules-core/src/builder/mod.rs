@@ -147,3 +147,14 @@ mod tests {
         assert_eq!(client.timeout, Duration::from_secs(10));
     }
 }
+/// Request builder module.
+pub mod request;
+pub use request::RequestBuilder;
+
+/// Conversation builder module.
+pub mod conversation;
+pub use conversation::ConversationBuilder;
+
+/// Message builder module.
+pub mod message;
+pub use message::MessageBuilder;
