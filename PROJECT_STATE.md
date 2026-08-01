@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 12 parent tasks / 47 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 12 parent tasks / 43 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -184,10 +184,10 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                          | Status |
 | --------- | ----------------------------------------------------- | ------ |
-| PH2-03.1  | Implement `RequestBuilder`                              | ⬜ |
-| PH2-03.2  | Implement `ConversationBuilder`                          | ⬜ |
-| PH2-03.3  | Implement `MessageBuilder`                              | ⬜ |
-| PH2-03.4  | Ensure builders integrate cleanly with `ClientBuilder`      | ⬜ |
+| PH2-03.1  | Implement `RequestBuilder`                              | ✅ |
+| PH2-03.2  | Implement `ConversationBuilder`                          | ✅ |
+| PH2-03.3  | Implement `MessageBuilder`                              | ✅ |
+| PH2-03.4  | Ensure builders integrate cleanly with `ClientBuilder`      | ✅ |
 
 ### Phase 3 — Tooling & CLI (4 parent tasks / 19 subtasks)
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH2-03  | Phase 2 | Builders (general, beyond ClientBuilder)       |
 | PH2-02  | Phase 2 | Streaming support                              |
 | PH2-01  | Phase 2 | API integrations                               |
 | TASK-15 | Phase 1 | Implement ClientBuilder in jules-core          |
@@ -440,6 +441,10 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed PH2-03.4: Write integration test and ensure builders integrate cleanly |
+| 2026-08-01 | Completed PH2-03.3: Implement MessageBuilder in jules-core |
+| 2026-08-01 | Completed PH2-03.2: Implement ConversationBuilder in jules-core |
+| 2026-08-01 | Completed PH2-03.1: Implement RequestBuilder in jules-core |
 | 2026-08-01 | Completed PH2-02.5: Wrote streaming integration tests and marked PH2-02 complete |
 | 2026-08-01 | Completed PH2-02.4: Implement stream error handling and reconnection |
 | 2026-08-01 | Completed PH2-02.3: Implement backpressure / chunk buffering |
