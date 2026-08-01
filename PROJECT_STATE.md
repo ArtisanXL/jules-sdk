@@ -26,10 +26,10 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 16 parent tasks / 73 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 15 parent tasks / 65 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
-| Workspace Status      | 🟨 In Progress (WS-04 remaining) |
+| Workspace Status      | ✅ Complete |
 | Last Updated         | 2026-08-01                          |
 
 ---
@@ -38,14 +38,14 @@
 
 > Establish the project's foundations before implementing public APIs.
 
-### Milestone Goals — Progress: 6 / 8 (75%)
+### Milestone Goals — Progress: 7 / 8 (87%)
 
 | ID     | Goal                          | Status |
 | ------ | ------------------------------- | ------ |
 | MG-01  | Production-ready repository structure | ✅ |
 | MG-02  | Cargo workspace initialization     | 🟨 |
 | MG-03  | Documentation foundations        | ✅ |
-| MG-04  | CI/CD foundations              | 🟨 |
+| MG-04  | CI/CD foundations              | ✅ |
 | MG-05  | Testing infrastructure          | ✅ |
 | MG-06  | Release management policies      | ✅ |
 | MG-07  | Security policies              | ✅ |
@@ -84,14 +84,14 @@
 
 ---
 
-## Workspace — Progress: 3 / 4 (75%)
+## Workspace — Progress: 4 / 4 (100%)
 
 | ID    | Task                        | Status | Notes |
 | ----- | ------------------------------ | ------ | ----- |
 | WS-01 | Cargo workspace initialization   | ✅ | — |
 | WS-02 | Crate organization             | ✅ | Broken down below |
 | WS-03 | Feature flag implementation      | ✅ | Also tracked as TASK-03 |
-| WS-04 | CI pipeline implementation       | ⬜ | ⚠️ Conflicts with TASK-04, which is marked done — reconcile before closing. Broken down below. |
+| WS-04 | CI pipeline implementation       | ✅ | — |
 
 ## Crates — Progress: In Progress (0 / 5 fully implemented)
 
@@ -127,14 +127,14 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID       | Subtask                                                | Status |
 | -------- | ---------------------------------------------------------- | ------ |
-| WS-04.1  | Choose CI provider and workflow file location (e.g. GitHub Actions) | ⬜ |
-| WS-04.2  | Add build workflow (`cargo build --workspace`)                | ⬜ |
-| WS-04.3  | Add test workflow (`cargo test --workspace`)                 | ⬜ |
-| WS-04.4  | Add lint workflow (`cargo clippy -- -D warnings`)             | ⬜ |
-| WS-04.5  | Add format-check workflow (`cargo fmt --check`)               | ⬜ |
-| WS-04.6  | Add MSRV check workflow (Rust 1.90+)                       | ⬜ |
-| WS-04.7  | Add dependency/build caching                              | ⬜ |
-| WS-04.8  | Reconcile this task's status against TASK-04 and remove the flag | ⬜ |
+| WS-04.1  | Choose CI provider and workflow file location (e.g. GitHub Actions) | ✅ |
+| WS-04.2  | Add build workflow (`cargo build --workspace`)                | ✅ |
+| WS-04.3  | Add test workflow (`cargo test --workspace`)                 | ✅ |
+| WS-04.4  | Add lint workflow (`cargo clippy -- -D warnings`)             | ✅ |
+| WS-04.5  | Add format-check workflow (`cargo fmt --check`)               | ✅ |
+| WS-04.6  | Add MSRV check workflow (Rust 1.90+)                       | ✅ |
+| WS-04.7  | Add dependency/build caching                              | ✅ |
+| WS-04.8  | Reconcile this task's status against TASK-04 and remove the flag | ✅ |
 
 ### Phase 1 — Core Abstractions (2 parent tasks / 10 subtasks)
 
@@ -293,13 +293,14 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| WS-04   | Phase 0 | CI pipeline implementation                     |
 | WS-02   | Phase 0 | Crate organization                             |
 | WS-01   | Phase 0 | Cargo workspace initialization                    |
 | WS-03   | Phase 0 | Feature flag implementation                      |
 | TASK-01 | Phase 0 | Initialize the Cargo workspace                    |
 | TASK-02 | Phase 0 | Implement crate structure                        |
 | TASK-03 | Phase 0 | Configure feature flags                          |
-| TASK-04 | Phase 0 | Configure CI workflows *(⚠️ see WS-04 conflict)*   |
+| TASK-04 | Phase 0 | Configure CI workflows                             |
 | TASK-05 | Phase 0 | Establish testing pipelines                      |
 | TASK-06 | Phase 1 | Implement SessionBuilder                         |
 | TASK-07 | Phase 1 | Implement configuration management                 |
@@ -435,6 +436,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed WS-04: CI pipeline implementation with GitHub Actions |
 | 2026-08-01 | Marked WS-02.5 and parent WS-02 as complete (crates already initialized)                                |
 | 2026-07-31 | Completed WS-02.3: Documented per-crate ownership boundaries in ARCHITECTURE.md |
 
