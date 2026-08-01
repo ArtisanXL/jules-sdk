@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 13 parent tasks / 48 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 12 parent tasks / 47 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -178,7 +178,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH2-02.2  | Implement SSE (server-sent events) parsing              | ✅ |
 | PH2-02.3  | Implement backpressure / chunk buffering                | ✅ |
 | PH2-02.4  | Implement stream error handling and reconnection          | ✅ |
-| PH2-02.5  | Write streaming integration tests                       | ⬜ |
+| PH2-02.5  | Write streaming integration tests                       | ✅ |
 
 **Order 7 — `PH2-03` Builders (general, beyond ClientBuilder)** — Medium priority
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH2-02  | Phase 2 | Streaming support                              |
 | PH2-01  | Phase 2 | API integrations                               |
 | TASK-15 | Phase 1 | Implement ClientBuilder in jules-core          |
 | TASK-14 | Phase 1 | Implement core Client traits in jules-core     |
@@ -439,6 +440,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed PH2-02.5: Wrote streaming integration tests and marked PH2-02 complete |
 | 2026-08-01 | Completed PH2-02.4: Implement stream error handling and reconnection |
 | 2026-08-01 | Completed PH2-02.3: Implement backpressure / chunk buffering |
 | 2026-08-01 | Completed PH2-02.2: Implement SSE (server-sent events) parsing |
