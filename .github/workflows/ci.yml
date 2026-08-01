@@ -41,6 +41,9 @@ jobs:
     - name: Compilation Checks
       run: cargo check --workspace --all-features
 
+    - name: Build
+      run: cargo build --workspace --all-features
+
     - name: Clippy Validation
       run: cargo clippy --workspace --all-features -- -D warnings
 
@@ -55,3 +58,17 @@ jobs:
 
     - name: Doc Tests
       run: cargo test --doc --workspace --all-features
+
+  msrv:
+    name: MSRV Check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Rust MSRV
+      uses: dtolnay/rust-toolchain@master
+      with:
+        toolchain: 1.90.0
+    - name: Cache dependencies for MSRV
+      uses: Swatinem/rust-cache@v2
+    - name: MSRV Check
+      run: cargo check --workspace --all-features

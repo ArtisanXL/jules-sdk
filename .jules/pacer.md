@@ -26,3 +26,6 @@
 ## 2026-08-01 - [Validating Task Completion Against Codebase State]
 **Learning:** Task tracking files (`PROJECT_STATE.md`) can fall out of sync with actual codebase state. `WS-02.5` (creating placeholder `lib.rs`/`main.rs`) was listed as incomplete (`⬜`), but exploring the workspace crates showed they already existed and contained proper `//!` doc comments.
 **Action:** Always verify the *actual codebase state* using `list_files` or `read_file` before assuming a task actually needs code implementation, even if the tracking file says it's pending. If the code already satisfies the requirement, the appropriate action is simply to update the tracking state.
+## 2026-08-01 - Github Actions cache step
+**Learning:** Found an existing CI workflow (`.github/workflows/ci.yml`) missing an explicit cargo build step and MSRV check, even though many CI checks were implemented. It was faster to append a job and add a run step than start from scratch.
+**Action:** Always check `.github/workflows` to avoid duplicating GitHub Actions files before assuming the task requires creating them from nothing.
