@@ -22,6 +22,12 @@ pub enum Role {
 pub struct Message {
     role: Role,
     content: String,
+    #[cfg(feature = "tools")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tool_calls: Option<Vec<crate::tool::ToolCall>>,
+    #[cfg(feature = "tools")]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    tool_call_id: Option<String>,
 }
 
 impl Message {
@@ -31,7 +37,41 @@ impl Message {
         Self {
             role,
             content: content.into(),
+            #[cfg(feature = "tools")]
+            tool_calls: None,
+            #[cfg(feature = "tools")]
+            tool_call_id: None,
         }
+    }
+
+    /// Adds tool calls to this message.
+    #[cfg(feature = "tools")]
+    #[must_use]
+    pub fn with_tool_calls(mut self, tool_calls: Vec<crate::tool::ToolCall>) -> Self {
+        self.tool_calls = Some(tool_calls);
+        self
+    }
+
+    /// Sets the tool call ID for this message.
+    #[cfg(feature = "tools")]
+    #[must_use]
+    pub fn with_tool_call_id(mut self, tool_call_id: impl Into<String>) -> Self {
+        self.tool_call_id = Some(tool_call_id.into());
+        self
+    }
+
+    /// Returns the tool calls associated with this message, if any.
+    #[cfg(feature = "tools")]
+    #[must_use]
+    pub fn tool_calls(&self) -> Option<&[crate::tool::ToolCall]> {
+        self.tool_calls.as_deref()
+    }
+
+    /// Returns the tool call ID associated with this message, if any.
+    #[cfg(feature = "tools")]
+    #[must_use]
+    pub fn tool_call_id(&self) -> Option<&str> {
+        self.tool_call_id.as_deref()
     }
 
     /// Returns the role of the message.
