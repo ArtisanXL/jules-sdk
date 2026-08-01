@@ -23,3 +23,6 @@
 ## 2026-08-01 - [Enforcing Architecture via Tests]
 **Learning:** We can define and enforce an inter-crate dependency graph in a Rust workspace programmatically by parsing `Cargo.toml` files in a unit test (e.g. `architecture_test.rs`). This is a lightweight alternative to setting up `cargo-deny` bans or relying solely on human review to prevent architectural violations.
 **Action:** When a task asks to "define inter-crate dependency graph", writing a test that verifies `Cargo.toml` dependencies against the intended `ARCHITECTURE.md` rules is a solid, deliverable artifact that proves completion.
+## 2026-08-01 - [Validating Task Completion Against Codebase State]
+**Learning:** Task tracking files (`PROJECT_STATE.md`) can fall out of sync with actual codebase state. `WS-02.5` (creating placeholder `lib.rs`/`main.rs`) was listed as incomplete (`⬜`), but exploring the workspace crates showed they already existed and contained proper `//!` doc comments.
+**Action:** Always verify the *actual codebase state* using `list_files` or `read_file` before assuming a task actually needs code implementation, even if the tracking file says it's pending. If the code already satisfies the requirement, the appropriate action is simply to update the tracking state.

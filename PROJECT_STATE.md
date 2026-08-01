@@ -26,10 +26,10 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 17 parent tasks / 74 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 16 parent tasks / 73 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
-| Workspace Status      | 🟨 In Progress (WS-02, WS-04 remaining) |
+| Workspace Status      | 🟨 In Progress (WS-04 remaining) |
 | Last Updated         | 2026-08-01                          |
 
 ---
@@ -84,12 +84,12 @@
 
 ---
 
-## Workspace — Progress: 2 / 4 (50%)
+## Workspace — Progress: 3 / 4 (75%)
 
 | ID    | Task                        | Status | Notes |
 | ----- | ------------------------------ | ------ | ----- |
 | WS-01 | Cargo workspace initialization   | ✅ | — |
-| WS-02 | Crate organization             | ⬜ | Broken down below |
+| WS-02 | Crate organization             | ✅ | Broken down below |
 | WS-03 | Feature flag implementation      | ✅ | Also tracked as TASK-03 |
 | WS-04 | CI pipeline implementation       | ⬜ | ⚠️ Conflicts with TASK-04, which is marked done — reconcile before closing. Broken down below. |
 
@@ -121,7 +121,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | WS-02.2  | Add workspace members to root `Cargo.toml`                                 | ✅ |
 | WS-02.3  | Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md      | ✅ |
 | WS-02.4  | Define inter-crate dependency graph (which crate depends on which)           | ✅ |
-| WS-02.5  | Add placeholder `lib.rs`/`main.rs` with crate-level doc comment per crate     | ⬜ |
+| WS-02.5  | Add placeholder `lib.rs`/`main.rs` with crate-level doc comment per crate     | ✅ |
 
 **Order 2 — `WS-04` CI pipeline implementation** — High priority ⚠️ reconcile with TASK-04 first
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| WS-02   | Phase 0 | Crate organization                             |
 | WS-01   | Phase 0 | Cargo workspace initialization                    |
 | WS-03   | Phase 0 | Feature flag implementation                      |
 | TASK-01 | Phase 0 | Initialize the Cargo workspace                    |
@@ -434,6 +435,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Marked WS-02.5 and parent WS-02 as complete (crates already initialized)                                |
 | 2026-07-31 | Completed WS-02.3: Documented per-crate ownership boundaries in ARCHITECTURE.md |
 
 | 2026-07-31 | Restructured into trackable format with task IDs and progress counters                                       |
