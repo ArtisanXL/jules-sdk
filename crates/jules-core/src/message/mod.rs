@@ -1,7 +1,10 @@
 //! Message module.
 
+use serde::{Deserialize, Serialize};
+
 /// The role of the entity that generated a message.
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
 pub enum Role {
     /// System messages provide instructions and context to the model.
     System,
@@ -15,7 +18,7 @@ pub enum Role {
 }
 
 /// A single message in a conversation.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Message {
     role: Role,
     content: String,
