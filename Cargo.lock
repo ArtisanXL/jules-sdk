@@ -55,6 +55,7 @@ version = "0.1.0-dev"
 dependencies = [
  "js-sys",
  "jules-core",
+ "tokio",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",

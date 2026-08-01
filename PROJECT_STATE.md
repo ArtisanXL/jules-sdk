@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 13 parent tasks / 56 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 13 parent tasks / 55 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -164,7 +164,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                          | Status |
 | --------- | ----------------------------------------------------- | ------ |
-| PH2-01.1  | Define HTTP transport layer abstraction                  | ⬜ |
+| PH2-01.1  | Define HTTP transport layer abstraction                  | ✅ |
 | PH2-01.2  | Implement authentication handling (API keys/tokens)         | ⬜ |
 | PH2-01.3  | Implement endpoint request construction                  | ⬜ |
 | PH2-01.4  | Implement response deserialization and error mapping        | ⬜ |
@@ -438,6 +438,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed PH2-01.1: Defined HTTP transport layer abstraction in jules-api |
 | 2026-08-01 | Completed TASK-15 (Implement ClientBuilder in jules-core) and marked previously implemented TASK-14 as complete |
 | 2026-08-01 | Completed TASK-14.2: Define request/response model types used by the Client trait |
 | 2026-08-01 | Completed WS-04: CI pipeline implementation with GitHub Actions |
