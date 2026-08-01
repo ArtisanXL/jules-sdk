@@ -1,5 +1,7 @@
 //! Http module defining transport layer abstractions.
 
+pub mod endpoint;
+
 use jules_core::errors::SDKError;
 use std::future::Future;
 
