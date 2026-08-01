@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 13 parent tasks / 50 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 13 parent tasks / 48 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -158,7 +158,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | TASK-15.4  | Wire builder output to the `Client` trait (TASK-14)                | ✅ |
 | TASK-15.5  | Write unit tests for defaults and validation errors                | ✅ |
 
-### Phase 2 — API Integrations & Streaming (3 parent tasks / 14 subtasks)
+### Phase 2 — API Integrations & Streaming (3 parent tasks / 13 subtasks)
 
 **Order 5 — `PH2-01` API integrations** — Medium priority
 
@@ -177,7 +177,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH2-02.1  | Define stream abstraction for incremental responses    | ✅ |
 | PH2-02.2  | Implement SSE (server-sent events) parsing              | ✅ |
 | PH2-02.3  | Implement backpressure / chunk buffering                | ✅ |
-| PH2-02.4  | Implement stream error handling and reconnection          | ⬜ |
+| PH2-02.4  | Implement stream error handling and reconnection          | ✅ |
 | PH2-02.5  | Write streaming integration tests                       | ⬜ |
 
 **Order 7 — `PH2-03` Builders (general, beyond ClientBuilder)** — Medium priority
@@ -439,6 +439,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed PH2-02.4: Implement stream error handling and reconnection |
 | 2026-08-01 | Completed PH2-02.3: Implement backpressure / chunk buffering |
 | 2026-08-01 | Completed PH2-02.2: Implement SSE (server-sent events) parsing |
 | 2026-08-01 | Completed PH2-02.1: Define stream abstraction for incremental responses |
