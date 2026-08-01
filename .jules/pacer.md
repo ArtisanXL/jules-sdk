@@ -29,3 +29,6 @@
 ## 2026-08-01 - Github Actions cache step
 **Learning:** Found an existing CI workflow (`.github/workflows/ci.yml`) missing an explicit cargo build step and MSRV check, even though many CI checks were implemented. It was faster to append a job and add a run step than start from scratch.
 **Action:** Always check `.github/workflows` to avoid duplicating GitHub Actions files before assuming the task requires creating them from nothing.
+## 2026-08-01 - [Applying HTTP configurations dynamically]
+**Learning:** For tasks involving configurations and building options (like `AuthType`), implementing methods that consume configurations (such as an `apply` method on the `AuthType` enum that modifies an `HttpRequest`) allows for decoupled and testable designs without adding state logic directly inside the structures handling transport.
+**Action:** Utilize the builder or direct application patterns when extending configurations like authentication, retry handlers, and timeouts onto requests.
