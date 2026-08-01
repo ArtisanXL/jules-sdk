@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 15 parent tasks / 65 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 15 parent tasks / 64 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -143,7 +143,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | ID         | Subtask                                                    | Status |
 | ---------- | -------------------------------------------------------------- | ------ |
 | TASK-14.1  | Define `Client` trait signature (async methods, associated types)  | ✅ |
-| TASK-14.2  | Define request/response model types used by the trait           | ⬜ |
+| TASK-14.2  | Define request/response model types used by the trait           | ✅ |
 | TASK-14.3  | Define/reuse error type for client operations (see TASK-08)       | ⬜ |
 | TASK-14.4  | Add doc comments and trait-level documentation                  | ⬜ |
 | TASK-14.5  | Write unit tests / mock implementation of the trait               | ⬜ |
@@ -436,6 +436,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed TASK-14.2: Define request/response model types used by the Client trait |
 | 2026-08-01 | Completed WS-04: CI pipeline implementation with GitHub Actions |
 | 2026-08-01 | Marked WS-02.5 and parent WS-02 as complete (crates already initialized)                                |
 | 2026-07-31 | Completed WS-02.3: Documented per-crate ownership boundaries in ARCHITECTURE.md |
