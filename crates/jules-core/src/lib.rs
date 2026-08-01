@@ -23,6 +23,10 @@ pub mod traits;
 #[cfg(feature = "wasm")]
 pub mod wasm;
 
+/// Middleware pipeline and abstractions.
+#[cfg(feature = "middleware")]
+pub mod middleware;
+
 #[cfg(test)]
 mod tests {
     #[test]

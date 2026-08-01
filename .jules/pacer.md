@@ -176,3 +176,9 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 running 0 tests
 
 test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s).
+
+## 2024-03-20 - Middleware Pipeline with BoxFuture
+
+**Learning:** Implementing a middleware pipeline where closures need to be Boxed and asynchronous (`BoxFuture`) and trait objects (`Arc<dyn Middleware>`) are involved introduces ownership and execution challenges, particularly when `NextFn` is typed as a closure. When using `Box<dyn FnOnce(...)>`, retry logic within the pipeline is effectively disabled, as the closure consumes itself upon execution. In an ideal environment, true retry middleware requires either `Arc<dyn Fn(...)>` or `Box<dyn Clone + FnOnce(...)>` alongside clonable requests. I worked around this by implementing a non-retrying stub that logs limitations instead.
+
+**Action:** When designing higher-order async functions (like middleware pipelines in Rust), favor statically dispatched stacks (e.g., Tower's `Service`) over dynamically dispatched closures to maintain better control over retry state and cloning behavior.
