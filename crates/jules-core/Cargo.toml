@@ -13,6 +13,8 @@ description = "Core abstractions and traits for Jules-SDK"
 workspace = true
 
 [dependencies]
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
 
 [features]
 # The default feature set provides the recommended experience for most users.

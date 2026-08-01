@@ -1,9 +1,10 @@
 //! Response module.
 
 use crate::message::Message;
+use serde::{Deserialize, Serialize};
 
 /// A response received from a client.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ClientResponse {
     /// The generated message.
     pub message: Message,

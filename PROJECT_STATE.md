@@ -167,7 +167,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH2-01.1  | Define HTTP transport layer abstraction                  | ✅ |
 | PH2-01.2  | Implement authentication handling (API keys/tokens)         | ✅ |
 | PH2-01.3  | Implement endpoint request construction                  | ✅ |
-| PH2-01.4  | Implement response deserialization and error mapping        | ⬜ |
+| PH2-01.4  | Implement response deserialization and error mapping        | ✅ |
 | PH2-01.5  | Add rate-limit / retry handling                          | ⬜ |
 
 **Order 6 — `PH2-02` Streaming support** — Medium priority
@@ -438,6 +438,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed PH2-01.4: Implement response deserialization and error mapping in jules-api |
 | 2026-08-01 | Completed PH2-01.3: Implement endpoint request construction in jules-api |
 | 2026-08-01 | Completed PH2-01.2: Implement authentication handling in jules-api |
 | 2026-08-01 | Completed PH2-01.1: Defined HTTP transport layer abstraction in jules-api |
