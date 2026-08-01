@@ -30,7 +30,7 @@
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | 🟨 In Progress (WS-02, WS-04 remaining) |
-| Last Updated         | 2026-07-31                          |
+| Last Updated         | 2026-08-01                          |
 
 ---
 
@@ -441,6 +441,7 @@ Release targets MAY evolve as development progresses.
 | 2026-07-31 | Replaced High/Medium/Low priority split with a single phased, ordered Pending Tasks list; added Completed Tasks Log |
 | 2026-07-31 | Broke down all 17 pending parent tasks into 77 granular subtasks for finer-grained tracking                    |
 | 2026-07-31 | Marked WS-02.2 complete as workspace members are already defined in Cargo.toml |
+| 2026-08-01 | WS-02.3: Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md |
 
 This document SHOULD be updated whenever:
 
