@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 17 parent tasks / 75 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 17 parent tasks / 74 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | 🟨 In Progress (WS-02, WS-04 remaining) |
@@ -120,7 +120,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | WS-02.1  | Define crate directory layout (jules-sdk, jules-core, jules-api, jules-macros, jules-cli) | ✅ |
 | WS-02.2  | Add workspace members to root `Cargo.toml`                                 | ✅ |
 | WS-02.3  | Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md      | ✅ |
-| WS-02.4  | Define inter-crate dependency graph (which crate depends on which)           | ⬜ |
+| WS-02.4  | Define inter-crate dependency graph (which crate depends on which)           | ✅ |
 | WS-02.5  | Add placeholder `lib.rs`/`main.rs` with crate-level doc comment per crate     | ⬜ |
 
 **Order 2 — `WS-04` CI pipeline implementation** — High priority ⚠️ reconcile with TASK-04 first
@@ -442,6 +442,7 @@ Release targets MAY evolve as development progresses.
 | 2026-07-31 | Broke down all 17 pending parent tasks into 77 granular subtasks for finer-grained tracking                    |
 | 2026-07-31 | Marked WS-02.2 complete as workspace members are already defined in Cargo.toml |
 | 2026-08-01 | WS-02.3: Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md |
+| 2026-08-01 | WS-02.4: Defined and enforced inter-crate dependency graph |
 
 This document SHOULD be updated whenever:
 
