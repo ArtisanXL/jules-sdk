@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 13 parent tasks / 51 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 13 parent tasks / 50 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -176,7 +176,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | --------- | -------------------------------------------------- | ------ |
 | PH2-02.1  | Define stream abstraction for incremental responses    | ✅ |
 | PH2-02.2  | Implement SSE (server-sent events) parsing              | ✅ |
-| PH2-02.3  | Implement backpressure / chunk buffering                | ⬜ |
+| PH2-02.3  | Implement backpressure / chunk buffering                | ✅ |
 | PH2-02.4  | Implement stream error handling and reconnection          | ⬜ |
 | PH2-02.5  | Write streaming integration tests                       | ⬜ |
 
@@ -439,6 +439,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed PH2-02.3: Implement backpressure / chunk buffering |
 | 2026-08-01 | Completed PH2-02.2: Implement SSE (server-sent events) parsing |
 | 2026-08-01 | Completed PH2-02.1: Define stream abstraction for incremental responses |
 | 2026-08-01 | Completed PH2-01.5: Add rate-limit / retry handling in jules-api |
