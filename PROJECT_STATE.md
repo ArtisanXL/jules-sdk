@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 15 parent tasks / 64 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 13 parent tasks / 56 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -38,12 +38,12 @@
 
 > Establish the project's foundations before implementing public APIs.
 
-### Milestone Goals — Progress: 7 / 8 (87%)
+### Milestone Goals — Progress: 8 / 8 (100%)
 
 | ID     | Goal                          | Status |
 | ------ | ------------------------------- | ------ |
 | MG-01  | Production-ready repository structure | ✅ |
-| MG-02  | Cargo workspace initialization     | 🟨 |
+| MG-02  | Cargo workspace initialization     | ✅ |
 | MG-03  | Documentation foundations        | ✅ |
 | MG-04  | CI/CD foundations              | ✅ |
 | MG-05  | Testing infrastructure          | ✅ |
@@ -144,19 +144,19 @@ Crate statuses should be updated whenever implementation milestones are complete
 | ---------- | -------------------------------------------------------------- | ------ |
 | TASK-14.1  | Define `Client` trait signature (async methods, associated types)  | ✅ |
 | TASK-14.2  | Define request/response model types used by the trait           | ✅ |
-| TASK-14.3  | Define/reuse error type for client operations (see TASK-08)       | ⬜ |
-| TASK-14.4  | Add doc comments and trait-level documentation                  | ⬜ |
-| TASK-14.5  | Write unit tests / mock implementation of the trait               | ⬜ |
+| TASK-14.3  | Define/reuse error type for client operations (see TASK-08)       | ✅ |
+| TASK-14.4  | Add doc comments and trait-level documentation                  | ✅ |
+| TASK-14.5  | Write unit tests / mock implementation of the trait               | ✅ |
 
 **Order 4 — `TASK-15` Implement ClientBuilder in jules-core** — High priority, depends on TASK-14
 
 | ID         | Subtask                                                        | Status |
 | ---------- | ------------------------------------------------------------------ | ------ |
-| TASK-15.1  | Define `ClientBuilder` struct (base URL, timeout, auth, etc.)        | ⬜ |
-| TASK-15.2  | Implement setter methods (builder pattern)                       | ⬜ |
-| TASK-15.3  | Implement validation logic in `build()`                          | ⬜ |
-| TASK-15.4  | Wire builder output to the `Client` trait (TASK-14)                | ⬜ |
-| TASK-15.5  | Write unit tests for defaults and validation errors                | ⬜ |
+| TASK-15.1  | Define `ClientBuilder` struct (base URL, timeout, auth, etc.)        | ✅ |
+| TASK-15.2  | Implement setter methods (builder pattern)                       | ✅ |
+| TASK-15.3  | Implement validation logic in `build()`                          | ✅ |
+| TASK-15.4  | Wire builder output to the `Client` trait (TASK-14)                | ✅ |
+| TASK-15.5  | Write unit tests for defaults and validation errors                | ✅ |
 
 ### Phase 2 — API Integrations & Streaming (3 parent tasks / 14 subtasks)
 
@@ -293,6 +293,8 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| TASK-15 | Phase 1 | Implement ClientBuilder in jules-core          |
+| TASK-14 | Phase 1 | Implement core Client traits in jules-core     |
 | WS-04   | Phase 0 | CI pipeline implementation                     |
 | WS-02   | Phase 0 | Crate organization                             |
 | WS-01   | Phase 0 | Cargo workspace initialization                    |
@@ -436,6 +438,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed TASK-15 (Implement ClientBuilder in jules-core) and marked previously implemented TASK-14 as complete |
 | 2026-08-01 | Completed TASK-14.2: Define request/response model types used by the Client trait |
 | 2026-08-01 | Completed WS-04: CI pipeline implementation with GitHub Actions |
 | 2026-08-01 | Marked WS-02.5 and parent WS-02 as complete (crates already initialized)                                |
