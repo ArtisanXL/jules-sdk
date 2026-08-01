@@ -2,7 +2,7 @@
 
 > This document describes the current development status, priorities and milestones of Jules-SDK. Contributors and AI coding agents SHOULD review this document before making significant changes to the repository.
 >
-> **Trackability note:** Every task and subtask below has a stable ID (e.g. `WS-02.3`, `PH2-01.4`). Reference these IDs in commit messages, PR titles, and issue trackers (e.g. `git commit -m "WS-02.2: add workspace members to Cargo.toml"`) so progress in this file stays traceable to actual repository history.
+**Last Updated:** 2026-08-01
 
 ---
 
@@ -195,11 +195,11 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                              | Status |
 | --------- | ----------------------------------------------------------- | ------ |
-| PH3-01.1  | Define `Tool` trait                                          | ⬜ |
-| PH3-01.2  | Implement tool registry / registration mechanism                 | ⬜ |
-| PH3-01.3  | Implement tool-call parsing from model responses                 | ⬜ |
-| PH3-01.4  | Implement tool result serialization back into conversation          | ⬜ |
-| PH3-01.5  | Write tool-calling integration tests                             | ⬜ |
+| PH3-01.1  | Define `Tool` trait                                          | ✅ |
+| PH3-01.2  | Implement tool registry / registration mechanism                 | ✅ |
+| PH3-01.3  | Implement tool-call parsing from model responses                 | ✅ |
+| PH3-01.4  | Implement tool result serialization back into conversation          | ✅ |
+| PH3-01.5  | Write tool-calling integration tests                             | ✅ |
 
 **Order 9 — `PH3-02` Middleware support** — Medium priority
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH3-01  | Phase 3 | Tool calling support |
 | PH2-03  | Phase 2 | Builders (general, beyond ClientBuilder)       |
 | PH2-02  | Phase 2 | Streaming support                              |
 | PH2-01  | Phase 2 | API integrations                               |
@@ -441,6 +442,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed Order 8 (PH3-01): Implemented tool calling support including Tool trait, registry, message serialization, and integration tests |
 | 2026-08-01 | Completed PH2-03.4: Write integration test and ensure builders integrate cleanly |
 | 2026-08-01 | Completed PH2-03.3: Implement MessageBuilder in jules-core |
 | 2026-08-01 | Completed PH2-03.2: Implement ConversationBuilder in jules-core |
