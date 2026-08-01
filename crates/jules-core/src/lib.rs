@@ -11,6 +11,9 @@ pub mod message;
 pub mod pagination;
 pub mod response;
 pub mod session;
+/// Streaming APIs, stream event handling, async stream abstractions, incremental responses.
+#[cfg(feature = "streaming")]
+pub mod streaming;
 /// Tool calling abstractions and APIs.
 /// This module is only available when the `tools` feature is enabled.
 #[cfg(feature = "tools")]
