@@ -38,3 +38,6 @@
 **Learning:** When adding modules to a file that starts with `//!` (module-level inner doc comments), ensure that `pub mod` or other statements do not inadvertently cause outer/inner doc comment errors. E.g., `//!` must be the first thing in the file, but putting code right after without a proper blank line can sometimes confuse the Rust parser about whether the comment applies to the module or the next statement.
 
 **Action:** Be careful when using `sed` to insert at the top of a rust file. It's often safer to rebuild the file structure with a bash script instead of blindly prepending, taking into account `//!` module comments. Always append to pacer.md using `>>` instead of `>`.
+## 2026-08-01 - [Retry implementation with backoff]
+**Learning:** When implementing retry mechanisms like exponential backoff, it is crucial to handle state safely, especially without relying on async state within the logic itself when simpler functional returns (like `Option<u64>` for delay) decouple the state from the executor.
+**Action:** Extract retry logic into standalone, testable units (like the `should_retry` trait method) rather than coupling it directly into the HTTP transport implementation. This keeps the transport clean and makes the policy entirely unit-testable.

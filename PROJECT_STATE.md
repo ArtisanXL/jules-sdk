@@ -168,7 +168,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH2-01.2  | Implement authentication handling (API keys/tokens)         | ✅ |
 | PH2-01.3  | Implement endpoint request construction                  | ✅ |
 | PH2-01.4  | Implement response deserialization and error mapping        | ✅ |
-| PH2-01.5  | Add rate-limit / retry handling                          | ⬜ |
+| PH2-01.5  | Add rate-limit / retry handling                          | ✅ |
 
 **Order 6 — `PH2-02` Streaming support** — Medium priority
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH2-01  | Phase 2 | API integrations                               |
 | TASK-15 | Phase 1 | Implement ClientBuilder in jules-core          |
 | TASK-14 | Phase 1 | Implement core Client traits in jules-core     |
 | WS-04   | Phase 0 | CI pipeline implementation                     |
@@ -438,6 +439,8 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed PH2-01.5: Add rate-limit / retry handling in jules-api |
+| 2026-08-01 | Completed parent task PH2-01 (API integrations) |
 | 2026-08-01 | Completed PH2-01.4: Implement response deserialization and error mapping in jules-api |
 | 2026-08-01 | Completed PH2-01.3: Implement endpoint request construction in jules-api |
 | 2026-08-01 | Completed PH2-01.2: Implement authentication handling in jules-api |
