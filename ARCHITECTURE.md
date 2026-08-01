@@ -242,9 +242,14 @@ The facade crate is responsible for exposing the entire public API.
 
 ---
 
-# Crate Responsibilities
+# Crate Ownership & Responsibilities
 
 ## jules-sdk
+
+### Ownership
+
+* **Primary Maintainers:** Core SDK Team
+* **Domain:** Public-facing API surface, feature orchestration, and user experience.
 
 ### Responsibilities
 
@@ -276,6 +281,11 @@ jules-sdk = "0.1"
 ## jules-core
 
 Responsible for all core abstractions.
+
+### Ownership
+
+* **Primary Maintainers:** Core SDK Team
+* **Domain:** Foundation abstractions, data models, traits, and error definitions.
 
 ### Responsibilities
 
@@ -354,6 +364,11 @@ BuilderTrait
 ## jules-api
 
 Responsible for communicating with the Jules API.
+
+### Ownership
+
+* **Primary Maintainers:** Integrations Team
+* **Domain:** HTTP communication, authentication, streaming, and third-party interactions.
 
 ### Responsibilities
 
@@ -474,6 +489,11 @@ Error Events
 
 Responsible for ergonomic APIs.
 
+### Ownership
+
+* **Primary Maintainers:** Core SDK Team
+* **Domain:** Ergonomic abstractions, code generation, and syntactic sugar.
+
 ### Responsibilities
 
 ```text
@@ -517,6 +537,11 @@ lib.rs
 ## jules-cli
 
 Responsible for the official CLI.
+
+### Ownership
+
+* **Primary Maintainers:** Tooling Team
+* **Domain:** Command-line tooling, diagnostics, and developer utilities.
 
 ### Commands
 
