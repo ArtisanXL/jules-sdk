@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 12 parent tasks / 43 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 11 parent tasks / 38 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -205,11 +205,11 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                | Status |
 | --------- | --------------------------------------------- | ------ |
-| PH3-02.1  | Define `Middleware` trait                        | ⬜ |
-| PH3-02.2  | Implement middleware chaining/execution pipeline    | ⬜ |
-| PH3-02.3  | Implement built-in logging middleware              | ⬜ |
-| PH3-02.4  | Implement built-in retry middleware                | ⬜ |
-| PH3-02.5  | Write middleware tests                            | ⬜ |
+| PH3-02.1  | Define `Middleware` trait                        | ✅ |
+| PH3-02.2  | Implement middleware chaining/execution pipeline    | ✅ |
+| PH3-02.3  | Implement built-in logging middleware              | ✅ |
+| PH3-02.4  | Implement built-in retry middleware                | ✅ |
+| PH3-02.5  | Write middleware tests                            | ✅ |
 
 **Order 10 — `PH3-03` CLI support** — Medium priority
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH3-02  | Phase 3 | Middleware support |
 | PH3-01  | Phase 3 | Tool calling support |
 | PH2-03  | Phase 2 | Builders (general, beyond ClientBuilder)       |
 | PH2-02  | Phase 2 | Streaming support                              |
@@ -442,6 +443,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-01 | Completed Order 9 (PH3-02): Implemented middleware pipeline, logging, and retry support |
 | 2026-08-01 | Completed Order 8 (PH3-01): Implemented tool calling support including Tool trait, registry, message serialization, and integration tests |
 | 2026-08-01 | Completed PH2-03.4: Write integration test and ensure builders integrate cleanly |
 | 2026-08-01 | Completed PH2-03.3: Implement MessageBuilder in jules-core |
