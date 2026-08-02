@@ -6,6 +6,7 @@ Implemented remaining examples for the Jules-SDK to cover additional functionali
 2. `tools`: Demonstrates `Tool` implementation and the `ToolRegistry` API.
 3. `middleware`: Showcases custom `Middleware` and pipeline execution.
 4. `cli_usage`: Simulates initial configuration usage when run as a CLI tool.
+Included a fix to remove an invalid `config` call in the `cli_usage` example that was failing CI.
 
 🎯 Why:
 This was pending in the backlog to complete phase 3 (`PH3-04`), helping developers understand how to extend and use these advanced components effectively.

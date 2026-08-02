@@ -19,7 +19,7 @@ fn main() {
     println!("CLI initialized with API Key: {}", config.api_key());
     println!("CLI initialized with Timeout: {:?}", config.timeout());
 
-    let _session = jules_sdk::Session::builder().config(config).build();
+    let _session = jules_sdk::Session::builder().build();
 
     println!("Session ready to be used by CLI commands.");
 }
