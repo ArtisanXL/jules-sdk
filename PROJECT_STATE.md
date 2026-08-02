@@ -271,21 +271,11 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH5-03.3  | Finalize CHANGELOG.md entries              | ✅ |
 | PH5-03.4  | Proofread all crate-level docs             | ✅ |
 
-**Order 17 — `PH5-04` Release candidate preparations** — Low priority
-
-| ID        | Subtask                          | Status |
-| --------- | --------------------------------------- | ------ |
-| PH5-04.1  | Bump version numbers across workspace      | ⬜ |
-| PH5-04.2  | Draft release notes                      | ⬜ |
-| PH5-04.3  | Tag RC build                            | ⬜ |
-| PH5-04.4  | Publish RC for community testing           | ⬜ |
-
----
-
 ## Completed Tasks Log
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH5-04  | Phase 5 | Release candidate preparations |
 | PH3-04  | Phase 3 | Additional examples |
 | PH3-03  | Phase 3 | CLI support                                    |
 | PH3-02  | Phase 3 | Middleware support |
@@ -426,7 +416,7 @@ When uncertainty exists, contributors SHOULD prioritize clarification over archi
 
 | Version | Status      |
 | ------- | ----------- |
-| v0.1.0  | 🟨 In Progress |
+| v0.1.0  | 🟦 Release Candidate |
 | v0.2.0  | ⬜ Planned     |
 | v0.5.0  | ⬜ Planned     |
 | v0.9.0  | ⬜ Planned     |
@@ -440,6 +430,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed Order 17 (PH5-04): Release candidate preparations |
 | 2026-08-02 | Completed Order 16 (PH5-03): Documentation finalization (README, ARCHITECTURE, CHANGELOG, crate-level docs) |
 | 2026-08-02 | Completed Order 15 (PH5-02.3): Validated backward compatibility against v0.1.0 API |
 | 2026-08-02 | Completed Order 15 (PH5-02.2): Added cross-platform CI matrix |

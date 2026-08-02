@@ -45,7 +45,7 @@ For more information, please refer to:
 
 ---
 
-## [0.1.0] - TBD
+## [0.1.0-rc.1] - 2026-08-02
 
 > Initial release of Jules-SDK.
 

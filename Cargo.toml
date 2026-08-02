@@ -9,7 +9,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.0-dev"
+version = "0.1.0-rc.1"
 edition = "2021"
 rust-version = "1.90.0"
 authors = ["ArtisanXL"]
@@ -31,11 +31,11 @@ redundant_clone = { level = "deny", priority = 9 }
 pedantic = { level = "warn", priority = 3 }
 
 [workspace.dependencies]
-jules-sdk = { path = "crates/jules-sdk", version = "0.1.0-dev" }
-jules-core = { path = "crates/jules-core", version = "0.1.0-dev" }
-jules-api = { path = "crates/jules-api", version = "0.1.0-dev" }
-jules-macros = { path = "crates/jules-macros", version = "0.1.0-dev" }
-jules-cli = { path = "crates/jules-cli", version = "0.1.0-dev" }
+jules-sdk = { path = "crates/jules-sdk", version = "0.1.0-rc.1" }
+jules-core = { path = "crates/jules-core", version = "0.1.0-rc.1" }
+jules-api = { path = "crates/jules-api", version = "0.1.0-rc.1" }
+jules-macros = { path = "crates/jules-macros", version = "0.1.0-rc.1" }
+jules-cli = { path = "crates/jules-cli", version = "0.1.0-rc.1" }
 
 [profile.release]
 opt-level = 3

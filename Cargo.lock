@@ -302,7 +302,7 @@ dependencies = [
 
 [[package]]
 name = "jules-api"
-version = "0.1.0-dev"
+version = "0.1.0-rc.1"
 dependencies = [
  "js-sys",
  "jules-core",
@@ -319,7 +319,7 @@ dependencies = [
 
 [[package]]
 name = "jules-cli"
-version = "0.1.0-dev"
+version = "0.1.0-rc.1"
 dependencies = [
  "clap",
  "dirs",
@@ -330,7 +330,7 @@ dependencies = [
 
 [[package]]
 name = "jules-core"
-version = "0.1.0-dev"
+version = "0.1.0-rc.1"
 dependencies = [
  "proptest",
  "serde",
@@ -342,11 +342,11 @@ dependencies = [
 
 [[package]]
 name = "jules-macros"
-version = "0.1.0-dev"
+version = "0.1.0-rc.1"
 
 [[package]]
 name = "jules-sdk"
-version = "0.1.0-dev"
+version = "0.1.0-rc.1"
 dependencies = [
  "jules-api",
  "jules-core",
