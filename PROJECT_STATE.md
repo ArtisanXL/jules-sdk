@@ -230,15 +230,8 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH3-04.3  | Add middleware example                 | ✅ |
 | PH3-04.4  | Add CLI usage example                  | ✅ |
 
-### Phase 4 — Platform & Performance (2 parent tasks / 7 subtasks)
+### Phase 4 — Platform & Performance (1 parent tasks / 4 subtasks)
 
-**Order 12 — `PH4-02` Platform integrations** — Low priority
-
-| ID        | Subtask                                                   | Status |
-| --------- | ---------------------------------------------------------------- | ------ |
-| PH4-02.1  | Validate/finalize WASM target build (cross-check TASK-10 flag)         | ⬜ |
-| PH4-02.2  | Validate native target support across OSes (Linux/macOS/Windows)          | ⬜ |
-| PH4-02.3  | Document platform-specific caveats                                 | ⬜ |
 
 **Order 13 — `PH4-04` Stability validations** — Low priority
 
@@ -316,7 +309,8 @@ Crate statuses should be updated whenever implementation milestones are complete
 | TASK-08 | Phase 1 | Implement core error types                       |
 | TASK-09 | Phase 3 | Add initial examples                            |
 | TASK-13 | Phase 2 | Implement Message and Conversation models in jules-core |
-| TASK-10 | Phase 4 | WASM integrations *(⚠️ needs verification)*        |
+| PH4-02  | Phase 4 | Platform integrations                          |
+| TASK-10 | Phase 4 | WASM integrations        |
 | TASK-11 | —       | Additional tooling support                       |
 | TASK-12 | Phase 4 | Performance optimizations *(⚠️ needs verification)* |
 
@@ -476,6 +470,7 @@ Release targets MAY evolve as development progresses.
 | 2026-07-31 | Marked WS-02.2 complete as workspace members are already defined in Cargo.toml |
 | 2026-08-01 | WS-02.3: Document per-crate ownership/responsibility boundaries in ARCHITECTURE.md |
 | 2026-08-01 | WS-02.4: Defined and enforced inter-crate dependency graph |
+| 2026-08-02 | Completed parent task PH4-02 (Platform integrations) and subtasks PH4-02.1, PH4-02.2, PH4-02.3 |
 
 This document SHOULD be updated whenever:
 

@@ -44,3 +44,4 @@ experimental = []
 
 [dev-dependencies]
 tokio = { version = "1.53.1", features = ["rt", "macros"] }
+wasm-bindgen-test = "0.3.45"
