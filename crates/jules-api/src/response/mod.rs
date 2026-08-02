@@ -110,4 +110,20 @@ mod tests {
             _ => panic!("Expected SDKError::Api"),
         }
     }
+
+    #[test]
+    fn test_deserialize_api_error_empty_body() {
+        let body = vec![];
+
+        let http_resp = HttpResponse::new(500, vec![], body);
+        let err = deserialize_response(&http_resp).unwrap_err();
+
+        match err {
+            SDKError::Api(e) => {
+                assert_eq!(e.status_code, Some(500));
+                assert_eq!(e.message, "HTTP 500");
+            }
+            _ => panic!("Expected SDKError::Api"),
+        }
+    }
 }
