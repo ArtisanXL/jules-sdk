@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 11 parent tasks / 38 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 10 parent tasks / 34 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -225,10 +225,10 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                        | Status |
 | --------- | ------------------------------------ | ------ |
-| PH3-04.1  | Add streaming example                  | ⬜ |
-| PH3-04.2  | Add tool-calling example                | ⬜ |
-| PH3-04.3  | Add middleware example                 | ⬜ |
-| PH3-04.4  | Add CLI usage example                  | ⬜ |
+| PH3-04.1  | Add streaming example                  | ✅ |
+| PH3-04.2  | Add tool-calling example                | ✅ |
+| PH3-04.3  | Add middleware example                 | ✅ |
+| PH3-04.4  | Add CLI usage example                  | ✅ |
 
 ### Phase 4 — Platform & Performance (2 parent tasks / 7 subtasks)
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH3-04  | Phase 3 | Additional examples |
 | PH3-03  | Phase 3 | CLI support                                    |
 | PH3-02  | Phase 3 | Middleware support |
 | PH3-01  | Phase 3 | Tool calling support |
