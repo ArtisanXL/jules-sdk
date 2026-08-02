@@ -2,7 +2,7 @@
 
 > This document describes the current development status, priorities and milestones of Jules-SDK. Contributors and AI coding agents SHOULD review this document before making significant changes to the repository.
 >
-**Last Updated:** 2026-08-02
+Last Updated: 2026-08-02
 
 ---
 
@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 10 parent tasks / 32 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 10 parent tasks / 31 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -258,9 +258,9 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                       | Status |
 | --------- | --------------------------------------------------- | ------ |
-| PH5-02.1  | Validate MSRV compliance across workspace                | ⬜ |
-| PH5-02.2  | Run cross-platform CI matrix                          | ⬜ |
-| PH5-02.3  | Validate backward compatibility against v0.1.0 API          | ⬜ |
+| PH5-02.1  | Validate MSRV compliance across workspace                | ✅ |
+| PH5-02.2  | Run cross-platform CI matrix                          | ✅ |
+| PH5-02.3  | Validate backward compatibility against v0.1.0 API          | ✅ |
 
 **Order 16 — `PH5-03` Documentation finalization** — Low priority
 
@@ -440,6 +440,8 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed Order 15 (PH5-02.3): Validated backward compatibility against v0.1.0 API |
+| 2026-08-02 | Completed Order 15 (PH5-02.2): Added cross-platform CI matrix |
 | 2026-08-02 | Completed Order 14 (PH5-01): API freeze preparations |
 | 2026-08-02 | Completed Order 13 (PH4-04.2): Implemented load/soak testing for HTTP client |
 | 2026-08-02 | Completed Order 13 (PH4-04.1): Added fuzz testing on core parsing paths |
