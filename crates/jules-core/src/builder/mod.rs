@@ -76,11 +76,30 @@ impl ClientBuilder {
 
 /// A concrete client built by `ClientBuilder`.
 #[derive(Debug, Clone)]
-#[allow(dead_code)]
 pub struct BuiltClient {
     base_url: String,
     timeout: Duration,
     auth_token: String,
+}
+
+impl BuiltClient {
+    /// Returns the base URL.
+    #[must_use]
+    pub fn base_url(&self) -> &str {
+        &self.base_url
+    }
+
+    /// Returns the timeout.
+    #[must_use]
+    pub fn timeout(&self) -> Duration {
+        self.timeout
+    }
+
+    /// Returns the auth token.
+    #[must_use]
+    pub fn auth_token(&self) -> &str {
+        &self.auth_token
+    }
 }
 
 impl Client for BuiltClient {
