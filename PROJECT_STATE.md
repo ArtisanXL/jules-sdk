@@ -26,7 +26,7 @@ Last Updated: 2026-08-02
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 10 parent tasks / 31 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 10 parent tasks / 27 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -266,10 +266,10 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                          | Status |
 | --------- | --------------------------------------- | ------ |
-| PH5-03.1  | Review and update README.md               | ⬜ |
-| PH5-03.2  | Review and update ARCHITECTURE.md          | ⬜ |
-| PH5-03.3  | Finalize CHANGELOG.md entries              | ⬜ |
-| PH5-03.4  | Proofread all crate-level docs             | ⬜ |
+| PH5-03.1  | Review and update README.md               | ✅ |
+| PH5-03.2  | Review and update ARCHITECTURE.md          | ✅ |
+| PH5-03.3  | Finalize CHANGELOG.md entries              | ✅ |
+| PH5-03.4  | Proofread all crate-level docs             | ✅ |
 
 **Order 17 — `PH5-04` Release candidate preparations** — Low priority
 
@@ -440,6 +440,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed Order 16 (PH5-03): Documentation finalization (README, ARCHITECTURE, CHANGELOG, crate-level docs) |
 | 2026-08-02 | Completed Order 15 (PH5-02.3): Validated backward compatibility against v0.1.0 API |
 | 2026-08-02 | Completed Order 15 (PH5-02.2): Added cross-platform CI matrix |
 | 2026-08-02 | Completed Order 14 (PH5-01): API freeze preparations |

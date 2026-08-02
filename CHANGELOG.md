@@ -71,6 +71,13 @@ For more information, please refer to:
 * Async-first API design.
 * Type-safe request and response models.
 
+#### Integrations & Features
+* Tool calling support.
+* Middleware support.
+* CLI support and subcommands.
+* Streaming API and stream event handling.
+* Session and Conversation builders.
+
 #### Documentation
 
 * README.md
