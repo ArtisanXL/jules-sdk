@@ -215,11 +215,11 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                    | Status |
 | --------- | ------------------------------------------------ | ------ |
-| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ⬜ |
-| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ⬜ |
-| PH3-03.3  | Implement config file loading/overrides                | ⬜ |
-| PH3-03.4  | Implement output formatting (plain/JSON)               | ⬜ |
-| PH3-03.5  | Write CLI smoke tests                                 | ⬜ |
+| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ✅ |
+| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ✅ |
+| PH3-03.3  | Implement config file loading/overrides                | ✅ |
+| PH3-03.4  | Implement output formatting (plain/JSON)               | ✅ |
+| PH3-03.5  | Write CLI smoke tests                                 | ✅ |
 
 **Order 11 — `PH3-04` Additional examples** — Low priority (initial examples already done via TASK-09)
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH3-03  | Phase 3 | CLI support                                    |
 | PH3-02  | Phase 3 | Middleware support |
 | PH3-01  | Phase 3 | Tool calling support |
 | PH2-03  | Phase 2 | Builders (general, beyond ClientBuilder)       |
