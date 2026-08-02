@@ -35,5 +35,6 @@ wasm-bindgen-futures = "0.4.76"
 web-sys = { version = "0.3.103", features = ["Headers", "Request", "RequestInit", "RequestMode", "Response", "Window"] }
 
 [dev-dependencies]
+proptest = "1.11.0"
 tokio = { version = "1.53.1", features = ["rt", "macros"] }
 wasm-bindgen-test = "0.3.45"

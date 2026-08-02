@@ -26,7 +26,7 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 10 parent tasks / 34 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 10 parent tasks / 33 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -237,7 +237,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                       | Status |
 | --------- | --------------------------------------------------- | ------ |
-| PH4-04.1  | Run fuzz testing on core parsing paths                 | ⬜ |
+| PH4-04.1  | Run fuzz testing on core parsing paths                 | ✅ |
 | PH4-04.2  | Run load/soak testing on client                       | ⬜ |
 | PH4-04.3  | Review public API for stability guarantees               | ⬜ |
 | PH4-04.4  | Fix issues found and document results                   | ⬜ |
@@ -439,6 +439,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed Order 13 (PH4-04.1): Added fuzz testing on core parsing paths |
 | 2026-08-02 | Completed Order 10 (PH3-03): CLI support and subcommands |
 | 2026-08-01 | Completed Order 9 (PH3-02): Implemented middleware pipeline, logging, and retry support |
 | 2026-08-01 | Completed Order 8 (PH3-01): Implemented tool calling support including Tool trait, registry, message serialization, and integration tests |

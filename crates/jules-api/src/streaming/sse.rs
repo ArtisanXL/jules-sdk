@@ -134,3 +134,25 @@ mod tests {
         assert_eq!(events[0].retry, Some(5000));
     }
 }
+
+#[cfg(test)]
+mod fuzz {
+    use super::*;
+    use proptest::prelude::*;
+
+    proptest! {
+        #[test]
+        fn test_sse_parser_doesnt_crash(s in ".*") {
+            let mut parser = SseParser::new();
+            let _ = parser.push(&s);
+        }
+
+        #[test]
+        fn test_sse_parser_multiple_pushes(chunks in proptest::collection::vec(".*", 1..10)) {
+            let mut parser = SseParser::new();
+            for chunk in chunks {
+                let _ = parser.push(&chunk);
+            }
+        }
+    }
+}
