@@ -62,3 +62,38 @@ fn test_validation_error() {
     let sdk_err: SDKError = err.into();
     assert_eq!(sdk_err.to_string(), "Validation error: invalid parameter");
 }
+
+#[test]
+fn test_sdk_error_source() {
+    use std::error::Error;
+
+    let sdk_err: SDKError = AuthenticationError::new("auth").into();
+    let source = sdk_err.source().unwrap();
+    assert_eq!(source.to_string(), "auth");
+    assert!(source.downcast_ref::<AuthenticationError>().is_some());
+
+    let sdk_err: SDKError = ApiError::new("api").into();
+    let source = sdk_err.source().unwrap();
+    assert_eq!(source.to_string(), "api");
+    assert!(source.downcast_ref::<ApiError>().is_some());
+
+    let sdk_err: SDKError = NetworkError::new("network").into();
+    let source = sdk_err.source().unwrap();
+    assert_eq!(source.to_string(), "network");
+    assert!(source.downcast_ref::<NetworkError>().is_some());
+
+    let sdk_err: SDKError = StreamingError::new("stream").into();
+    let source = sdk_err.source().unwrap();
+    assert_eq!(source.to_string(), "stream");
+    assert!(source.downcast_ref::<StreamingError>().is_some());
+
+    let sdk_err: SDKError = ToolError::new("tool").into();
+    let source = sdk_err.source().unwrap();
+    assert_eq!(source.to_string(), "tool");
+    assert!(source.downcast_ref::<ToolError>().is_some());
+
+    let sdk_err: SDKError = ValidationError::new("val").into();
+    let source = sdk_err.source().unwrap();
+    assert_eq!(source.to_string(), "val");
+    assert!(source.downcast_ref::<ValidationError>().is_some());
+}
