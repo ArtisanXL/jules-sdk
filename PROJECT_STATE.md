@@ -26,7 +26,7 @@ Last Updated: 2026-08-02
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 10 parent tasks / 27 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 11 parent tasks / 31 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -158,7 +158,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | TASK-15.4  | Wire builder output to the `Client` trait (TASK-14)                | ✅ |
 | TASK-15.5  | Write unit tests for defaults and validation errors                | ✅ |
 
-### Phase 2 — API Integrations & Streaming (3 parent tasks / 13 subtasks)
+### Phase 2 — API Integrations & Streaming (4 parent tasks / 17 subtasks)
 
 **Order 5 — `PH2-01` API integrations** — Medium priority
 
@@ -188,6 +188,16 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH2-03.2  | Implement `ConversationBuilder`                          | ✅ |
 | PH2-03.3  | Implement `MessageBuilder`                              | ✅ |
 | PH2-03.4  | Ensure builders integrate cleanly with `ClientBuilder`      | ✅ |
+
+
+**Order 5.5 — `PH2-04` REST API Structure Alignment (v1alpha)** — High priority
+
+| ID        | Subtask                                                              | Status |
+| --------- | ---------------------------------------------------------------------- | ------ |
+| PH2-04.1  | Define API resource models (Sessions, Activities, Sources) in jules-core | ⬜ |
+| PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | ⬜ |
+| PH2-04.3  | Implement `v1alpha/sessions.activities` and `v1alpha/sources` endpoints  | ⬜ |
+| PH2-04.4  | Configure Base URL (`https://jules.googleapis.com`) and Google Auth handling | ⬜ |
 
 ### Phase 3 — Tooling & CLI (4 parent tasks / 19 subtasks)
 
@@ -280,6 +290,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH3-03  | Phase 3 | CLI support                                    |
 | PH3-02  | Phase 3 | Middleware support |
 | PH3-01  | Phase 3 | Tool calling support |
+| PH2-04  | Phase 2 | REST API Structure Alignment (v1alpha) |
 | PH2-03  | Phase 2 | Builders (general, beyond ClientBuilder)       |
 | PH2-02  | Phase 2 | Streaming support                              |
 | PH2-01  | Phase 2 | API integrations                               |
