@@ -109,4 +109,12 @@ mod tests {
         // Should not retry client errors (400)
         assert_eq!(policy.should_retry(0, &error), None);
     }
+
+    #[test]
+    fn test_exponential_backoff_no_status_code() {
+        let policy = ExponentialBackoff::default();
+        let error = SDKError::Api(ApiError::new("Unknown Error"));
+
+        assert_eq!(policy.should_retry(0, &error), None);
+    }
 }
