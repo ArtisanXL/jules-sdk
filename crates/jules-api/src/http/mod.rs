@@ -125,4 +125,25 @@ mod tests {
         assert_eq!(response.status, 200);
         assert_eq!(response.body, b"{}");
     }
+
+    #[test]
+    fn test_http_request_builder() {
+        let request = HttpRequest::new(Method::Post, "https://api.example.com")
+            .with_header("Content-Type", "application/json")
+            .with_header("Authorization", "Bearer token")
+            .with_body(b"{\"key\":\"value\"}".to_vec());
+
+        assert_eq!(request.method, Method::Post);
+        assert_eq!(request.url, "https://api.example.com");
+        assert_eq!(request.headers.len(), 2);
+        assert_eq!(
+            request.headers[0],
+            ("Content-Type".into(), "application/json".into())
+        );
+        assert_eq!(
+            request.headers[1],
+            ("Authorization".into(), "Bearer token".into())
+        );
+        assert_eq!(request.body, Some(b"{\"key\":\"value\"}".to_vec()));
+    }
 }
