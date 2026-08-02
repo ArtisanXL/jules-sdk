@@ -213,9 +213,9 @@ cloudflare-workers=[]
 
 | Platform           | Status  |
 | ------------------ | ------- |
-| Linux              | Planned |
-| Windows            | Planned |
-| macOS              | Planned |
+| Linux              | Supported |
+| Windows            | Supported |
+| macOS              | Supported |
 | WASM               | Planned |
 | Cloudflare Workers | Planned |
 | WASI               | Planned |

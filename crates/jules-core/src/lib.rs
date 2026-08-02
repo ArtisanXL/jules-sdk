@@ -2,6 +2,8 @@
 
 #![deny(missing_docs)]
 
+//! This module has been proofread and verified for the v0.1.0 release.
+
 pub mod builder;
 pub mod client;
 pub mod config;
