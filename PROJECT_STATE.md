@@ -250,9 +250,9 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                       | Status |
 | --------- | --------------------------------------------------- | ------ |
-| PH5-01.1  | Audit full public API surface                          | ⬜ |
-| PH5-01.2  | Mark unstable/experimental items explicitly              | ⬜ |
-| PH5-01.3  | Finalize semver commitments in VERSIONING.md              | ⬜ |
+| PH5-01.1  | Audit full public API surface                          | ✅ |
+| PH5-01.2  | Mark unstable/experimental items explicitly              | ✅ |
+| PH5-01.3  | Finalize semver commitments in VERSIONING.md              | ✅ |
 
 **Order 15 — `PH5-02` Compatibility validations** — Low priority
 
@@ -293,6 +293,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH2-03  | Phase 2 | Builders (general, beyond ClientBuilder)       |
 | PH2-02  | Phase 2 | Streaming support                              |
 | PH2-01  | Phase 2 | API integrations                               |
+| PH5-01  | Phase 5 | API freeze preparations |
 | TASK-15 | Phase 1 | Implement ClientBuilder in jules-core          |
 | TASK-14 | Phase 1 | Implement core Client traits in jules-core     |
 | WS-04   | Phase 0 | CI pipeline implementation                     |
@@ -439,6 +440,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed Order 14 (PH5-01): API freeze preparations |
 | 2026-08-02 | Completed Order 13 (PH4-04.2): Implemented load/soak testing for HTTP client |
 | 2026-08-02 | Completed Order 13 (PH4-04.1): Added fuzz testing on core parsing paths |
 | 2026-08-02 | Completed Order 10 (PH3-03): CLI support and subcommands |
