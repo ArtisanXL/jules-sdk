@@ -43,5 +43,6 @@ wasm = []
 experimental = []
 
 [dev-dependencies]
+proptest = "1.11.0"
 tokio = { version = "1.53.1", features = ["rt", "macros"] }
 wasm-bindgen-test = "0.3.45"
