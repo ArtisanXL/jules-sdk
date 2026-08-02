@@ -42,3 +42,13 @@ mod tests {
         use crate::tool;
     }
 }
+
+/// Experimental features and APIs.
+///
+/// Items in this module are NOT considered stable and MAY change without notice.
+/// This module is only available when the `experimental` feature is enabled.
+#[cfg(feature = "experimental")]
+#[cfg_attr(docsrs, doc(cfg(feature = "experimental")))]
+pub mod experimental {
+    // Experimental items will be added here
+}
