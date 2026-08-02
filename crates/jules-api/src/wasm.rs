@@ -31,9 +31,9 @@ pub mod client {
         /// Returns a `JsValue` error if the fetch operation fails.
         #[allow(deprecated)]
         pub async fn get(&self, url: &str) -> Result<Response, JsValue> {
-            let mut opts = RequestInit::new();
-            opts.method("GET");
-            opts.mode(RequestMode::Cors);
+            let opts = RequestInit::new();
+            opts.set_method("GET");
+            opts.set_mode(RequestMode::Cors);
 
             let request = Request::new_with_str_and_init(url, &opts)?;
 
