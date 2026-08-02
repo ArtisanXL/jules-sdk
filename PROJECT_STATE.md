@@ -301,7 +301,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | TASK-09 | Phase 3 | Add initial examples                            |
 | TASK-13 | Phase 2 | Implement Message and Conversation models in jules-core |
 | PH4-02  | Phase 4 | Platform integrations                          |
-| TASK-10 | Phase 4 | WASM integrations        |
+| TASK-10 | Phase 4 | WASM integrations        | ✅ |
 | TASK-11 | —       | Additional tooling support                       |
 | TASK-12 | Phase 4 | Performance optimizations *(⚠️ needs verification)* |
 

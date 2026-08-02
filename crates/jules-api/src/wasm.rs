@@ -60,4 +60,20 @@ mod tests {
             assert!(dummy, "module should be available");
         }
     }
+
+    #[cfg(target_arch = "wasm32")]
+    mod wasm_tests {
+        use crate::wasm::client::FetchClient;
+        use wasm_bindgen_test::*;
+
+        #[wasm_bindgen_test]
+        fn test_fetch_client_new() {
+            let client = FetchClient::new();
+            // Depending on the test runner context (headless browser vs node), window might be available.
+            // When using --node, window is NOT available, so it should be None.
+            // When using --headless --firefox, window IS available, so it should be Some.
+            // We verify that calling new() doesn't panic.
+            let _ = client;
+        }
+    }
 }
