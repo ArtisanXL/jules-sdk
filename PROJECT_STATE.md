@@ -2,7 +2,7 @@
 
 > This document describes the current development status, priorities and milestones of Jules-SDK. Contributors and AI coding agents SHOULD review this document before making significant changes to the repository.
 >
-**Last Updated:** 2026-08-01
+**Last Updated:** 2026-08-02
 
 ---
 
@@ -26,11 +26,11 @@
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 11 parent tasks / 38 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 11 parent tasks / 37 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
-| Last Updated         | 2026-08-01                          |
+| Last Updated         | 2026-08-02                          |
 
 ---
 
@@ -215,7 +215,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                    | Status |
 | --------- | ------------------------------------------------ | ------ |
-| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ⬜ |
+| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ✅ |
 | PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ⬜ |
 | PH3-03.3  | Implement config file loading/overrides                | ⬜ |
 | PH3-03.4  | Implement output formatting (plain/JSON)               | ⬜ |
@@ -443,6 +443,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed PH3-03.1: Set up `jules-cli` argument parsing with clap |
 | 2026-08-01 | Completed Order 9 (PH3-02): Implemented middleware pipeline, logging, and retry support |
 | 2026-08-01 | Completed Order 8 (PH3-01): Implemented tool calling support including Tool trait, registry, message serialization, and integration tests |
 | 2026-08-01 | Completed PH2-03.4: Write integration test and ensure builders integrate cleanly |

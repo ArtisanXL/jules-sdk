@@ -13,4 +13,5 @@ description = "Command line interface for Jules-SDK"
 workspace = true
 
 [dependencies]
+clap = { version = "4.6.5", features = ["derive"] }
 jules-sdk = { workspace = true }
