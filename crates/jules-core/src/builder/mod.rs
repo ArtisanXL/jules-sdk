@@ -146,6 +146,23 @@ mod tests {
         assert_eq!(client.auth_token, "secret");
         assert_eq!(client.timeout, Duration::from_secs(10));
     }
+
+    #[tokio::test]
+    async fn test_built_client_send_request() {
+        let builder = ClientBuilder::new()
+            .base_url("https://api.example.com")
+            .auth_token("secret");
+        let client = builder.build().unwrap();
+        let request = ClientRequest::default();
+        let result = client.send_request(request).await;
+
+        assert!(result.is_err());
+        if let Err(SDKError::Validation(e)) = result {
+            assert_eq!(e.message, "Not implemented");
+        } else {
+            panic!("Expected validation error with message 'Not implemented'");
+        }
+    }
 }
 /// Request builder module.
 pub mod request;
