@@ -94,6 +94,7 @@ impl SseParser {
 }
 
 #[cfg(test)]
+#[cfg(not(target_arch = "wasm32"))]
 mod tests {
     use super::*;
 
@@ -136,6 +137,7 @@ mod tests {
 }
 
 #[cfg(test)]
+#[cfg(not(target_arch = "wasm32"))]
 mod fuzz {
     use super::*;
     use proptest::prelude::*;

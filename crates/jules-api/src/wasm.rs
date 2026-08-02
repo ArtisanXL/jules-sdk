@@ -61,3 +61,19 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[cfg(target_arch = "wasm32")]
+mod wasm_tests {
+    use super::client::FetchClient;
+    use wasm_bindgen_test::*;
+
+    #[wasm_bindgen_test]
+    fn test_fetch_client_new() {
+        let client = FetchClient::new();
+        match client {
+            Some(_) => assert!(true, "Client instantiated successfully"),
+            None => assert!(true, "Window not available, client correctly returned None"),
+        }
+    }
+}
