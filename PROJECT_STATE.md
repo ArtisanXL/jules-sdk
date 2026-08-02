@@ -2,7 +2,7 @@
 
 > This document describes the current development status, priorities and milestones of Jules-SDK. Contributors and AI coding agents SHOULD review this document before making significant changes to the repository.
 >
-**Last Updated:** 2026-08-01
+**Last Updated:** 2026-08-02
 
 ---
 
@@ -30,7 +30,7 @@
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
-| Last Updated         | 2026-08-01                          |
+| Last Updated         | 2026-08-02                          |
 
 ---
 
@@ -443,6 +443,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed Order 10 (PH3-03): CLI support and subcommands |
 | 2026-08-01 | Completed Order 9 (PH3-02): Implemented middleware pipeline, logging, and retry support |
 | 2026-08-01 | Completed Order 8 (PH3-01): Implemented tool calling support including Tool trait, registry, message serialization, and integration tests |
 | 2026-08-01 | Completed PH2-03.4: Write integration test and ensure builders integrate cleanly |
