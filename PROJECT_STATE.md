@@ -441,6 +441,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-02 | Completed TASK-10: Added WASM client tests (FetchClient instantiation) |
 | 2026-08-02 | Completed Order 17 (PH5-04): Release candidate preparations |
 | 2026-08-02 | Completed Order 16 (PH5-03): Documentation finalization (README, ARCHITECTURE, CHANGELOG, crate-level docs) |
 | 2026-08-02 | Completed Order 15 (PH5-02.3): Validated backward compatibility against v0.1.0 API |
