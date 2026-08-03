@@ -3,7 +3,7 @@
 use crate::http::HttpRequest;
 
 /// The type of authentication to use.
-#[derive(Debug, Clone, PartialEq, Eq, Default)]
+#[derive(Clone, PartialEq, Eq, Default)]
 pub enum AuthType {
     /// Bearer token authentication (e.g. `OAuth2` or JWT).
     Bearer(String),
@@ -24,6 +24,25 @@ pub enum AuthType {
     /// No authentication.
     #[default]
     None,
+}
+
+impl std::fmt::Debug for AuthType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Bearer(_) => f.debug_tuple("Bearer").field(&"***REDACTED***").finish(),
+            Self::ApiKey { header, key: _ } => f
+                .debug_struct("ApiKey")
+                .field("header", header)
+                .field("key", &"***REDACTED***")
+                .finish(),
+            Self::Custom { header, value: _ } => f
+                .debug_struct("Custom")
+                .field("header", header)
+                .field("value", &"***REDACTED***")
+                .finish(),
+            Self::None => write!(f, "None"),
+        }
+    }
 }
 
 impl AuthType {

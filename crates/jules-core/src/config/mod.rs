@@ -16,10 +16,19 @@ impl fmt::Display for ConfigBuildError {
 impl Error for ConfigBuildError {}
 
 /// The configuration used to build a client.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct Config {
     api_key: String,
     timeout: Option<u64>,
+}
+
+impl fmt::Debug for Config {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Config")
+            .field("api_key", &"***REDACTED***")
+            .field("timeout", &self.timeout)
+            .finish()
+    }
 }
 
 impl Config {
@@ -43,10 +52,19 @@ impl Config {
 }
 
 /// A builder for constructing a [`Config`].
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct ConfigBuilder {
     api_key: Option<String>,
     timeout: Option<u64>,
+}
+
+impl fmt::Debug for ConfigBuilder {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ConfigBuilder")
+            .field("api_key", &self.api_key.as_ref().map(|_| "***REDACTED***"))
+            .field("timeout", &self.timeout)
+            .finish()
+    }
 }
 
 impl ConfigBuilder {
