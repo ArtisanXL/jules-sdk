@@ -38,9 +38,9 @@ mod tests {
         assert!(conv.messages().is_empty());
 
         let msg = Message::new(Role::User, "Hello");
-        conv.add_message(msg.clone());
+        conv.add_message(msg);
 
         assert_eq!(conv.messages().len(), 1);
-        assert_eq!(conv.messages()[0], msg);
+        assert_eq!(conv.messages()[0], Message::new(Role::User, "Hello"));
     }
 }
