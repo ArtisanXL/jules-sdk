@@ -46,7 +46,7 @@ impl ChunkBuffer {
         }
 
         let drained = self.buffer[..split_idx].to_string();
-        self.buffer = self.buffer[split_idx..].to_string();
+        self.buffer.drain(..split_idx);
         drained
     }
 
