@@ -98,7 +98,7 @@ mod tests {
     use super::*;
 
     struct MockTransport {
-        response: HttpResponse,
+        response: std::sync::Mutex<Option<HttpResponse>>,
     }
 
     impl Transport for MockTransport {
@@ -106,7 +106,7 @@ mod tests {
             &self,
             _request: HttpRequest,
         ) -> impl Future<Output = Result<HttpResponse, SDKError>> + Send {
-            let response = self.response.clone();
+            let response = self.response.lock().unwrap().take().unwrap();
             async move { Ok(response) }
         }
     }
@@ -114,11 +114,11 @@ mod tests {
     #[tokio::test]
     async fn test_mock_transport() {
         let transport = MockTransport {
-            response: HttpResponse::new(
+            response: std::sync::Mutex::new(Some(HttpResponse::new(
                 200,
                 vec![("Content-Type".into(), "application/json".into())],
                 b"{}".to_vec(),
-            ),
+            ))),
         };
         let request = HttpRequest::new(Method::Get, "https://api.example.com");
         let response = transport.send(request).await.unwrap();
