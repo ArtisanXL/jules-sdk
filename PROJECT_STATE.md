@@ -2,7 +2,7 @@
 
 > This document describes the current development status, priorities and milestones of Jules-SDK. Contributors and AI coding agents SHOULD review this document before making significant changes to the repository.
 >
-Last Updated: 2026-08-02
+Last Updated: 2026-08-03
 
 ---
 
@@ -26,7 +26,7 @@ Last Updated: 2026-08-02
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 11 parent tasks / 31 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 11 parent tasks / 30 subtasks remaining (see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -194,7 +194,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 | ID        | Subtask                                                              | Status |
 | --------- | ---------------------------------------------------------------------- | ------ |
-| PH2-04.1  | Define API resource models (Sessions, Activities, Sources) in jules-core | ⬜ |
+| PH2-04.1  | Define API resource models (Sessions, Activities, Sources) in jules-core | ✅ |
 | PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | ⬜ |
 | PH2-04.3  | Implement `v1alpha/sessions.activities` and `v1alpha/sources` endpoints  | ⬜ |
 | PH2-04.4  | Configure Base URL (`https://jules.googleapis.com`) and Google Auth handling | ⬜ |
@@ -441,6 +441,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-03 | Completed PH2-04.1: Defined API resource models (Sessions, Activities, Sources) in jules-core |
 | 2026-08-02 | Completed TASK-10: Added WASM client tests (FetchClient instantiation) |
 | 2026-08-02 | Completed Order 17 (PH5-04): Release candidate preparations |
 | 2026-08-02 | Completed Order 16 (PH5-03): Documentation finalization (README, ARCHITECTURE, CHANGELOG, crate-level docs) |

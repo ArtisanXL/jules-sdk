@@ -4,6 +4,7 @@
 
 //! This module has been proofread and verified for the v0.1.0 release.
 
+pub mod activity;
 pub mod builder;
 pub mod client;
 pub mod config;
@@ -13,6 +14,7 @@ pub mod message;
 pub mod pagination;
 pub mod response;
 pub mod session;
+pub mod source;
 /// Streaming APIs, stream event handling, async stream abstractions, incremental responses.
 #[cfg(feature = "streaming")]
 pub mod streaming;
