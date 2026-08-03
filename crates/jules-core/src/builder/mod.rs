@@ -8,11 +8,24 @@ use std::future::Future;
 use std::time::Duration;
 
 /// A builder for creating a client.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct ClientBuilder {
     base_url: Option<String>,
     timeout: Duration,
     auth_token: Option<String>,
+}
+
+impl std::fmt::Debug for ClientBuilder {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ClientBuilder")
+            .field("base_url", &self.base_url)
+            .field("timeout", &self.timeout)
+            .field(
+                "auth_token",
+                &self.auth_token.as_ref().map(|_| "***REDACTED***"),
+            )
+            .finish()
+    }
 }
 
 impl Default for ClientBuilder {
@@ -75,11 +88,21 @@ impl ClientBuilder {
 }
 
 /// A concrete client built by `ClientBuilder`.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct BuiltClient {
     base_url: String,
     timeout: Duration,
     auth_token: String,
+}
+
+impl std::fmt::Debug for BuiltClient {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("BuiltClient")
+            .field("base_url", &self.base_url)
+            .field("timeout", &self.timeout)
+            .field("auth_token", &"***REDACTED***")
+            .finish()
+    }
 }
 
 impl BuiltClient {

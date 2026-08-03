@@ -1,0 +1,4 @@
+## 2024-05-18 - Prevent Credential Leakage in Debug Logs
+**Vulnerability:** Core configuration and authentication types (`Config`, `BuiltClient`, `ClientBuilder`, `AuthType`) used the standard `#[derive(Debug)]` macro. This meant any sensitive credentials (API keys, bearer tokens) stored in these types would be printed in plaintext if the structures were logged or dumped during a panic.
+**Learning:** Default Debug derivations are dangerous for structures holding sensitive data. When `tracing` or `log` is used to dump request/response contexts, or during crash reports, these keys can easily leak into persistent storage (e.g., CloudWatch, Splunk) or console outputs.
+**Prevention:** Always manually implement `std::fmt::Debug` for types containing sensitive fields, explicitly redacting the values (e.g., using `"***REDACTED***"`).
