@@ -40,17 +40,29 @@ impl Endpoint {
     /// Builds the full URL string for the endpoint.
     #[must_use]
     pub fn build_url(&self) -> String {
-        let mut url = format!("{}{}", self.base_url, self.path);
+        let capacity = self.base_url.len()
+            + self.path.len()
+            + usize::from(!self.query_params.is_empty())
+            + self
+                .query_params
+                .iter()
+                .map(|(k, v)| k.len() + v.len() + 2)
+                .sum::<usize>();
+
+        let mut url = String::with_capacity(capacity);
+        url.push_str(&self.base_url);
+        url.push_str(&self.path);
 
         if !self.query_params.is_empty() {
             url.push('?');
-            let query_string = self
-                .query_params
-                .iter()
-                .map(|(k, v)| format!("{k}={v}")) // Note: Needs URL encoding in production
-                .collect::<Vec<String>>()
-                .join("&");
-            url.push_str(&query_string);
+            for (i, (k, v)) in self.query_params.iter().enumerate() {
+                if i > 0 {
+                    url.push('&');
+                }
+                url.push_str(k);
+                url.push('=');
+                url.push_str(v);
+            }
         }
 
         url
