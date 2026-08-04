@@ -2,3 +2,6 @@
 ## $(date +%Y-%m-%d) - Prevent capacity reset during String reassignment in buffer drain
 **Learning:** Assigning a substring back to a `String` variable (`buffer = buffer[idx..].to_string()`) creates a new String, completely dropping the carefully pre-allocated capacity. In hot paths like a streaming chunk buffer, this leads to continuous reallocation on every single read.
 **Action:** Use `String::drain(..idx)` instead of reassignment to remove a prefix while preserving the buffer's existing capacity, significantly reducing allocations in hot loops.
+## 2024-06-25 - Optimize SSE Parsing String Allocations
+**Learning:** Found O(N^2) memory reallocation in streaming parser. `self.buffer = self.buffer[pos+2..].to_string()` in a loop causes quadratic behavior when receiving large batches of SSE events.
+**Action:** Use `.find()` with string slices `&self.buffer[last_pos..abs_pos]` and single `.drain(..last_pos)` at the end to turn O(N^2) into O(N).
