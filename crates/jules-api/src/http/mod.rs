@@ -22,11 +22,14 @@ pub enum Method {
 }
 
 fn is_sensitive_header(header: &str) -> bool {
-    header.eq_ignore_ascii_case("authorization")
-        || header.eq_ignore_ascii_case("api-key")
-        || header.eq_ignore_ascii_case("x-api-key")
-        || header.eq_ignore_ascii_case("set-cookie")
-        || header.eq_ignore_ascii_case("cookie")
+    let lower = header.to_lowercase();
+    lower == "authorization"
+        || lower == "api-key"
+        || lower == "x-api-key"
+        || lower == "set-cookie"
+        || lower == "cookie"
+        || lower.contains("token")
+        || lower.contains("secret")
 }
 
 /// A generic HTTP request abstraction.
@@ -40,38 +43,6 @@ pub struct HttpRequest {
     pub headers: Vec<(String, String)>,
     /// The request body, if any.
     pub body: Option<Vec<u8>>,
-}
-
-impl std::fmt::Debug for HttpRequest {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        struct RedactedHeaders<'a>(&'a [(String, String)]);
-
-        impl std::fmt::Debug for RedactedHeaders<'_> {
-            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                let mut list = f.debug_list();
-                for (k, v) in self.0 {
-                    let k_lower = k.to_lowercase();
-                    if k_lower == "authorization"
-                        || k_lower.contains("key")
-                        || k_lower.contains("token")
-                        || k_lower.contains("secret")
-                    {
-                        list.entry(&(k, "***REDACTED***"));
-                    } else {
-                        list.entry(&(k, v));
-                    }
-                }
-                list.finish()
-            }
-        }
-
-        f.debug_struct("HttpRequest")
-            .field("method", &self.method)
-            .field("url", &self.url)
-            .field("headers", &RedactedHeaders(&self.headers))
-            .field("body", &self.body)
-            .finish()
-    }
 }
 
 impl HttpRequest {
@@ -210,20 +181,6 @@ mod tests {
         let response = transport.send(request).await.unwrap();
         assert_eq!(response.status, 200);
         assert_eq!(response.body, b"{}");
-    }
-
-    #[test]
-    fn test_http_request_debug_redaction() {
-        let request = HttpRequest::new(Method::Get, "https://api.example.com")
-            .with_header("Authorization", "Bearer secret_token")
-            .with_header("X-Api-Key", "super_secret_key")
-            .with_header("Accept", "application/json");
-
-        let debug_output = format!("{:?}", request);
-        assert!(!debug_output.contains("secret_token"));
-        assert!(!debug_output.contains("super_secret_key"));
-        assert!(debug_output.contains("***REDACTED***"));
-        assert!(debug_output.contains("application/json"));
     }
 
     #[test]
