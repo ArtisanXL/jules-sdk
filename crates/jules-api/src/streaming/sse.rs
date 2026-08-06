@@ -32,13 +32,20 @@ impl SseParser {
         self.buffer.push_str(chunk);
         let mut events = Vec::new();
 
-        while let Some(pos) = self.buffer.find("\n\n") {
-            let block = self.buffer[..pos].to_string();
-            self.buffer = self.buffer[pos + 2..].to_string();
+        let mut last_pos = 0;
+        while let Some(pos) = self.buffer[last_pos..].find("\n\n") {
+            let abs_pos = last_pos + pos;
+            let block = &self.buffer[last_pos..abs_pos];
 
-            if let Some(event) = Self::parse_block(&block) {
+            if let Some(event) = Self::parse_block(block) {
                 events.push(event);
             }
+
+            last_pos = abs_pos + 2;
+        }
+
+        if last_pos > 0 {
+            self.buffer.drain(..last_pos);
         }
 
         events
