@@ -21,6 +21,14 @@ pub enum Method {
     Patch,
 }
 
+fn is_sensitive_header(header: &str) -> bool {
+    header.eq_ignore_ascii_case("authorization")
+        || header.eq_ignore_ascii_case("api-key")
+        || header.eq_ignore_ascii_case("x-api-key")
+        || header.eq_ignore_ascii_case("set-cookie")
+        || header.eq_ignore_ascii_case("cookie")
+}
+
 /// A generic HTTP request abstraction.
 #[derive(Clone, Default)]
 pub struct HttpRequest {
@@ -93,8 +101,44 @@ impl HttpRequest {
     }
 }
 
+struct RedactedHeaders<'a>(&'a [(String, String)]);
+
+impl std::fmt::Debug for RedactedHeaders<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        struct RedactedHeader<'a>(&'a str, &'a str);
+
+        impl std::fmt::Debug for RedactedHeader<'_> {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                if is_sensitive_header(self.0) {
+                    f.debug_tuple("")
+                        .field(&self.0)
+                        .field(&"***REDACTED***")
+                        .finish()
+                } else {
+                    f.debug_tuple("").field(&self.0).field(&self.1).finish()
+                }
+            }
+        }
+
+        f.debug_list()
+            .entries(self.0.iter().map(|(k, v)| RedactedHeader(k, v)))
+            .finish()
+    }
+}
+
+impl std::fmt::Debug for HttpRequest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HttpRequest")
+            .field("method", &self.method)
+            .field("url", &self.url)
+            .field("headers", &RedactedHeaders(&self.headers))
+            .field("body", &self.body)
+            .finish()
+    }
+}
+
 /// A generic HTTP response abstraction.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct HttpResponse {
     /// The HTTP status code.
     pub status: u16,
@@ -113,6 +157,16 @@ impl HttpResponse {
             headers,
             body,
         }
+    }
+}
+
+impl std::fmt::Debug for HttpResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HttpResponse")
+            .field("status", &self.status)
+            .field("headers", &RedactedHeaders(&self.headers))
+            .field("body", &self.body)
+            .finish()
     }
 }
 
@@ -156,6 +210,37 @@ mod tests {
         let response = transport.send(request).await.unwrap();
         assert_eq!(response.status, 200);
         assert_eq!(response.body, b"{}");
+    }
+
+    #[test]
+    fn test_http_request_debug_redaction() {
+        let request = HttpRequest::new(Method::Get, "https://api.example.com")
+            .with_header("Authorization", "Bearer secret_token")
+            .with_header("X-Api-Key", "super_secret_key")
+            .with_header("Accept", "application/json");
+
+        let debug_output = format!("{:?}", request);
+        assert!(!debug_output.contains("secret_token"));
+        assert!(!debug_output.contains("super_secret_key"));
+        assert!(debug_output.contains("***REDACTED***"));
+        assert!(debug_output.contains("application/json"));
+    }
+
+    #[test]
+    fn test_http_response_debug_redaction() {
+        let response = HttpResponse::new(
+            200,
+            vec![
+                ("Set-Cookie".to_string(), "session=secret_value".to_string()),
+                ("Content-Type".to_string(), "text/plain".to_string()),
+            ],
+            b"ok".to_vec(),
+        );
+
+        let debug_output = format!("{:?}", response);
+        assert!(!debug_output.contains("secret_value"));
+        assert!(debug_output.contains("***REDACTED***"));
+        assert!(debug_output.contains("text/plain"));
     }
 
     #[test]
