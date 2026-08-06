@@ -34,7 +34,7 @@ impl SseParser {
 
         while let Some(pos) = self.buffer.find("\n\n") {
             let block = self.buffer[..pos].to_string();
-            self.buffer = self.buffer[pos + 2..].to_string();
+            self.buffer.drain(..pos + 2);
 
             if let Some(event) = Self::parse_block(&block) {
                 events.push(event);
