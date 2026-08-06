@@ -22,7 +22,7 @@ pub enum Method {
 }
 
 /// A generic HTTP request abstraction.
-#[derive(Debug, Clone, Default)]
+#[derive(Clone, Default)]
 pub struct HttpRequest {
     /// The HTTP method.
     pub method: Method,
@@ -62,7 +62,7 @@ impl HttpRequest {
 }
 
 /// A generic HTTP response abstraction.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct HttpResponse {
     /// The HTTP status code.
     pub status: u16,
@@ -145,5 +145,43 @@ mod tests {
             ("Authorization".into(), "Bearer token".into())
         );
         assert_eq!(request.body, Some(b"{\"key\":\"value\"}".to_vec()));
+    }
+}
+
+struct RedactedHeaders<'a>(&'a [(String, String)]);
+
+impl std::fmt::Debug for RedactedHeaders<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_list()
+            .entries(self.0.iter().map(|(k, v)| {
+                let k_lower = k.to_lowercase();
+                if k_lower == "authorization" || k_lower == "x-api-key" || k_lower == "set-cookie" {
+                    (k, "***REDACTED***")
+                } else {
+                    (k, v.as_str())
+                }
+            }))
+            .finish()
+    }
+}
+
+impl std::fmt::Debug for HttpRequest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HttpRequest")
+            .field("method", &self.method)
+            .field("url", &self.url)
+            .field("headers", &RedactedHeaders(&self.headers))
+            .field("body", &self.body)
+            .finish()
+    }
+}
+
+impl std::fmt::Debug for HttpResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("HttpResponse")
+            .field("status", &self.status)
+            .field("headers", &RedactedHeaders(&self.headers))
+            .field("body", &self.body)
+            .finish()
     }
 }
