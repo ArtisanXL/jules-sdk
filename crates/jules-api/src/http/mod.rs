@@ -22,7 +22,7 @@ pub enum Method {
 }
 
 /// A generic HTTP request abstraction.
-#[derive(Debug, Clone, Default)]
+#[derive(Clone, Default)]
 pub struct HttpRequest {
     /// The HTTP method.
     pub method: Method,
@@ -32,6 +32,38 @@ pub struct HttpRequest {
     pub headers: Vec<(String, String)>,
     /// The request body, if any.
     pub body: Option<Vec<u8>>,
+}
+
+impl std::fmt::Debug for HttpRequest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        struct RedactedHeaders<'a>(&'a [(String, String)]);
+
+        impl std::fmt::Debug for RedactedHeaders<'_> {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                let mut list = f.debug_list();
+                for (k, v) in self.0 {
+                    let k_lower = k.to_lowercase();
+                    if k_lower == "authorization"
+                        || k_lower.contains("key")
+                        || k_lower.contains("token")
+                        || k_lower.contains("secret")
+                    {
+                        list.entry(&(k, "***REDACTED***"));
+                    } else {
+                        list.entry(&(k, v));
+                    }
+                }
+                list.finish()
+            }
+        }
+
+        f.debug_struct("HttpRequest")
+            .field("method", &self.method)
+            .field("url", &self.url)
+            .field("headers", &RedactedHeaders(&self.headers))
+            .field("body", &self.body)
+            .finish()
+    }
 }
 
 impl HttpRequest {
@@ -145,5 +177,29 @@ mod tests {
             ("Authorization".into(), "Bearer token".into())
         );
         assert_eq!(request.body, Some(b"{\"key\":\"value\"}".to_vec()));
+    }
+
+    #[test]
+    fn test_http_request_debug_redaction() {
+        let request = HttpRequest::new(Method::Get, "https://api.example.com")
+            .with_header("Content-Type", "application/json")
+            .with_header("Authorization", "Bearer secret-token")
+            .with_header("x-api-key", "secret-key")
+            .with_header("X-Custom-Token", "some-token");
+
+        let debug_str = format!("{:?}", request);
+
+        // Assert non-sensitive headers are visible
+        assert!(debug_str.contains("\"Content-Type\", \"application/json\""));
+
+        // Assert sensitive headers are redacted
+        assert!(!debug_str.contains("secret-token"));
+        assert!(debug_str.contains("\"Authorization\", \"***REDACTED***\""));
+
+        assert!(!debug_str.contains("secret-key"));
+        assert!(debug_str.contains("\"x-api-key\", \"***REDACTED***\""));
+
+        assert!(!debug_str.contains("some-token"));
+        assert!(debug_str.contains("\"X-Custom-Token\", \"***REDACTED***\""));
     }
 }
