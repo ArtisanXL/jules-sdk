@@ -6,3 +6,7 @@
 **Vulnerability:** `HttpRequest` and `HttpResponse` derived `Debug` by default, leaking raw headers like `Authorization` or `x-api-key` to logs or console outputs.
 **Learning:** Default Debug derivations are dangerous for structures holding network request context which often contains sensitive tokens or session cookies.
 **Prevention:** Always manually implement `std::fmt::Debug` for HTTP request/response types to explicitly redact sensitive headers like `Authorization`, `x-api-key`, and `Set-Cookie`.
+## 2024-05-24 - Prevent HTTP Header CRLF Injection
+**Vulnerability:** `HttpRequest::with_header` accepted arbitrary strings for header keys and values without sanitizing CRLF (`\r\n`) characters, leading to HTTP Header Injection (CRLF Injection).
+**Learning:** Always sanitize inputs that become part of HTTP headers. Unvalidated headers can allow attackers to inject custom headers or manipulate the HTTP request.
+**Prevention:** Added sanitization to explicitly strip `\r` and `\n` characters from keys and values in `HttpRequest::with_header`.
