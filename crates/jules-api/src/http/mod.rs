@@ -60,7 +60,12 @@ impl HttpRequest {
     /// Adds a header to the request.
     #[must_use]
     pub fn with_header(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
-        self.headers.push((key.into(), value.into()));
+        let key_str = key.into();
+        let value_str = value.into();
+        // Sanitize CRLF to prevent HTTP Header Injection
+        let sanitized_key = key_str.replace(['\r', '\n'], "");
+        let sanitized_value = value_str.replace(['\r', '\n'], "");
+        self.headers.push((sanitized_key, sanitized_value));
         self
     }
 
@@ -243,5 +248,15 @@ mod tests {
 
         assert!(!debug_str.contains("some-token"));
         assert!(debug_str.contains("\"X-Custom-Token\", \"***REDACTED***\""));
+    }
+
+    #[test]
+    fn test_http_request_crlf_injection() {
+        let request = HttpRequest::new(Method::Get, "https://api.example.com")
+            .with_header("Evil\r\nHeader", "value\r\nInjected-Header: secret");
+
+        assert_eq!(request.headers.len(), 1);
+        assert_eq!(request.headers[0].0, "EvilHeader");
+        assert_eq!(request.headers[0].1, "valueInjected-Header: secret");
     }
 }
