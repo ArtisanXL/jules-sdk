@@ -80,38 +80,18 @@ impl MiddlewarePipeline {
         final_handler: F,
     ) -> Result<ClientResponse, SDKError>
     where
-        F: Fn(ClientRequest) -> Fut + Send + Sync + 'static,
+        F: FnOnce(ClientRequest) -> Fut + Send + Sync + 'static,
         Fut: Future<Output = Result<ClientResponse, SDKError>> + Send + 'static,
     {
-        // Recursively build the chain of NextFn closures.
-        #[allow(clippy::elidable_lifetime_names)]
-        fn build_chain<'a, F, Fut>(
-            middlewares: &'a [Arc<dyn Middleware>],
-            index: usize,
-            final_handler: Arc<F>,
-        ) -> NextFn<'a>
-        where
-            F: Fn(ClientRequest) -> Fut + Send + Sync + 'static,
-            Fut: Future<Output = Result<ClientResponse, SDKError>> + Send + 'static,
-        {
-            if index < middlewares.len() {
-                Box::new(move |req| {
-                    let middleware = &middlewares[index];
-                    let handler = final_handler.clone();
-                    let next = build_chain(middlewares, index + 1, handler);
-                    middleware.execute(req, next)
-                })
-            } else {
-                Box::new(move |req| {
-                    let fut = (final_handler)(req);
-                    Box::pin(fut)
-                })
-            }
+        let mut next: NextFn<'_> = Box::new(move |req| Box::pin(final_handler(req)));
+        for middleware in self.middlewares.iter().rev() {
+            let next_fn = next;
+            // Capture a reference to the middleware instead of cloning the Arc.
+            // This is safe because `self` outlives the `NextFn` closures and `execute` call.
+            let m: &dyn Middleware = &**middleware;
+            next = Box::new(move |req| m.execute(req, next_fn));
         }
-
-        let final_handler_arc = Arc::new(final_handler);
-        let chain = build_chain(&self.middlewares, 0, final_handler_arc);
-        chain(request).await
+        next(request).await
     }
 }
 

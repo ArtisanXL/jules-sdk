@@ -5,3 +5,6 @@
 ## 2024-06-25 - Optimize SSE Parsing String Allocations
 **Learning:** Found O(N^2) memory reallocation in streaming parser. `self.buffer = self.buffer[pos+2..].to_string()` in a loop causes quadratic behavior when receiving large batches of SSE events.
 **Action:** Use `.find()` with string slices `&self.buffer[last_pos..abs_pos]` and single `.drain(..last_pos)` at the end to turn O(N^2) into O(N).
+## 2024-08-07 - Optimize Middleware Pipeline Iteration
+**Learning:** Building middleware execution chains recursively wraps the final handler in an `Arc` and incurs multiple heap allocation penalties due to recursive `Fn` closures.
+**Action:** Build the execution chain iteratively in reverse (`iter().rev()`), which allows using `FnOnce` bounds, avoids wrapping the final handler in an `Arc`, and eliminates recursive closure heap allocations.
