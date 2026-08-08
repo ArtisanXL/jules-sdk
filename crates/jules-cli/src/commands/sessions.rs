@@ -112,6 +112,44 @@ mod tests {
         assert!(request.path.contains("pageSize=10"));
     }
 
+    /// `page_size` is already asserted by `list_renders_sessions`; `page_token` was never
+    /// separately asserted, so a bug that dropped or mis-serialized it would not be caught.
+    #[tokio::test]
+    async fn list_forwards_page_token() {
+        let server = MockServer::respond_once(200, r#"{"sessions": []}"#).await;
+        let client = client_for(&server);
+        let args = SessionsArgs {
+            command: SessionsCommand::List {
+                page_size: None,
+                page_token: Some("tok-1".to_string()),
+            },
+        };
+
+        handle(&client, &args, OutputFormat::Plain).await.unwrap();
+
+        let request = server.received().await;
+        assert!(request.path.contains("pageToken=tok-1"));
+    }
+
+    /// Proves a non-2xx API response is mapped into `CliError::Sdk` via `?` propagation,
+    /// rather than being silently swallowed or panicking.
+    #[tokio::test]
+    async fn get_error_response_maps_to_sdk_error() {
+        let server =
+            MockServer::respond_once(404, r#"{"error": {"message": "session not found"}}"#).await;
+        let client = client_for(&server);
+        let args = SessionsArgs {
+            command: SessionsCommand::Get {
+                id: "missing".to_string(),
+            },
+        };
+
+        let err = handle(&client, &args, OutputFormat::Plain)
+            .await
+            .unwrap_err();
+        assert!(matches!(err, CliError::Sdk(_)));
+    }
+
     #[tokio::test]
     async fn get_qualifies_bare_id() {
         let server = MockServer::respond_once(
