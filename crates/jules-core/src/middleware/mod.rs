@@ -160,6 +160,108 @@ mod tests {
         assert_eq!(calls.load(Ordering::SeqCst), 1);
         assert_eq!(res.message.content(), "Original (modified)");
     }
+
+    struct RecordingMiddleware {
+        name: &'static str,
+        order: Arc<std::sync::Mutex<Vec<String>>>,
+    }
+
+    impl Middleware for RecordingMiddleware {
+        fn execute<'a>(
+            &'a self,
+            request: ClientRequest,
+            next: NextFn<'a>,
+        ) -> BoxFuture<'a, Result<ClientResponse, SDKError>> {
+            self.order
+                .lock()
+                .unwrap()
+                .push(format!("{}-enter", self.name));
+            Box::pin(async move {
+                let res = next(request).await;
+                self.order
+                    .lock()
+                    .unwrap()
+                    .push(format!("{}-exit", self.name));
+                res
+            })
+        }
+    }
+
+    /// Proves middlewares compose in the documented order: the first middleware added wraps
+    /// the second (outer-to-inner going in, inner-to-outer coming out).
+    #[tokio::test]
+    async fn test_middleware_pipeline_multiple_middlewares_order() {
+        let order = Arc::new(std::sync::Mutex::new(Vec::new()));
+        let mut pipeline = MiddlewarePipeline::new();
+        pipeline.add(RecordingMiddleware {
+            name: "A",
+            order: Arc::clone(&order),
+        });
+        pipeline.add(RecordingMiddleware {
+            name: "B",
+            order: Arc::clone(&order),
+        });
+
+        let request = ClientRequest::new(Conversation::new());
+        let handler = |_req: ClientRequest| async move {
+            Ok(ClientResponse::new(Message::new(
+                Role::Assistant,
+                "Success",
+            )))
+        };
+
+        pipeline.execute(request, handler).await.unwrap();
+
+        assert_eq!(
+            *order.lock().unwrap(),
+            vec!["A-enter", "B-enter", "B-exit", "A-exit"]
+        );
+    }
+
+    /// Proves a middleware that calls `next` multiple times (like `RetryMiddleware`) still
+    /// works correctly when composed with another middleware ahead of it in the chain.
+    #[tokio::test]
+    async fn test_middleware_pipeline_retry_with_logging_middleware() {
+        use crate::middleware::logging::LoggingMiddleware;
+        use crate::middleware::retry::{RetryConfig, RetryMiddleware};
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        use std::time::Duration;
+
+        let mut pipeline = MiddlewarePipeline::new();
+        pipeline.add(LoggingMiddleware::new());
+        pipeline.add(RetryMiddleware::with_config(RetryConfig {
+            max_attempts: 3,
+            delay: Duration::from_millis(1),
+            backoff_multiplier: 1.0,
+        }));
+
+        let request = ClientRequest::new(Conversation::new());
+        let calls = Arc::new(AtomicUsize::new(0));
+        let calls_clone = Arc::clone(&calls);
+
+        let handler = move |_req: ClientRequest| {
+            let calls = Arc::clone(&calls_clone);
+            async move {
+                let attempt = calls.fetch_add(1, Ordering::SeqCst) + 1;
+                if attempt < 3 {
+                    Err(SDKError::Api(crate::errors::ApiError::with_status(
+                        "server error",
+                        500,
+                    )))
+                } else {
+                    Ok(ClientResponse::new(Message::new(
+                        Role::Assistant,
+                        "Success",
+                    )))
+                }
+            }
+        };
+
+        let res = pipeline.execute(request, handler).await.unwrap();
+
+        assert_eq!(res.message.content(), "Success");
+        assert_eq!(calls.load(Ordering::SeqCst), 3);
+    }
 }
 pub mod logging;
 pub mod retry;
