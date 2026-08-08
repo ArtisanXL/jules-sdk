@@ -9,9 +9,18 @@ pub use jules_api;
 pub use jules_core;
 
 pub use jules_core::config::{Config, ConfigBuilder};
+pub use jules_core::conversation::Conversation;
 pub use jules_core::session::{Session, SessionBuilder};
+pub use jules_core::traits::Client;
 
 pub use jules_macros::Placeholder;
+
+/// Tool calling abstractions and APIs.
+///
+/// This is only available when the `tools` feature is enabled.
+#[cfg(feature = "tools")]
+#[cfg_attr(docsrs, doc(cfg(feature = "tools")))]
+pub use jules_core::tool::Tool;
 
 /// Experimental features and APIs.
 ///
