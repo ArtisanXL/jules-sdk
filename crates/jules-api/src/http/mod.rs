@@ -150,12 +150,29 @@ impl std::fmt::Debug for HttpResponse {
 }
 
 /// The transport layer abstraction for executing HTTP requests.
+///
+/// On native targets the returned future must be [`Send`] (and the implementor `Send + Sync`)
+/// so transports can be used from multi-threaded async runtimes. On `wasm32`, browser types
+/// reached through the Fetch API (e.g. `JsValue`, `web_sys::Response`, the `JsFuture` returned
+/// by `wasm_bindgen_futures`) are not `Send`/`Sync` — wasm is single-threaded, so the bound is
+/// dropped there rather than required.
+#[cfg(not(target_arch = "wasm32"))]
 pub trait Transport: Send + Sync {
     /// Sends an HTTP request and returns the response asynchronously.
     fn send(
         &self,
         request: HttpRequest,
     ) -> impl Future<Output = Result<HttpResponse, SDKError>> + Send;
+}
+
+/// The transport layer abstraction for executing HTTP requests.
+///
+/// See the native definition of this trait for details on why the `Send` bound is dropped on
+/// `wasm32`.
+#[cfg(target_arch = "wasm32")]
+pub trait Transport {
+    /// Sends an HTTP request and returns the response asynchronously.
+    fn send(&self, request: HttpRequest) -> impl Future<Output = Result<HttpResponse, SDKError>>;
 }
 
 #[cfg(test)]
@@ -166,11 +183,23 @@ mod tests {
         response: std::sync::Mutex<Option<HttpResponse>>,
     }
 
+    #[cfg(not(target_arch = "wasm32"))]
     impl Transport for MockTransport {
         fn send(
             &self,
             _request: HttpRequest,
         ) -> impl Future<Output = Result<HttpResponse, SDKError>> + Send {
+            let response = self.response.lock().unwrap().take().unwrap();
+            async move { Ok(response) }
+        }
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    impl Transport for MockTransport {
+        fn send(
+            &self,
+            _request: HttpRequest,
+        ) -> impl Future<Output = Result<HttpResponse, SDKError>> {
             let response = self.response.lock().unwrap().take().unwrap();
             async move { Ok(response) }
         }

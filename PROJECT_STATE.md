@@ -26,7 +26,7 @@ Last Updated: 2026-08-08
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 2 parent tasks / 7 subtasks remaining (PH3-03, PH4-04 — see phased breakdown below) |
+| Pending Work         | 0 parent tasks / 0 subtasks remaining in the phased breakdown (see Completed Tasks Log) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -233,13 +233,11 @@ Note (2026-08-08, later): PH2-04.1's prior "✅" was also false — `Session`/`S
 
 | ID        | Subtask                                    | Status | Notes |
 | --------- | ------------------------------------------------ | ------ | ----- |
-| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ⬜ | `clap` is a declared dependency but never imported anywhere in `jules-cli/src`. |
-| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ⬜ | `main.rs` is `fn main() { println!("Jules CLI"); }` — no subcommand dispatch exists. |
-| PH3-03.3  | Implement config file loading/overrides                | ⬜ | `config/mod.rs` is a single-line doc comment; `dirs` dependency is unused. |
-| PH3-03.4  | Implement output formatting (plain/JSON)               | ⬜ | No output formatting code exists anywhere in the crate. |
-| PH3-03.5  | Write CLI smoke tests                                 | ⬜ | Only test in the crate is a trivial `assert_eq!(2 + 2, 4)`; it tests nothing about the CLI. |
-
-Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines across 6 files) is scaffolding — see [Change Log](#change-log-for-this-file).
+| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ✅ | Implemented 2026-08-08: clap-derive `Cli`/`Commands` in `main.rs`, wired to the real `JulesClient`/`JulesClientBuilder` (jules-api, `middleware` feature). |
+| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ✅ | Implemented 2026-08-08: `config show`/`config set`, `chat <message>` (creates a session or, with `--session`, sends a message to an existing one), `sessions list`/`sessions get`, `sources list`. |
+| PH3-03.3  | Implement config file loading/overrides                | ✅ | Implemented 2026-08-08: `CliConfig` loaded from a JSON file (via `dirs::config_dir()`) with CLI-flag > `JULES_API_KEY`/`JULES_BASE_URL` env var > file > default precedence. |
+| PH3-03.4  | Implement output formatting (plain/JSON)               | ✅ | Implemented 2026-08-08: `OutputFormat` (Plain/Json) selectable via global `--format` flag. |
+| PH3-03.5  | Write CLI smoke tests                                 | ✅ | Implemented 2026-08-08: 26 tests, including handler-level tests against the real `JulesClient` pointed at a local mock HTTP server (`test_support::MockServer`, mirroring `jules-api`'s own `tests/client_e2e_test.rs` pattern) — not just arg-parsing checks. Manually live-verified (read-only: `sessions list`, `sessions get`, `sources list`) against the real API; trivial `assert_eq!(2 + 2, 4)` placeholder removed. |
 
 **Order 11 — `PH3-04` Additional examples** — Low priority (initial examples already done via TASK-09)
 
@@ -259,10 +257,14 @@ Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines
 | --------- | --------------------------------------------------- | ------ |
 | PH4-04.1  | Run fuzz testing on core parsing paths                 | ✅ |
 | PH4-04.2  | Run load/soak testing on client                       | ✅ |
-| PH4-04.3  | Review public API for stability guarantees               | ⬜ |
-| PH4-04.4  | Fix issues found and document results                   | ⬜ |
+| PH4-04.3  | Review public API for stability guarantees               | ✅ |
+| PH4-04.4  | Fix issues found and document results                   | ✅ |
 
-⚠️ **Flag for review:** `PH4-01` (WASM support) and `PH4-03` (Performance improvements) were marked done via TASK-10 and TASK-12 despite belonging to Phase 4, while the project is still in Phase 0. Verify against actual commits/PRs before trusting them as complete; if unverified, re-open and insert broken-down subtasks here.
+✅ **Flag resolved (2026-08-08):** `PH4-01` (WASM support) and `PH4-03` (Performance improvements), previously flagged as claimed-done-but-unverified via TASK-10/TASK-12, have both now been verified:
+- `PH4-03` (performance): confirmed legitimate — 8 real commits with substantive diffs to production code (SSE parser allocations, streaming buffer pre-allocation, middleware pipeline iteration, endpoint URL building, MockTransport/Conversation clone removal).
+- `PH4-01` (WASM support): found genuinely incomplete — `FetchClient` (`crates/jules-api/src/wasm.rs`) did not implement the `Transport` trait at all, so WASM users could not use any of this crate's `v1alpha` endpoint methods. Fixing it surfaced a deeper issue: `Transport::send`'s `+ Send` bound is incompatible with `wasm32` types (`JsValue`/`web_sys` are not `Send`). Fixed for real: `Transport` is now defined with a `Send` bound on native targets and without it on `wasm32` (`crates/jules-api/src/http/mod.rs`), and `FetchClient` now fully implements it (method/headers/body/status/response-body all wired through the Fetch API). Verified with a real, executed `wasm-bindgen-test` run in headless Firefox exercising the full request/response round trip (including a custom header) via a `data:` URL, needing no live server. Also fixed a pre-existing, unrelated blocker found along the way: `cargo test --target wasm32-unknown-unknown` failed to compile at all because dev-only `tokio` features (`net`/`io-util`, added for the native TCP-socket e2e tests) don't support wasm32 — now target-gated to non-wasm32.
+
+Also found and fixed during this review: `jules_sdk::Client`/`Conversation`/`Tool` are documented in VERSIONING.md's Public API Stability section as supported imports from the facade crate, but were not actually re-exported (only `Config`/`ConfigBuilder`, `Session`/`SessionBuilder`, and `JulesClient`/`JulesClientBuilder` were) — fixed in `crates/jules-sdk/src/lib.rs` (`Tool` gated behind the `tools` feature, matching `jules-core`'s own gating).
 
 ### Phase 5 — Release Preparation (4 parent tasks / 14 subtasks)
 
@@ -295,6 +297,8 @@ Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH4-04  | Phase 4 | Stability validations — resolved the PH4-01/PH4-03 flag (WASM `Transport` fix, verified perf history), fixed the `jules_sdk::Client`/`Conversation`/`Tool` re-export gap |
+| PH3-03  | Phase 3 | CLI support — `jules-cli` fully implemented and wired to the real `JulesClient` |
 | PH2-04  | Phase 2 | REST API Structure Alignment (v1alpha) — real endpoints implemented and live-verified, including the `approve_plan`/`send_message` fix in PR #79 |
 | PH3-02  | Phase 3 | Middleware support — retry middleware genuinely retries now |
 | PH5-04  | Phase 5 | Release candidate preparations |
@@ -450,6 +454,9 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-08 | Completed PH3-03 (CLI support): implemented `jules-cli` end to end — clap argument parsing, `config`/`chat`/`sessions`/`sources` subcommands wired to the real `JulesClient`, JSON config file with CLI-flag/env/file/default precedence, plain/JSON output formatting, and 26 tests (including handler-level tests against the real client via a local mock HTTP server). Manually live-verified read-only (`sessions list`, `sessions get`, `sources list`) against the real API. |
+| 2026-08-08 | Resolved the PH4-01/PH4-03 flag-for-review (also closes PH4-04.3/.4): verified PH4-03 (performance) as legitimate; found PH4-01 (WASM support) genuinely incomplete (`FetchClient` didn't implement `Transport`; `Transport`'s `Send` bound conflicted with `wasm32` types) and fixed both for real, verified via an executed `wasm-bindgen-test` run in headless Firefox. Also fixed a pre-existing wasm32 test-compilation blocker (dev-only tokio `net`/`io-util` features not being target-gated) found along the way, and fixed `jules_sdk::Client`/`Conversation`/`Tool` not being re-exported from the facade crate despite VERSIONING.md documenting them as supported imports. |
+| 2026-08-08 | Added `crates/jules-sdk/examples/v1alpha_client.rs`: a live (not mock-backed, unlike this crate's other examples) usage example for the real `v1alpha` session/source client, making only read-only calls; prints setup instructions and exits gracefully if no `JULES_API_KEY` is set. |
 | 2026-08-08 | PH2-04 fully closed and moved to Completed Tasks Log. Delegated the `send_message`/`approve_plan` fix to a real Jules session (`sessions/10348936599420094322`) via `create_session`; it researched the live API docs, found `send_message`'s 404 was a session-state timing issue (not a shape bug — confirmed live), fixed `approve_plan` to send `{}` instead of Rust `()` (which serializes to `null`), and opened [PR #79](https://github.com/ArtisanXL/jules-sdk/pull/79). Independently re-verified PR #79 in a clean git worktree (build/test/clippy/fmt all green) before merging. Also moved PH3-02 (retry middleware, already fully ✅ at the subtask level) to the Completed Tasks Log, since it had been left off it. |
 | 2026-08-08 | With explicit user go-ahead, tried `create_session`/`send_message`/`approve_plan` against the live API. `create_session` WORKED (created a real, still-running session — see ⚠️ note above). `send_message` and `approve_plan` both FAILED with real API errors (404 / 400) proving our guessed request shapes were wrong; PH2-04.2 stays 🟨 with the corrected findings recorded there. |
 | 2026-08-08 | Closed out PH2-04: reworked PH2-04.1's models (were false-✅ id+name stubs), implemented and live-verified `list_sessions`/`get_session`/`list_sources`/`list_activities` against `https://jules.googleapis.com` (PH2-04.3 ✅, PH2-04.4 ✅), left PH2-04.2 🟨 since `create_session`/`send_message`/`approve_plan` are implemented but intentionally unverified against the live API (would mutate a real account). |

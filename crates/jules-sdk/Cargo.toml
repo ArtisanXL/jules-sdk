@@ -17,6 +17,9 @@ jules-core = { workspace = true }
 jules-api = { workspace = true }
 jules-macros = { workspace = true }
 
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "macros"] }
+
 [features]
 # The default feature set provides the recommended experience for most users.
 default = ["streaming", "tools"]

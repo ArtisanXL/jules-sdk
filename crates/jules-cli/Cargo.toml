@@ -15,6 +15,10 @@ workspace = true
 [dependencies]
 clap = { version = "4.6.5", features = ["derive"] }
 dirs = "6.0.0"
-jules-sdk = { workspace = true }
+jules-sdk = { workspace = true, features = ["middleware"] }
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "macros"] }
+
+[dev-dependencies]
+tokio = { version = "1.53.1", features = ["net", "io-util", "time"] }
