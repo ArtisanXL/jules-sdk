@@ -45,6 +45,39 @@ For more information, please refer to:
 
 ---
 
+## [0.1.0] - 2026-08-08
+
+> First functional release. Unlike `0.1.0-rc.1`, this release can make real requests
+> against the live Jules API (`https://jules.googleapis.com`).
+
+### Added
+
+* Real, working HTTP transport (`ReqwestTransport`) wired end-to-end through `JulesClient`/`JulesClientBuilder`.
+* Live-verified `v1alpha` REST endpoints: `sessions` (create, get, list, approvePlan, sendMessage), `sessions.activities`, and `sources`, including pagination.
+* Full `jules-cli` implementation: clap argument parsing; `config`/`chat`/`sessions`/`sources` subcommands; JSON config file with CLI-flag > env var > file > default precedence; plain/JSON output formatting.
+* WASM `Transport` support: `FetchClient` now fully implements the `Transport` trait (method/headers/body/status/response body via the Fetch API), verified with an executed `wasm-bindgen-test` run in headless Firefox.
+* Live `v1alpha` client usage example (`crates/jules-sdk/examples/v1alpha_client.rs`).
+
+### Changed
+
+* Retry middleware now genuinely retries retriable errors with backoff (previously a no-op).
+* `Transport` now carries a `Send` bound on native targets only, resolving a conflict with wasm32's non-`Send` `JsValue`/`web_sys` types.
+* `jules_sdk::Client`, `Conversation`, and `Tool` are now re-exported from the facade crate, matching what VERSIONING.md already documented.
+
+### Fixed
+
+* `approve_plan` now sends an empty JSON object (`{}`) instead of Rust's `()` (which serialized to `null`), matching the live API's requirement.
+* `Session`/`Source`/`Activity` models now carry real fields and serde derives verified against live API payloads (previously id+name-only stubs).
+* wasm32 test compilation, broken by dev-only Tokio `net`/`io-util` features that weren't target-gated, now builds and runs.
+
+### Security
+
+* Sanitized CRLF characters in HTTP headers to prevent header injection.
+* Redacted sensitive headers from `HttpRequest`/`HttpResponse` `Debug` output to prevent credential leakage.
+* Prevented PR title spoofing in the CI auto-merge workflow.
+
+---
+
 ## [0.1.0-rc.1] - 2026-08-02
 
 > Pre-alpha scaffolding for Jules-SDK. Not a functional release — nothing in this
