@@ -594,6 +594,7 @@ dependencies = [
  "getrandom 0.4.3",
  "js-sys",
  "jules-core",
+ "percent-encoding",
  "proptest",
  "reqwest",
  "serde",
