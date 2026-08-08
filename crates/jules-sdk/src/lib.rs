@@ -4,6 +4,7 @@
 //! as well as procedural macros from `jules-macros`.
 
 #![deny(missing_docs)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 pub use jules_api;
 pub use jules_core;
