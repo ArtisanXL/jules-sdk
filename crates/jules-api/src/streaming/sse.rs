@@ -38,6 +38,18 @@ impl SseParser {
     /// Pushes a chunk of text into the parser, returning any complete `SseEvent`s parsed.
     pub fn push(&mut self, chunk: &str) -> Vec<SseEvent> {
         self.buffer.push_str(chunk);
+        // Normalize CRLF/CR line endings to LF so block-boundary detection (`\n\n`) also
+        // matches CRLF-terminated events (`\r\n\r\n`), as permitted by the SSE spec. Done over
+        // the whole buffer (not just the new chunk) so a CRLF split across two `push` calls is
+        // still normalized correctly once both halves have arrived. A trailing lone `\r` is
+        // held back from normalization in case the matching `\n` arrives in the next chunk.
+        if self.buffer.contains('\r') {
+            let holdback = self.buffer.ends_with('\r');
+            let split_at = self.buffer.len() - usize::from(holdback);
+            let (head, tail) = self.buffer.split_at(split_at);
+            let normalized = head.replace("\r\n", "\n").replace('\r', "\n") + tail;
+            self.buffer = normalized;
+        }
         let mut events = Vec::new();
 
         let mut last_pos = 0;
@@ -153,6 +165,29 @@ mod tests {
         assert_eq!(events[0].event, Some("message".to_string()));
         assert_eq!(events[0].data, "payload");
         assert_eq!(events[0].retry, Some(5000));
+    }
+
+    /// Real servers/proxies often emit CRLF-terminated SSE events. Block boundaries must be
+    /// detected on `\r\n\r\n`, not just a literal `\n\n`.
+    #[test]
+    fn test_sse_parser_crlf_line_endings() {
+        let mut parser = SseParser::new();
+        let events = parser.push("id: 1\r\ndata: hello\r\n\r\n");
+        assert_eq!(events.len(), 1);
+        assert_eq!(events[0].id, Some("1".to_string()));
+        assert_eq!(events[0].data, "hello");
+    }
+
+    /// A CRLF split across two `push` calls (the `\r` in one chunk, `\n` in the next) must
+    /// still be normalized and parsed correctly.
+    #[test]
+    fn test_sse_parser_crlf_split_across_pushes() {
+        let mut parser = SseParser::new();
+        let events = parser.push("data: hello\r");
+        assert!(events.is_empty());
+        let events = parser.push("\ndata: world\r\n\r\n");
+        assert_eq!(events.len(), 1);
+        assert_eq!(events[0].data, "hello\nworld");
     }
 }
 
