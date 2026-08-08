@@ -26,7 +26,7 @@ Last Updated: 2026-08-08
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 4 parent tasks / 11 subtasks remaining (PH2-04, PH3-02, PH3-03, PH4-04 — see phased breakdown below) |
+| Pending Work         | 2 parent tasks / 7 subtasks remaining (PH3-03, PH4-04 — see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -195,11 +195,13 @@ Crate statuses should be updated whenever implementation milestones are complete
 | ID        | Subtask                                                              | Status | Notes |
 | --------- | ---------------------------------------------------------------------- | ------ | ----- |
 | PH2-04.1  | Define API resource models (Sessions, Activities, Sources) in jules-core | ✅ | Reworked 2026-08-08 — the prior "done" mark was false (see note below); models now carry real fields and serde derives verified against live payloads. |
-| PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | 🟨 | `list_sessions`/`get_session`/`create_session` implemented and confirmed working against the live API (2026-08-08) — `create_session` genuinely created a real session (`sessions/13267831108462964551`, title "jules-sdk SDK integration test", QUEUED) against the `ArtisanXL/jules-sdk` source. `send_message` and `approve_plan` were also tried live and BOTH FAILED with real API errors: `send_message` → HTTP 404 "Requested entity was not found" (our `:sendMessage` path/timing guess is wrong), `approve_plan` → HTTP 400 "Invalid JSON payload... Root element must be a message" (our empty-body guess is wrong). Their request shapes need correction and re-verification. |
+| PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | ✅ | All five confirmed working against the live API (2026-08-08). `create_session`/`list_sessions`/`get_session` verified directly. `send_message` initially appeared broken (404) but was proven correct — the 404 only happens if called while the session is still `QUEUED`; once past that (e.g. `AWAITING_USER_FEEDBACK`), it returns HTTP 200. `approve_plan` had a real bug: our code sent Rust's `()` (serializes to JSON `null`), but the API requires an empty object `{}` — fixed in [PR #79](https://github.com/ArtisanXL/jules-sdk/pull/79) (`ApprovePlanRequest {}`), independently re-verified in a clean worktree (build/test/clippy/fmt all green) before merge. |
 | PH2-04.3  | Implement `v1alpha/sessions.activities` and `v1alpha/sources` endpoints  | ✅ | `list_activities` and `list_sources` implemented and verified against the live API (2026-08-08), including pagination (`nextPageToken`). |
 | PH2-04.4  | Configure Base URL (`https://jules.googleapis.com`) and Google Auth handling | ✅ | `JULES_API_BASE_URL` is the `JulesClientBuilder` default; `AuthType::google_api_key()` sends the `X-Goog-Api-Key` header. Both confirmed working against the live API (2026-08-08) — no OAuth/service-account flow was needed or implemented, the real API accepts a plain API key via this header. |
 
-⚠️ **Live artifact created 2026-08-08**: `create_session` testing left a REAL session (`sessions/13267831108462964551`, "jules-sdk SDK integration test (safe to ignore/close)") running against the `ArtisanXL/jules-sdk` GitHub source in the account owning the test API key. It was last observed in state `QUEUED`. This SDK has no `delete_session`/cancel endpoint — clean it up manually via the Jules UI/console if it shouldn't be left running.
+PH2-04 is now fully done (all four subtasks ✅) — see the PH2-04 Completed Tasks Log entry.
+
+⚠️ **Live artifacts created 2026-08-08** (informational, not action items): two real Jules sessions were created against the `ArtisanXL/jules-sdk` GitHub source while testing `create_session`: `sessions/13267831108462964551` ("jules-sdk SDK integration test", last observed `QUEUED`, harmless no-op prompt, not cleaned up — this SDK has no `delete_session`/cancel endpoint) and `sessions/10348936599420094322` (the session actually delegated the `approve_plan`/`send_message` bug fix to — reached `COMPLETED` and produced [PR #79](https://github.com/ArtisanXL/jules-sdk/pull/79), which was reviewed independently and merged).
 
 Note (2026-08-08, earlier): A real, generic, tested native HTTP transport (`ReqwestTransport`) and an end-to-end `JulesClient`/`JulesClientBuilder` were added in `jules-api`, verified against local test servers.
 
@@ -293,6 +295,8 @@ Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH2-04  | Phase 2 | REST API Structure Alignment (v1alpha) — real endpoints implemented and live-verified, including the `approve_plan`/`send_message` fix in PR #79 |
+| PH3-02  | Phase 3 | Middleware support — retry middleware genuinely retries now |
 | PH5-04  | Phase 5 | Release candidate preparations |
 | PH3-04  | Phase 3 | Additional examples |
 | PH3-01  | Phase 3 | Tool calling support |
@@ -446,6 +450,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-08 | PH2-04 fully closed and moved to Completed Tasks Log. Delegated the `send_message`/`approve_plan` fix to a real Jules session (`sessions/10348936599420094322`) via `create_session`; it researched the live API docs, found `send_message`'s 404 was a session-state timing issue (not a shape bug — confirmed live), fixed `approve_plan` to send `{}` instead of Rust `()` (which serializes to `null`), and opened [PR #79](https://github.com/ArtisanXL/jules-sdk/pull/79). Independently re-verified PR #79 in a clean git worktree (build/test/clippy/fmt all green) before merging. Also moved PH3-02 (retry middleware, already fully ✅ at the subtask level) to the Completed Tasks Log, since it had been left off it. |
 | 2026-08-08 | With explicit user go-ahead, tried `create_session`/`send_message`/`approve_plan` against the live API. `create_session` WORKED (created a real, still-running session — see ⚠️ note above). `send_message` and `approve_plan` both FAILED with real API errors (404 / 400) proving our guessed request shapes were wrong; PH2-04.2 stays 🟨 with the corrected findings recorded there. |
 | 2026-08-08 | Closed out PH2-04: reworked PH2-04.1's models (were false-✅ id+name stubs), implemented and live-verified `list_sessions`/`get_session`/`list_sources`/`list_activities` against `https://jules.googleapis.com` (PH2-04.3 ✅, PH2-04.4 ✅), left PH2-04.2 🟨 since `create_session`/`send_message`/`approve_plan` are implemented but intentionally unverified against the live API (would mutate a real account). |
 | 2026-08-08 | Marked PH3-02.4 (retry middleware) ✅: `RetryMiddleware` now genuinely retries, proven by new test `test_retry_middleware_retries_on_retriable_error`. Added a PH2-04 context note: a tested native HTTP transport (`ReqwestTransport`) and end-to-end `JulesClient`/`JulesClientBuilder` now exist in jules-api, but PH2-04.2-.4 (real `v1alpha` endpoint shapes, base URL, Google Auth) remain ⬜ and unverified against the live API. |
