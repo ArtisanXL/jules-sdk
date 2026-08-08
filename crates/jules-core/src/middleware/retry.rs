@@ -208,4 +208,54 @@ mod tests {
         assert!(res.is_err());
         assert_eq!(calls.load(Ordering::SeqCst), 1);
     }
+
+    /// Proves that `SDKError::Network` errors are retried (the `is_retriable` match arm at
+    /// line 57), not just `ApiError`s with a 5xx/429 status code.
+    #[tokio::test]
+    async fn test_retry_middleware_retries_network_error() {
+        let mut pipeline = MiddlewarePipeline::new();
+        pipeline.add(RetryMiddleware::with_config(RetryConfig {
+            max_attempts: 3,
+            delay: Duration::from_millis(1),
+            backoff_multiplier: 1.0,
+        }));
+
+        let request = ClientRequest::new(Conversation::new());
+        let calls = Arc::new(AtomicUsize::new(0));
+        let calls_clone = Arc::clone(&calls);
+
+        let handler = move |_req: ClientRequest| {
+            let calls = Arc::clone(&calls_clone);
+            async move {
+                let attempt = calls.fetch_add(1, Ordering::SeqCst) + 1;
+                if attempt < 2 {
+                    Err(SDKError::Network(crate::errors::NetworkError::new(
+                        "connection reset",
+                    )))
+                } else {
+                    Ok(ClientResponse::new(Message::new(
+                        Role::Assistant,
+                        "Success",
+                    )))
+                }
+            }
+        };
+
+        let res = pipeline.execute(request, handler).await.unwrap();
+
+        assert_eq!(res.message.content(), "Success");
+        assert_eq!(calls.load(Ordering::SeqCst), 2);
+    }
+
+    /// Proves the message-based fallback in `is_retriable` (used when an `ApiError` carries no
+    /// status code): a "rate limit" message is retried, while an unrelated message is not.
+    #[tokio::test]
+    async fn test_retry_is_retriable_message_fallback() {
+        assert!(RetryMiddleware::is_retriable(&SDKError::Api(
+            ApiError::new("Rate limit exceeded, please slow down")
+        )));
+        assert!(!RetryMiddleware::is_retriable(&SDKError::Api(
+            ApiError::new("resource not found")
+        )));
+    }
 }
