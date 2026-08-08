@@ -138,6 +138,21 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_middleware_pipeline_len_and_is_empty() {
+        let mut pipeline = MiddlewarePipeline::new();
+        assert_eq!(pipeline.len(), 0);
+        assert!(pipeline.is_empty());
+
+        let calls = Arc::new(AtomicUsize::new(0));
+        pipeline.add(TestMiddleware {
+            calls: Arc::clone(&calls),
+        });
+
+        assert_eq!(pipeline.len(), 1);
+        assert!(!pipeline.is_empty());
+    }
+
+    #[tokio::test]
     async fn test_middleware_pipeline() {
         let mut pipeline = MiddlewarePipeline::new();
         let calls = Arc::new(AtomicUsize::new(0));
