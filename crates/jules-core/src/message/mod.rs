@@ -97,4 +97,24 @@ mod tests {
         assert_eq!(*msg.role(), Role::User);
         assert_eq!(msg.content(), "Hello");
     }
+
+    #[test]
+    #[cfg(feature = "tools")]
+    fn test_message_with_tool_calls() {
+        use crate::tool::{ToolCall, ToolCallInfo};
+        let call = ToolCall {
+            function: ToolCallInfo {
+                id: "call_123".to_string(),
+                name: "get_weather".to_string(),
+                arguments: "{}".to_string(),
+            },
+            tool_type: "function".to_string(),
+        };
+        let msg = Message::new(Role::Assistant, "Tool call")
+            .with_tool_call_id("call_123")
+            .with_tool_calls(vec![call.clone()]);
+
+        assert_eq!(msg.tool_call_id(), Some("call_123"));
+        assert_eq!(msg.tool_calls(), Some(vec![call].as_slice()));
+    }
 }
