@@ -69,6 +69,17 @@ impl jules_sdk::Client for DummyClient {
 
 fn assert_client_trait<T: jules_sdk::Client>() {}
 
+/// Locks in that `jules_sdk::experimental` resolves under the `experimental` feature flag, so a
+/// broken `cfg` gate is caught even while the module itself is still empty. The import is the
+/// assertion: this test's only job is to fail to compile if the path stops resolving.
+#[cfg(feature = "experimental")]
+#[allow(unused_imports)]
+use jules_sdk::experimental as _;
+
+#[cfg(feature = "experimental")]
+#[test]
+fn test_experimental_module_reachable_via_facade() {}
+
 #[test]
 fn test_core_types_reachable_via_facade() {
     let config = jules_sdk::Config::builder()
