@@ -78,6 +78,9 @@ struct CreateSessionRequest<'a> {
 }
 
 #[derive(Serialize)]
+struct ApprovePlanRequest {}
+
+#[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
 struct SendMessageRequest<'a> {
     prompt: &'a str,
@@ -217,9 +220,9 @@ impl JulesClient {
 
     /// Sends a message to an existing session. `POST /v1alpha/{session_name}:sendMessage`.
     ///
-    /// **Unverified against the live API** — the endpoint path uses the Google API "custom
-    /// method" colon-suffix convention (per `ROADMAP.md`'s naming), but was not confirmed
-    /// against the real API.
+    /// **Live API note**: The session must be in a ready state (e.g., `AWAITING_USER_FEEDBACK`)
+    /// before calling this endpoint. If called while the session is still in the `QUEUED` state
+    /// (such as immediately after creation), the API may return a `404 Requested entity was not found` error.
     ///
     /// # Errors
     /// Returns `SDKError` on network, auth, or deserialization failure.
@@ -232,14 +235,16 @@ impl JulesClient {
     /// Approves the currently proposed plan for a session.
     /// `POST /v1alpha/{session_name}:approvePlan`.
     ///
-    /// **Unverified against the live API** — see [`JulesClient::send_message`]'s note on the
-    /// colon-suffix convention.
+    /// **Live API note**: the request body must be `{}`.
     ///
     /// # Errors
     /// Returns `SDKError` on network, auth, or deserialization failure.
     pub async fn approve_plan(&self, session_name: &str) -> Result<(), SDKError> {
-        self.post_no_content(&format!("/v1alpha/{session_name}:approvePlan"), &())
-            .await
+        self.post_no_content(
+            &format!("/v1alpha/{session_name}:approvePlan"),
+            &ApprovePlanRequest {},
+        )
+        .await
     }
 
     /// Lists sources (e.g. connected GitHub repositories). `GET /v1alpha/sources`.

@@ -282,6 +282,8 @@ async fn test_send_message() {
         .build()
         .unwrap();
 
+    // Note: In the live API, this endpoint may return HTTP 404 if the session
+    // is in the QUEUED state. It must be in a ready state (e.g., AWAITING_USER_FEEDBACK).
     client
         .send_message("sessions/000", "hello agent")
         .await
@@ -311,4 +313,5 @@ async fn test_approve_plan() {
     assert!(req
         .request_line
         .starts_with("POST /v1alpha/sessions/000:approvePlan"));
+    assert_eq!(std::str::from_utf8(&req.body).unwrap(), "{}");
 }
