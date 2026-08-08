@@ -258,4 +258,49 @@ mod tests {
             ApiError::new("resource not found")
         )));
     }
+
+    /// Proves the exponential backoff delay actually grows across attempts when
+    /// `backoff_multiplier > 1.0`, using a paused Tokio clock so the assertion is exact and
+    /// deterministic rather than a wall-clock-timing-based approximation.
+    #[tokio::test(start_paused = true)]
+    async fn test_retry_middleware_backoff_grows_exponentially() {
+        let mut pipeline = MiddlewarePipeline::new();
+        pipeline.add(RetryMiddleware::with_config(RetryConfig {
+            max_attempts: 3,
+            delay: Duration::from_millis(10),
+            backoff_multiplier: 2.0,
+        }));
+
+        let request = ClientRequest::new(Conversation::new());
+        let timestamps = Arc::new(std::sync::Mutex::new(Vec::new()));
+        let timestamps_clone = Arc::clone(&timestamps);
+        let calls = Arc::new(AtomicUsize::new(0));
+        let calls_clone = Arc::clone(&calls);
+
+        let handler = move |_req: ClientRequest| {
+            let calls = Arc::clone(&calls_clone);
+            let timestamps = Arc::clone(&timestamps_clone);
+            async move {
+                timestamps.lock().unwrap().push(tokio::time::Instant::now());
+                let attempt = calls.fetch_add(1, Ordering::SeqCst) + 1;
+                if attempt < 3 {
+                    Err(SDKError::Api(ApiError::with_status("server error", 500)))
+                } else {
+                    Ok(ClientResponse::new(Message::new(
+                        Role::Assistant,
+                        "Success",
+                    )))
+                }
+            }
+        };
+
+        pipeline.execute(request, handler).await.unwrap();
+
+        let ts = timestamps.lock().unwrap();
+        assert_eq!(ts.len(), 3);
+        let first_gap = ts[1] - ts[0];
+        let second_gap = ts[2] - ts[1];
+        assert_eq!(first_gap, Duration::from_millis(10));
+        assert_eq!(second_gap, Duration::from_millis(20));
+    }
 }
