@@ -43,7 +43,8 @@ getrandom = { version = "0.4", features = ["wasm_js"] }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 proptest = "1.11.0"
+tokio = { version = "1.53.1", features = ["net", "io-util", "time"] }
 
 [dev-dependencies]
-tokio = { version = "1.53.1", features = ["rt", "macros", "net", "io-util", "time"] }
+tokio = { version = "1.53.1", features = ["rt", "macros"] }
 wasm-bindgen-test = "0.3.45"
