@@ -117,4 +117,19 @@ mod tests {
 
         assert_eq!(policy.should_retry(0, &error), None);
     }
+
+    /// Proves the delay is capped at `max_delay_ms` once the uncapped exponential value would
+    /// exceed it, rather than growing unbounded (or overflowing via `saturating_mul`).
+    #[test]
+    fn test_exponential_backoff_caps_at_max_delay() {
+        let policy = ExponentialBackoff {
+            max_retries: 10,
+            base_delay_ms: 1000,
+            max_delay_ms: 2000,
+        };
+        let error = SDKError::Network(NetworkError::new("Timeout"));
+
+        // Uncapped would be base_delay_ms * 2^3 = 8000ms; must be capped to max_delay_ms.
+        assert_eq!(policy.should_retry(3, &error), Some(2000));
+    }
 }
