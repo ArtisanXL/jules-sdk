@@ -1,12 +1,14 @@
 # Jules-SDK Architecture
 
-> Production-ready, async-first and idiomatic Rust implementation of Google's Jules SDK.
+> Early-stage (pre-alpha), async-first and idiomatic Rust implementation of Google's Jules SDK.
 >
 > Repository: `jules-sdk`
 >
 > Version: Draft v1 (For live crate status and current priorities, see [PROJECT_STATE.md](PROJECT_STATE.md))
 >
 > MSRV: Rust 1.90+
+>
+> **Note:** This document describes the target architecture. It is written largely in the present tense for readability, but most of what it describes (in particular the HTTP transport in `jules-api`) is not implemented yet — see [PROJECT_STATE.md](PROJECT_STATE.md) for what actually exists in code today.
 
 ---
 

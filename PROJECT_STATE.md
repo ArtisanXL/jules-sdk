@@ -2,7 +2,7 @@
 
 > This document describes the current development status, priorities and milestones of Jules-SDK. Contributors and AI coding agents SHOULD review this document before making significant changes to the repository.
 >
-Last Updated: 2026-08-03
+Last Updated: 2026-08-08
 
 ---
 
@@ -26,11 +26,11 @@ Last Updated: 2026-08-03
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 11 parent tasks / 30 subtasks remaining (see phased breakdown below) |
+| Pending Work         | 4 parent tasks / 11 subtasks remaining (PH2-04, PH3-02, PH3-03, PH4-04 — see phased breakdown below) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
-| Last Updated         | 2026-08-02                          |
+| Last Updated         | 2026-08-08                          |
 
 ---
 
@@ -213,23 +213,25 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 **Order 9 — `PH3-02` Middleware support** — Medium priority
 
-| ID        | Subtask                                | Status |
-| --------- | --------------------------------------------- | ------ |
-| PH3-02.1  | Define `Middleware` trait                        | ✅ |
-| PH3-02.2  | Implement middleware chaining/execution pipeline    | ✅ |
-| PH3-02.3  | Implement built-in logging middleware              | ✅ |
-| PH3-02.4  | Implement built-in retry middleware                | ✅ |
-| PH3-02.5  | Write middleware tests                            | ✅ |
+| ID        | Subtask                                | Status | Notes |
+| --------- | --------------------------------------------- | ------ | ----- |
+| PH3-02.1  | Define `Middleware` trait                        | ✅ | — |
+| PH3-02.2  | Implement middleware chaining/execution pipeline    | ✅ | — |
+| PH3-02.3  | Implement built-in logging middleware              | ✅ | — |
+| PH3-02.4  | Implement built-in retry middleware                | ⬜ | `RetryMiddleware::execute()` (jules-core/src/middleware/retry.rs:80-93) explicitly does not retry — its own comment says "Actual retry omitted due to FnOnce pipeline constraints." Re-opened 2026-08-08. |
+| PH3-02.5  | Write middleware tests                            | ✅ | — |
 
 **Order 10 — `PH3-03` CLI support** — Medium priority
 
-| ID        | Subtask                                    | Status |
-| --------- | ------------------------------------------------ | ------ |
-| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ✅ |
-| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ✅ |
-| PH3-03.3  | Implement config file loading/overrides                | ✅ |
-| PH3-03.4  | Implement output formatting (plain/JSON)               | ✅ |
-| PH3-03.5  | Write CLI smoke tests                                 | ✅ |
+| ID        | Subtask                                    | Status | Notes |
+| --------- | ------------------------------------------------ | ------ | ----- |
+| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ⬜ | `clap` is a declared dependency but never imported anywhere in `jules-cli/src`. |
+| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ⬜ | `main.rs` is `fn main() { println!("Jules CLI"); }` — no subcommand dispatch exists. |
+| PH3-03.3  | Implement config file loading/overrides                | ⬜ | `config/mod.rs` is a single-line doc comment; `dirs` dependency is unused. |
+| PH3-03.4  | Implement output formatting (plain/JSON)               | ⬜ | No output formatting code exists anywhere in the crate. |
+| PH3-03.5  | Write CLI smoke tests                                 | ⬜ | Only test in the crate is a trivial `assert_eq!(2 + 2, 4)`; it tests nothing about the CLI. |
+
+Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines across 6 files) is scaffolding — see [Change Log](#change-log-for-this-file).
 
 **Order 11 — `PH3-04` Additional examples** — Low priority (initial examples already done via TASK-09)
 
@@ -287,10 +289,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | ------- | ------- | ---------------------------------------------- |
 | PH5-04  | Phase 5 | Release candidate preparations |
 | PH3-04  | Phase 3 | Additional examples |
-| PH3-03  | Phase 3 | CLI support                                    |
-| PH3-02  | Phase 3 | Middleware support |
 | PH3-01  | Phase 3 | Tool calling support |
-| PH2-04  | Phase 2 | REST API Structure Alignment (v1alpha) |
 | PH2-03  | Phase 2 | Builders (general, beyond ClientBuilder)       |
 | PH2-02  | Phase 2 | Streaming support                              |
 | PH2-01  | Phase 2 | API integrations                               |
@@ -441,6 +440,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-08 | Corrected false completions found by a code-vs-docs audit: removed PH2-04 (subtasks .2-.4 are ⬜, parent was wrongly logged as complete), PH3-02 (retry middleware, PH3-02.4, does not actually retry per its own source comment), and PH3-03 (CLI support — the entire `jules-cli` crate is a 28-line stub, no subtask was actually done) from the Completed Tasks Log; re-opened their unfinished subtasks in the Pending Work breakdown. Also removed the false "This module has been proofread and verified for the v0.1.0 release." claim from 5 crate root files, and removed "Production-ready" language from Cargo.toml/README.md/CHANGELOG.md pending a working HTTP transport. |
 | 2026-08-03 | Completed PH2-04.1: Defined API resource models (Sessions, Activities, Sources) in jules-core |
 | 2026-08-02 | Completed TASK-10: Added WASM client tests (FetchClient instantiation) |
 | 2026-08-02 | Completed Order 17 (PH5-04): Release candidate preparations |

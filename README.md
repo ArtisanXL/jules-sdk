@@ -1,6 +1,6 @@
 # Jules-SDK
 
-> Production-ready, async-first and idiomatic Rust implementation of Google's Jules SDK.
+> Early-stage (pre-alpha), async-first and idiomatic Rust implementation of Google's Jules SDK.
 
 [![Crates.io](https://img.shields.io/crates/v/jules-sdk)](https://crates.io/crates/jules-sdk)
 [![Docs.rs](https://img.shields.io/docsrs/jules-sdk)](https://docs.rs/jules-sdk)
@@ -8,6 +8,8 @@
 [![MSRV](https://img.shields.io/badge/MSRV-1.90%2B-blue)](#minimum-supported-rust-version)
 
 ---
+
+> **Status:** This project is in Pre-Alpha. Core types, builders and abstractions exist, but there is currently **no working HTTP transport** — nothing in this workspace can make a real request to the Jules API yet. See [PROJECT_STATE.md](PROJECT_STATE.md) for the authoritative, up-to-date status of every crate.
 
 ## Overview
 
@@ -18,15 +20,15 @@ The project follows Rust ecosystem best practices and is designed around:
 * Type safety
 * Async-first APIs
 * Builder pattern abstractions
-* Production-grade error handling
-* Streaming support
-* Tool calling support
-* WASM compatibility
-* Comprehensive testing
+* Error handling infrastructure
+* Streaming support (planned)
+* Tool calling support (planned)
+* WASM compatibility (planned)
+* Testing infrastructure
 * Multi-platform support
 * Excellent developer experience
 
-Jules-SDK is designed to remain ergonomic for beginners while being powerful enough for production workloads.
+Jules-SDK aims to remain ergonomic for beginners while being powerful enough for production workloads once it reaches a stable, functionally complete release.
 
 ---
 
@@ -50,7 +52,7 @@ Jules-SDK is designed to remain ergonomic for beginners while being powerful eno
 * Minimal public API surface
 * Zero-cost abstractions whenever possible
 * Feature flag driven architecture
-* Production-ready defaults
+* Production-ready defaults (target for v1.0.0, not the current state)
 * Long-term maintainability
 * Semantic versioning compliance
 

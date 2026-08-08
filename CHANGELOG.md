@@ -47,7 +47,9 @@ For more information, please refer to:
 
 ## [0.1.0-rc.1] - 2026-08-02
 
-> Initial release of Jules-SDK.
+> Pre-alpha scaffolding for Jules-SDK. Not a functional release — nothing in this
+> workspace can make a real request to the Jules API yet. See
+> [PROJECT_STATE.md](PROJECT_STATE.md) for accurate, per-crate implementation status.
 
 ### Added
 
@@ -55,28 +57,27 @@ For more information, please refer to:
 
 * Cargo workspace architecture.
 * Five-crate project structure.
-* Production-ready repository layout.
+* Repository layout and policy documentation.
 
 #### Core Functionality
 
-* Public `jules-sdk` facade crate.
-* Core abstractions.
+* Public `jules-sdk` facade crate (re-exports only).
+* Core abstractions (types, builders, trait signatures — no working transport).
 * Builder pattern foundations.
 * Error handling infrastructure.
 * Configuration management.
 
 #### API Support
 
-* Initial Jules API integration.
+* Type-safe request and response data models (not wired to any real HTTP transport).
 * Async-first API design.
-* Type-safe request and response models.
 
 #### Integrations & Features
-* Tool calling support.
-* Middleware support.
-* CLI support and subcommands.
-* Streaming API and stream event handling.
-* Session and Conversation builders.
+* Tool registry scaffolding (not wired to any model/API round-trip).
+* Middleware pipeline and logging middleware (retry middleware does not yet retry — see PROJECT_STATE.md).
+* CLI crate skeleton (no argument parsing or subcommands implemented yet).
+* Streaming/SSE parsing utilities (not connected to any real endpoint).
+* Session and Conversation builders (data-only; no CRUD or network calls).
 
 #### Documentation
 
