@@ -192,12 +192,18 @@ Crate statuses should be updated whenever implementation milestones are complete
 
 **Order 5.5 — `PH2-04` REST API Structure Alignment (v1alpha)** — High priority
 
-| ID        | Subtask                                                              | Status |
-| --------- | ---------------------------------------------------------------------- | ------ |
-| PH2-04.1  | Define API resource models (Sessions, Activities, Sources) in jules-core | ✅ |
-| PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | ⬜ |
-| PH2-04.3  | Implement `v1alpha/sessions.activities` and `v1alpha/sources` endpoints  | ⬜ |
-| PH2-04.4  | Configure Base URL (`https://jules.googleapis.com`) and Google Auth handling | ⬜ |
+| ID        | Subtask                                                              | Status | Notes |
+| --------- | ---------------------------------------------------------------------- | ------ | ----- |
+| PH2-04.1  | Define API resource models (Sessions, Activities, Sources) in jules-core | ✅ | Reworked 2026-08-08 — the prior "done" mark was false (see note below); models now carry real fields and serde derives verified against live payloads. |
+| PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | 🟨 | `list_sessions`/`get_session`/`create_session` implemented and confirmed working against the live API (2026-08-08) — `create_session` genuinely created a real session (`sessions/13267831108462964551`, title "jules-sdk SDK integration test", QUEUED) against the `ArtisanXL/jules-sdk` source. `send_message` and `approve_plan` were also tried live and BOTH FAILED with real API errors: `send_message` → HTTP 404 "Requested entity was not found" (our `:sendMessage` path/timing guess is wrong), `approve_plan` → HTTP 400 "Invalid JSON payload... Root element must be a message" (our empty-body guess is wrong). Their request shapes need correction and re-verification. |
+| PH2-04.3  | Implement `v1alpha/sessions.activities` and `v1alpha/sources` endpoints  | ✅ | `list_activities` and `list_sources` implemented and verified against the live API (2026-08-08), including pagination (`nextPageToken`). |
+| PH2-04.4  | Configure Base URL (`https://jules.googleapis.com`) and Google Auth handling | ✅ | `JULES_API_BASE_URL` is the `JulesClientBuilder` default; `AuthType::google_api_key()` sends the `X-Goog-Api-Key` header. Both confirmed working against the live API (2026-08-08) — no OAuth/service-account flow was needed or implemented, the real API accepts a plain API key via this header. |
+
+⚠️ **Live artifact created 2026-08-08**: `create_session` testing left a REAL session (`sessions/13267831108462964551`, "jules-sdk SDK integration test (safe to ignore/close)") running against the `ArtisanXL/jules-sdk` GitHub source in the account owning the test API key. It was last observed in state `QUEUED`. This SDK has no `delete_session`/cancel endpoint — clean it up manually via the Jules UI/console if it shouldn't be left running.
+
+Note (2026-08-08, earlier): A real, generic, tested native HTTP transport (`ReqwestTransport`) and an end-to-end `JulesClient`/`JulesClientBuilder` were added in `jules-api`, verified against local test servers.
+
+Note (2026-08-08, later): PH2-04.1's prior "✅" was also false — `Session`/`Source`/`Activity` were id+name-only stubs with zero serde derives, and `jules-core/src/pagination/mod.rs` was completely empty, despite being marked done. All four were reworked with real fields matching live API response payloads (captured via a working test API key, see `.secrets/jules_api_key.env`, gitignored) and re-verified end-to-end: `list_sessions`, `get_session`, `list_sources`, and `list_activities` were each called for real against `https://jules.googleapis.com` through the actual compiled `jules-api` client code (not curl) and correctly deserialized live responses. `Activity` additionally carries `#[serde(flatten)] extra` to avoid silently dropping activity kinds not seen in the sampled data (only `planGenerated` was observed). `create_session`/`send_message`/`approve_plan` remain unverified by design — do not mark PH2-04.2 fully done until one of them is confirmed against the live API.
 
 ### Phase 3 — Tooling & CLI (4 parent tasks / 19 subtasks)
 
@@ -218,7 +224,7 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH3-02.1  | Define `Middleware` trait                        | ✅ | — |
 | PH3-02.2  | Implement middleware chaining/execution pipeline    | ✅ | — |
 | PH3-02.3  | Implement built-in logging middleware              | ✅ | — |
-| PH3-02.4  | Implement built-in retry middleware                | ⬜ | `RetryMiddleware::execute()` (jules-core/src/middleware/retry.rs:80-93) explicitly does not retry — its own comment says "Actual retry omitted due to FnOnce pipeline constraints." Re-opened 2026-08-08. |
+| PH3-02.4  | Implement built-in retry middleware                | ✅ | `RetryMiddleware::execute()` now loops and retries retriable errors with backoff. Proven by `test_retry_middleware_retries_on_retriable_error` (jules-core/src/middleware/retry.rs), which fails a handler with a retriable HTTP 500 twice and asserts the handler was actually invoked 3 times (`call_count == 3`) before succeeding. Confirmed 2026-08-08. |
 | PH3-02.5  | Write middleware tests                            | ✅ | — |
 
 **Order 10 — `PH3-03` CLI support** — Medium priority
@@ -440,6 +446,9 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-08 | With explicit user go-ahead, tried `create_session`/`send_message`/`approve_plan` against the live API. `create_session` WORKED (created a real, still-running session — see ⚠️ note above). `send_message` and `approve_plan` both FAILED with real API errors (404 / 400) proving our guessed request shapes were wrong; PH2-04.2 stays 🟨 with the corrected findings recorded there. |
+| 2026-08-08 | Closed out PH2-04: reworked PH2-04.1's models (were false-✅ id+name stubs), implemented and live-verified `list_sessions`/`get_session`/`list_sources`/`list_activities` against `https://jules.googleapis.com` (PH2-04.3 ✅, PH2-04.4 ✅), left PH2-04.2 🟨 since `create_session`/`send_message`/`approve_plan` are implemented but intentionally unverified against the live API (would mutate a real account). |
+| 2026-08-08 | Marked PH3-02.4 (retry middleware) ✅: `RetryMiddleware` now genuinely retries, proven by new test `test_retry_middleware_retries_on_retriable_error`. Added a PH2-04 context note: a tested native HTTP transport (`ReqwestTransport`) and end-to-end `JulesClient`/`JulesClientBuilder` now exist in jules-api, but PH2-04.2-.4 (real `v1alpha` endpoint shapes, base URL, Google Auth) remain ⬜ and unverified against the live API. |
 | 2026-08-08 | Corrected false completions found by a code-vs-docs audit: removed PH2-04 (subtasks .2-.4 are ⬜, parent was wrongly logged as complete), PH3-02 (retry middleware, PH3-02.4, does not actually retry per its own source comment), and PH3-03 (CLI support — the entire `jules-cli` crate is a 28-line stub, no subtask was actually done) from the Completed Tasks Log; re-opened their unfinished subtasks in the Pending Work breakdown. Also removed the false "This module has been proofread and verified for the v0.1.0 release." claim from 5 crate root files, and removed "Production-ready" language from Cargo.toml/README.md/CHANGELOG.md pending a working HTTP transport. |
 | 2026-08-03 | Completed PH2-04.1: Defined API resource models (Sessions, Activities, Sources) in jules-core |
 | 2026-08-02 | Completed TASK-10: Added WASM client tests (FetchClient instantiation) |

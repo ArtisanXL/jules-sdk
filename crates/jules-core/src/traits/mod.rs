@@ -25,16 +25,11 @@ mod tests {
     struct MockClient;
 
     impl Client for MockClient {
-        fn send_request(
-            &self,
-            _request: ClientRequest,
-        ) -> impl Future<Output = Result<ClientResponse, SDKError>> + Send {
-            async {
-                Ok(ClientResponse::new(Message::new(
-                    Role::Assistant,
-                    "Mock response",
-                )))
-            }
+        async fn send_request(&self, _request: ClientRequest) -> Result<ClientResponse, SDKError> {
+            Ok(ClientResponse::new(Message::new(
+                Role::Assistant,
+                "Mock response",
+            )))
         }
     }
 

@@ -13,8 +13,11 @@ use std::sync::Arc;
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
 /// A function type that represents the execution of the next middleware in the pipeline.
+///
+/// This is `Fn` (not `FnOnce`) so that middlewares such as `RetryMiddleware` can invoke
+/// `next` more than once to retry a request.
 pub type NextFn<'a> = Box<
-    dyn FnOnce(ClientRequest) -> BoxFuture<'a, Result<ClientResponse, SDKError>> + Send + Sync + 'a,
+    dyn Fn(ClientRequest) -> BoxFuture<'a, Result<ClientResponse, SDKError>> + Send + Sync + 'a,
 >;
 
 /// A trait for intercepting and modifying requests and responses.
@@ -80,16 +83,24 @@ impl MiddlewarePipeline {
         final_handler: F,
     ) -> Result<ClientResponse, SDKError>
     where
-        F: FnOnce(ClientRequest) -> Fut + Send + Sync + 'static,
+        F: Fn(ClientRequest) -> Fut + Send + Sync + 'static,
         Fut: Future<Output = Result<ClientResponse, SDKError>> + Send + 'static,
     {
         let mut next: NextFn<'_> = Box::new(move |req| Box::pin(final_handler(req)));
         for middleware in self.middlewares.iter().rev() {
-            let next_fn = next;
+            // `next` must remain callable more than once (it is now `Fn`, not `FnOnce`) so that
+            // a middleware further up the chain (e.g. `RetryMiddleware`) can invoke it multiple
+            // times. Since `NextFn` is passed by value into `Middleware::execute`, we share the
+            // previous `next` behind an `Arc` and hand each invocation a fresh `NextFn` wrapper
+            // that delegates through it.
+            let next_shared: Arc<NextFn<'_>> = Arc::new(next);
             // Capture a reference to the middleware instead of cloning the Arc.
             // This is safe because `self` outlives the `NextFn` closures and `execute` call.
             let m: &dyn Middleware = &**middleware;
-            next = Box::new(move |req| m.execute(req, next_fn));
+            next = Box::new(move |req| {
+                let next_shared = Arc::clone(&next_shared);
+                m.execute(req, Box::new(move |req2| next_shared(req2)))
+            });
         }
         next(request).await
     }

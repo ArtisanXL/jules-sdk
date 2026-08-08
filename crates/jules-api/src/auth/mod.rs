@@ -56,6 +56,16 @@ impl AuthType {
             Self::None => request,
         }
     }
+
+    /// Creates an [`AuthType::ApiKey`] using the `X-Goog-Api-Key` header, which is the header
+    /// the real Jules `v1alpha` API accepts an API key through (verified against the live API).
+    #[must_use]
+    pub fn google_api_key(key: impl Into<String>) -> Self {
+        Self::ApiKey {
+            header: "X-Goog-Api-Key".to_string(),
+            key: key.into(),
+        }
+    }
 }
 
 #[cfg(test)]

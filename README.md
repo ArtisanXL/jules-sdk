@@ -9,7 +9,7 @@
 
 ---
 
-> **Status:** This project is in Pre-Alpha. Core types, builders and abstractions exist, but there is currently **no working HTTP transport** — nothing in this workspace can make a real request to the Jules API yet. See [PROJECT_STATE.md](PROJECT_STATE.md) for the authoritative, up-to-date status of every crate.
+> **Status:** This project is in Pre-Alpha. Core types, builders and abstractions exist, and `jules-api` has a real native HTTP transport (`ReqwestTransport`) and an end-to-end `JulesClient`. Reading data from the real Jules API works and is live-verified: `list_sessions`, `get_session`, `list_sources`, and `list_activities` have each been confirmed against `https://jules.googleapis.com` using an API key via the `X-Goog-Api-Key` header. `create_session` is also live-confirmed working. `send_message` and `approve_plan` were tried against the live API and both currently **fail** (real 404 / 400 errors) — their request shapes are known-wrong and need correction. See [PROJECT_STATE.md](PROJECT_STATE.md) for the authoritative, up-to-date status of every crate.
 
 ## Overview
 

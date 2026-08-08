@@ -6,11 +6,11 @@ use std::future::Future;
 struct ReverseTextTool;
 
 impl Tool for ReverseTextTool {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "reverse_text"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "Reverses the given string."
     }
 
@@ -46,21 +46,19 @@ fn main() {
 
         let f = async {
             match tool.call_dyn("hello").await {
-                Ok(result) => println!("Result: {}", result),
-                Err(e) => println!("Error: {:?}", e),
+                Ok(result) => println!("Result: {result}"),
+                Err(e) => println!("Error: {e:?}"),
             }
         };
 
         // Poor man's block_on
         let waker = std::task::Waker::noop();
-        let mut cx = std::task::Context::from_waker(&waker);
+        let mut cx = std::task::Context::from_waker(waker);
         let mut future = std::boxed::Box::pin(f);
         let mut iters = 0;
         while std::future::Future::poll(future.as_mut(), &mut cx).is_pending() {
             iters += 1;
-            if iters > 100 {
-                panic!("future didn't resolve");
-            }
+            assert!(iters <= 100, "future didn't resolve");
         }
     }
 }

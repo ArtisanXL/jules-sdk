@@ -33,7 +33,6 @@ impl Default for RetryConfig {
 /// A middleware that retries failed requests.
 #[derive(Debug, Clone, Default)]
 pub struct RetryMiddleware {
-    #[allow(dead_code)]
     config: RetryConfig,
 }
 
@@ -77,24 +76,37 @@ impl Middleware for RetryMiddleware {
         next: NextFn<'a>,
     ) -> BoxFuture<'a, Result<ClientResponse, SDKError>> {
         Box::pin(async move {
-            // Note: Since `NextFn` is `FnOnce` to allow the final handler to easily own its state and request,
-            // true retries in the middleware pipeline are constrained. A real implementation might require
-            // `NextFn` to be `Fn` or `Clone` (which means the request and the final handler would also need
-            // to be cloneable).
-            // For this basic SDK implementation, we will attempt the request once. If it fails with a
-            // retriable error, we log a warning explaining that retry requires cloneable handlers.
+            let max_attempts = self.config.max_attempts.max(1);
+            let mut attempt = 0u32;
 
-            debug!("Executing retry middleware (Note: limited by FnOnce pipeline)");
+            loop {
+                attempt += 1;
+                debug!(
+                    attempt,
+                    max_attempts, "Executing request via retry middleware"
+                );
 
-            let result = next(request).await;
+                let result = next(request.clone()).await;
 
-            if let Err(e) = &result {
-                if Self::is_retriable(e) {
-                    warn!("Request failed with retriable error: {}. (Actual retry omitted due to FnOnce pipeline constraints)", e);
+                match &result {
+                    Err(e) if attempt < max_attempts && Self::is_retriable(e) => {
+                        let exponent = i32::try_from(attempt - 1).unwrap_or(i32::MAX);
+                        let delay = self
+                            .config
+                            .delay
+                            .mul_f32(self.config.backoff_multiplier.powi(exponent));
+                        warn!(
+                            attempt,
+                            max_attempts,
+                            error = %e,
+                            delay_ms = delay.as_millis(),
+                            "Request failed with retriable error; retrying after backoff"
+                        );
+                        tokio::time::sleep(delay).await;
+                    }
+                    _ => return result,
                 }
             }
-
-            result
         })
     }
 }
@@ -103,8 +115,11 @@ impl Middleware for RetryMiddleware {
 mod tests {
     use super::*;
     use crate::conversation::Conversation;
+    use crate::errors::ApiError;
     use crate::message::{Message, Role};
     use crate::middleware::MiddlewarePipeline;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::Arc;
 
     #[tokio::test]
     async fn test_retry_middleware() {
@@ -122,5 +137,75 @@ mod tests {
 
         let res = pipeline.execute(request, handler).await.unwrap();
         assert_eq!(res.message.content(), "Success");
+    }
+
+    /// Proves that a retriable error actually causes the request to be retried: the handler
+    /// fails with a retriable (HTTP 500) error twice, then succeeds on the third attempt.
+    #[tokio::test]
+    async fn test_retry_middleware_retries_on_retriable_error() {
+        let mut pipeline = MiddlewarePipeline::new();
+        pipeline.add(RetryMiddleware::with_config(RetryConfig {
+            max_attempts: 3,
+            delay: Duration::from_millis(1),
+            backoff_multiplier: 1.0,
+        }));
+
+        let request = ClientRequest::new(Conversation::new());
+        let calls = Arc::new(AtomicUsize::new(0));
+        let calls_clone = Arc::clone(&calls);
+
+        let handler = move |_req: ClientRequest| {
+            let calls = Arc::clone(&calls_clone);
+            async move {
+                let attempt = calls.fetch_add(1, Ordering::SeqCst) + 1;
+                if attempt < 3 {
+                    Err(SDKError::Api(ApiError::with_status("server error", 500)))
+                } else {
+                    Ok(ClientResponse::new(Message::new(
+                        Role::Assistant,
+                        "Success",
+                    )))
+                }
+            }
+        };
+
+        let res = pipeline.execute(request, handler).await.unwrap();
+
+        assert_eq!(res.message.content(), "Success");
+        let call_count = calls.load(Ordering::SeqCst);
+        assert!(
+            call_count > 1,
+            "expected more than one attempt, got {call_count}"
+        );
+        assert_eq!(call_count, 3);
+    }
+
+    /// Proves that a non-retriable error (HTTP 400) is NOT retried: only a single attempt is
+    /// made and the original error is propagated.
+    #[tokio::test]
+    async fn test_retry_middleware_does_not_retry_non_retriable_error() {
+        let mut pipeline = MiddlewarePipeline::new();
+        pipeline.add(RetryMiddleware::with_config(RetryConfig {
+            max_attempts: 3,
+            delay: Duration::from_millis(1),
+            backoff_multiplier: 1.0,
+        }));
+
+        let request = ClientRequest::new(Conversation::new());
+        let calls = Arc::new(AtomicUsize::new(0));
+        let calls_clone = Arc::clone(&calls);
+
+        let handler = move |_req: ClientRequest| {
+            let calls = Arc::clone(&calls_clone);
+            async move {
+                calls.fetch_add(1, Ordering::SeqCst);
+                Err::<ClientResponse, _>(SDKError::Api(ApiError::with_status("bad request", 400)))
+            }
+        };
+
+        let res = pipeline.execute(request, handler).await;
+
+        assert!(res.is_err());
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
     }
 }

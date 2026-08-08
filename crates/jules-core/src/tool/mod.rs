@@ -160,11 +160,11 @@ mod tests {
     struct EchoTool;
 
     impl Tool for EchoTool {
-        fn name(&self) -> &str {
+        fn name(&self) -> &'static str {
             "echo"
         }
 
-        fn description(&self) -> &str {
+        fn description(&self) -> &'static str {
             "Echoes the input."
         }
 

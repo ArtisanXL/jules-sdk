@@ -2,6 +2,9 @@
 
 pub mod endpoint;
 
+#[cfg(not(target_arch = "wasm32"))]
+pub mod reqwest_transport;
+
 use jules_core::errors::SDKError;
 use std::future::Future;
 
@@ -199,7 +202,7 @@ mod tests {
             b"ok".to_vec(),
         );
 
-        let debug_output = format!("{:?}", response);
+        let debug_output = format!("{response:?}");
         assert!(!debug_output.contains("secret_value"));
         assert!(debug_output.contains("***REDACTED***"));
         assert!(debug_output.contains("text/plain"));
@@ -234,7 +237,7 @@ mod tests {
             .with_header("x-api-key", "secret-key")
             .with_header("X-Custom-Token", "some-token");
 
-        let debug_str = format!("{:?}", request);
+        let debug_str = format!("{request:?}");
 
         // Assert non-sensitive headers are visible
         assert!(debug_str.contains("\"Content-Type\", \"application/json\""));

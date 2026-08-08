@@ -16,6 +16,7 @@ workspace = true
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
 tracing = { version = "0.1.44", features = ["log"] }
+tokio = { version = "1.53.1", features = ["time"], optional = true }
 
 [features]
 # The default feature set provides the recommended experience for most users.
@@ -28,7 +29,7 @@ streaming = []
 tools = []
 
 # Request middleware, response middleware, middleware composition, request interception.
-middleware = []
+middleware = ["dep:tokio"]
 
 # Metrics support, tracing integrations, diagnostics capabilities, performance instrumentation.
 telemetry = []

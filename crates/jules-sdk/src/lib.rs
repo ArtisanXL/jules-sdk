@@ -11,6 +11,12 @@ pub use jules_core;
 pub use jules_core::config::{Config, ConfigBuilder};
 pub use jules_core::session::{Session, SessionBuilder};
 
+/// Re-exports of the real, network-capable client. Only available when the `middleware`
+/// feature is enabled (the client relies on `jules_core`'s middleware pipeline) and on
+/// non-wasm targets (it relies on `reqwest` for network I/O).
+#[cfg(all(feature = "middleware", not(target_arch = "wasm32")))]
+pub use jules_api::client::{JulesClient, JulesClientBuilder};
+
 pub use jules_macros::Placeholder;
 
 /// Experimental features and APIs.
