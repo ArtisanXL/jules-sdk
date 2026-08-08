@@ -144,4 +144,28 @@ mod tests {
             _ => panic!("Expected SDKError::Api"),
         }
     }
+
+    /// Proves that a 2xx response whose body fails to deserialize into the target type (e.g.
+    /// the API returned a changed/unexpected schema) is mapped into an `SDKError::Api` that
+    /// preserves the success status code and explains the deserialization failure, rather than
+    /// being confused with a genuine non-2xx API error.
+    #[test]
+    fn test_deserialize_malformed_json_with_success_status() {
+        let body = b"not valid json".to_vec();
+
+        let http_resp = HttpResponse::new(200, vec![], body);
+        let err = deserialize_response(&http_resp).unwrap_err();
+
+        match err {
+            SDKError::Api(e) => {
+                assert_eq!(e.status_code, Some(200));
+                assert!(
+                    e.message.contains("Failed to deserialize response"),
+                    "unexpected message: {}",
+                    e.message
+                );
+            }
+            _ => panic!("Expected SDKError::Api"),
+        }
+    }
 }
