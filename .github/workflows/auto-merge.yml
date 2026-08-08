@@ -17,8 +17,13 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       github.event.pull_request.user.login == 'dependabot[bot]' ||
-      startsWith(github.event.pull_request.title, '🛡️ Sentinel:') ||
-      startsWith(github.event.pull_request.title, '⚡ Bolt:')
+      (
+        github.event.pull_request.author_association == 'OWNER' &&
+        (
+          startsWith(github.event.pull_request.title, '🛡️ Sentinel:') ||
+          startsWith(github.event.pull_request.title, '⚡ Bolt:')
+        )
+      )
     steps:
       - name: Enable auto-merge
         run: gh pr merge --auto --merge "$PR_URL"
