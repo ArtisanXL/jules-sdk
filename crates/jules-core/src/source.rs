@@ -96,6 +96,10 @@ pub struct GitHubRepo {
     /// The repository name.
     pub repo: String,
     /// Whether the repository is private.
+    ///
+    /// Omitted by the REST API when `false` (proto3 JSON encoding omits
+    /// default scalar values), so this defaults to `false` when absent.
+    #[serde(default)]
     pub is_private: bool,
     /// The repository's default branch.
     #[serde(default, skip_serializing_if = "Option::is_none")]

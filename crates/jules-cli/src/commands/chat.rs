@@ -1,98 +1,276 @@
-//! `chat` subcommand: build a local conversation from a single message.
+//! `chat` subcommand: create a new Jules session, or send a message to an
+//! existing one.
 //!
-//! This command operates entirely locally/offline: it builds a
-//! [`Conversation`] and appends the given text as a [`Role::User`]
-//! [`Message`], then renders the resulting conversation state. Live network
-//! execution against the Jules API is not yet wired up here — that is a
-//! natural follow-up once the v1alpha REST client lands in `jules-api`.
+//! With no `--session` flag, `chat` creates a new session via
+//! [`JulesClient::create_session`] using the message as the prompt (a bare
+//! invocation with no `--source` creates a repoless session). With
+//! `--session <id>`, it sends the message to that existing session via
+//! [`JulesClient::send_message`].
 
 use clap::Args;
-use jules_sdk::jules_core::conversation::Conversation;
-use jules_sdk::jules_core::message::{Message, Role};
+use jules_api::client::JulesClient;
+use jules_api::http::Transport;
+use jules_api::session::CreateSessionRequest;
+use jules_sdk::jules_core::session::resource::{GithubRepoContext, SourceContext};
 use serde::Serialize;
 
+use crate::commands::view::SessionView;
+use crate::error::CliError;
 use crate::utils::{OutputFormat, Render};
 
 /// Arguments for the `chat` subcommand.
 #[derive(Debug, Args)]
 pub struct ChatArgs {
-    /// The message to append to the conversation, as the user.
+    /// The message to send, either as a new session's prompt or to an
+    /// existing session.
     pub message: String,
-}
 
-/// A single rendered message within a [`ChatResult`].
-#[derive(Debug, Serialize)]
-pub struct ChatMessageView {
-    /// The role of the message sender (e.g. `"user"`).
-    pub role: String,
-    /// The message content.
-    pub content: String,
+    /// An existing session id to send the message to, instead of creating a
+    /// new session.
+    #[arg(long)]
+    pub session: Option<String>,
+
+    /// The source repository to create the session against, as `owner/repo`.
+    /// Ignored when `--session` is given.
+    #[arg(long)]
+    pub source: Option<String>,
+
+    /// The branch to start the new session from. Requires `--source`.
+    #[arg(long)]
+    pub branch: Option<String>,
+
+    /// An optional title for the new session.
+    #[arg(long)]
+    pub title: Option<String>,
 }
 
 /// The rendered result of a `chat` subcommand invocation.
 #[derive(Debug, Serialize)]
-pub struct ChatResult {
-    /// The messages currently in the conversation.
-    pub messages: Vec<ChatMessageView>,
+#[serde(untagged)]
+pub enum ChatResult {
+    /// A newly created session.
+    Created(SessionView),
+    /// Confirmation that a message was sent to an existing session.
+    MessageSent {
+        /// The id of the session the message was sent to.
+        session_id: String,
+    },
 }
 
 impl Render for ChatResult {
     fn render_plain(&self) -> String {
-        self.messages
-            .iter()
-            .map(|m| format!("{}: {}", m.role, m.content))
-            .collect::<Vec<_>>()
-            .join("\n")
+        match self {
+            Self::Created(session) => format!("Created session:\n{}", session.render_plain()),
+            Self::MessageSent { session_id } => format!("Message sent to session {session_id}"),
+        }
     }
+}
+
+fn build_source_context(source: &str, branch: Option<&str>) -> Result<SourceContext, CliError> {
+    let (owner, repo) = source.split_once('/').ok_or_else(|| {
+        CliError::InvalidArgument(format!(
+            "--source must be in `owner/repo` form, got `{source}`"
+        ))
+    })?;
+    Ok(SourceContext {
+        source: format!("sources/github/{owner}/{repo}"),
+        github_repo_context: branch.map(|starting_branch| GithubRepoContext {
+            starting_branch: starting_branch.to_string(),
+        }),
+        working_branch: None,
+        environment_variables_enabled: None,
+    })
 }
 
 /// Handles the `chat` subcommand.
 ///
-/// Builds a [`Conversation`] locally and appends `args.message` as a
-/// [`Role::User`] message. This performs no network I/O: live execution
-/// against the Jules API is not yet wired up (see the module documentation).
-///
 /// # Errors
 ///
-/// Returns an error if rendering the result as JSON fails.
-pub fn handle(args: &ChatArgs, format: OutputFormat) -> Result<String, serde_json::Error> {
-    let mut conversation = Conversation::new();
-    conversation.add_message(Message::new(Role::User, args.message.clone()));
+/// Returns an error if `--branch` is given without `--source`, `--source` is
+/// not in `owner/repo` form, the Jules API request fails, or rendering the
+/// result fails.
+pub async fn handle<T: Transport>(
+    client: &JulesClient<T>,
+    args: &ChatArgs,
+    format: OutputFormat,
+) -> Result<String, CliError> {
+    let result = if let Some(session_id) = &args.session {
+        client.send_message(session_id, &args.message).await?;
+        ChatResult::MessageSent {
+            session_id: session_id.clone(),
+        }
+    } else if args.branch.is_some() && args.source.is_none() {
+        return Err(CliError::InvalidArgument(
+            "--branch requires --source to also be given".to_string(),
+        ));
+    } else {
+        let source_context = args
+            .source
+            .as_deref()
+            .map(|source| build_source_context(source, args.branch.as_deref()))
+            .transpose()?;
 
-    let messages = conversation
-        .messages()
-        .iter()
-        .map(|message| ChatMessageView {
-            // `Role`'s `Debug` output (`User`, `System`, ...) lowercased
-            // matches its `serde(rename_all = "lowercase")` wire format.
-            role: format!("{:?}", message.role()).to_lowercase(),
-            content: message.content().to_string(),
-        })
-        .collect();
+        let request = CreateSessionRequest {
+            prompt: args.message.clone(),
+            source_context,
+            title: args.title.clone(),
+            require_plan_approval: None,
+            automation_mode: None,
+        };
+        let session = client.create_session(&request).await?;
+        ChatResult::Created(SessionView::from(&session))
+    };
 
-    ChatResult { messages }.render(format)
+    Ok(result.render(format)?)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_support::MockTransport;
+    use jules_api::auth::AuthType;
+    use jules_api::http::HttpResponse;
 
-    #[test]
-    fn builds_single_user_message() {
-        let args = ChatArgs {
-            message: "hello".to_string(),
-        };
-        let output = handle(&args, OutputFormat::Plain).unwrap();
-        assert_eq!(output, "user: hello");
+    fn session_json() -> &'static str {
+        r#"{
+            "name": "sessions/12345",
+            "id": "12345",
+            "prompt": "Fix the bug",
+            "sourceContext": { "source": "sources/github/owner/repo" },
+            "title": "Fix the bug",
+            "createTime": "2026-08-08T00:00:00Z",
+            "updateTime": "2026-08-08T00:00:00Z",
+            "state": "QUEUED",
+            "url": "https://jules.google.com/session/12345"
+        }"#
     }
 
-    #[test]
-    fn renders_json_with_role_and_content() {
+    fn make_client(response: HttpResponse) -> (JulesClient<MockTransport>, MockTransport) {
+        let mock = MockTransport::new(response);
+        let client = JulesClient::new(mock.clone(), AuthType::jules_api_key("k"));
+        (client, mock)
+    }
+
+    #[tokio::test]
+    async fn no_session_creates_session_with_repoless_prompt() {
+        let (client, mock) = make_client(HttpResponse::new(200, vec![], session_json().into()));
         let args = ChatArgs {
-            message: "hi there".to_string(),
+            message: "Fix the bug".to_string(),
+            session: None,
+            source: None,
+            branch: None,
+            title: None,
         };
-        let output = handle(&args, OutputFormat::Json).unwrap();
-        assert!(output.contains("\"role\": \"user\""));
-        assert!(output.contains("\"content\": \"hi there\""));
+
+        let output = handle(&client, &args, OutputFormat::Plain).await.unwrap();
+        assert!(output.contains("Created session:"));
+        assert!(output.contains("id: 12345"));
+        assert!(output.contains("state: Queued"));
+        assert!(output.contains("url: https://jules.google.com/session/12345"));
+
+        let sent = mock.last_request().unwrap();
+        assert_eq!(sent.url, "https://jules.googleapis.com/v1alpha/sessions");
+        let body: serde_json::Value =
+            serde_json::from_slice(sent.body.as_deref().unwrap()).unwrap();
+        assert_eq!(body["prompt"], "Fix the bug");
+        assert!(body.get("sourceContext").is_none());
+    }
+
+    #[tokio::test]
+    async fn source_and_branch_populate_source_context() {
+        let (client, mock) = make_client(HttpResponse::new(200, vec![], session_json().into()));
+        let args = ChatArgs {
+            message: "Fix the bug".to_string(),
+            session: None,
+            source: Some("owner/repo".to_string()),
+            branch: Some("main".to_string()),
+            title: Some("My title".to_string()),
+        };
+
+        handle(&client, &args, OutputFormat::Plain).await.unwrap();
+
+        let sent = mock.last_request().unwrap();
+        let body: serde_json::Value =
+            serde_json::from_slice(sent.body.as_deref().unwrap()).unwrap();
+        assert_eq!(body["sourceContext"]["source"], "sources/github/owner/repo");
+        assert_eq!(
+            body["sourceContext"]["githubRepoContext"]["startingBranch"],
+            "main"
+        );
+        assert_eq!(body["title"], "My title");
+    }
+
+    #[tokio::test]
+    async fn renders_created_session_as_json() {
+        let (client, _mock) = make_client(HttpResponse::new(200, vec![], session_json().into()));
+        let args = ChatArgs {
+            message: "Fix the bug".to_string(),
+            session: None,
+            source: None,
+            branch: None,
+            title: None,
+        };
+
+        let output = handle(&client, &args, OutputFormat::Json).await.unwrap();
+        assert!(output.contains("\"id\": \"12345\""));
+        assert!(output.contains("\"state\": \"Queued\""));
+    }
+
+    #[tokio::test]
+    async fn invalid_source_format_is_rejected() {
+        let (client, _mock) = make_client(HttpResponse::new(200, vec![], session_json().into()));
+        let args = ChatArgs {
+            message: "hi".to_string(),
+            session: None,
+            source: Some("not-a-valid-source".to_string()),
+            branch: None,
+            title: None,
+        };
+
+        let err = handle(&client, &args, OutputFormat::Plain)
+            .await
+            .unwrap_err();
+        assert!(matches!(err, CliError::InvalidArgument(_)));
+    }
+
+    #[tokio::test]
+    async fn branch_without_source_is_rejected() {
+        let (client, _mock) = make_client(HttpResponse::new(200, vec![], session_json().into()));
+        let args = ChatArgs {
+            message: "hi".to_string(),
+            session: None,
+            source: None,
+            branch: Some("main".to_string()),
+            title: None,
+        };
+
+        let err = handle(&client, &args, OutputFormat::Plain)
+            .await
+            .unwrap_err();
+        assert!(matches!(err, CliError::InvalidArgument(_)));
+    }
+
+    #[tokio::test]
+    async fn with_session_sends_message_to_existing_session() {
+        let (client, mock) = make_client(HttpResponse::new(200, vec![], b"{}".to_vec()));
+        let args = ChatArgs {
+            message: "keep going".to_string(),
+            session: Some("12345".to_string()),
+            source: None,
+            branch: None,
+            title: None,
+        };
+
+        let output = handle(&client, &args, OutputFormat::Plain).await.unwrap();
+        assert_eq!(output, "Message sent to session 12345");
+
+        let sent = mock.last_request().unwrap();
+        assert_eq!(
+            sent.url,
+            "https://jules.googleapis.com/v1alpha/sessions/12345:sendMessage"
+        );
+        let body: serde_json::Value =
+            serde_json::from_slice(sent.body.as_deref().unwrap()).unwrap();
+        assert_eq!(body["prompt"], "keep going");
     }
 }

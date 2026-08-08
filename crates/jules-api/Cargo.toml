@@ -24,7 +24,7 @@ streaming = ["jules-core/streaming"]
 tools = ["jules-core/tools"]
 middleware = ["jules-core/middleware"]
 telemetry = ["jules-core/telemetry"]
-cli = ["jules-core/cli"]
+cli = ["jules-core/cli", "dep:reqwest"]
 wasm = ["jules-core/wasm"]
 experimental = ["jules-core/experimental"]
 
@@ -36,6 +36,9 @@ web-sys = { version = "0.3.103", features = ["Headers", "Request", "RequestInit"
 
 [target.wasm32-unknown-unknown.dependencies]
 getrandom = { version = "0.4", features = ["wasm_js"] }
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"], optional = true }
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 proptest = "1.11.0"

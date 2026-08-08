@@ -2,3 +2,6 @@
 
 pub mod chat;
 pub mod config;
+pub mod sessions;
+pub mod sources;
+pub mod view;
