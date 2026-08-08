@@ -1,5 +1,7 @@
 //! `config` subcommand: inspect or persist local CLI configuration.
 
+use std::path::Path;
+
 use clap::{Args, Subcommand};
 use serde::Serialize;
 
@@ -59,24 +61,32 @@ impl Render for ConfigView {
 
 /// Handles the `config` subcommand.
 ///
+/// `config_dir` overrides where the config file is read from/written to; production callers
+/// pass `None` (the real OS config directory). This is the hook tests use to avoid touching
+/// the real user's home directory.
+///
 /// # Errors
 ///
 /// Returns a [`CliError`] if the config file cannot be loaded or saved, or rendering fails.
-pub fn handle(args: &ConfigArgs, format: crate::utils::OutputFormat) -> Result<String, CliError> {
+pub fn handle(
+    args: &ConfigArgs,
+    format: crate::utils::OutputFormat,
+    config_dir: Option<&Path>,
+) -> Result<String, CliError> {
     match &args.command {
         ConfigCommand::Show => {
-            let resolved = config::resolve(None, None, None)?;
+            let resolved = config::resolve(config_dir, None, None)?;
             Ok(ConfigView::from(&resolved).render(format)?)
         }
         ConfigCommand::Set { api_key, base_url } => {
-            let mut current = config::load_file(None)?;
+            let mut current = config::load_file(config_dir)?;
             if let Some(api_key) = api_key {
                 current.api_key = Some(api_key.clone());
             }
             if let Some(base_url) = base_url {
                 current.base_url = Some(base_url.clone());
             }
-            config::save_file(None, &current)?;
+            config::save_file(config_dir, &current)?;
             Ok(ConfigView::from(&current).render(format)?)
         }
     }
@@ -86,6 +96,44 @@ pub fn handle(args: &ConfigArgs, format: crate::utils::OutputFormat) -> Result<S
 mod tests {
     use super::*;
     use crate::utils::OutputFormat;
+    use std::path::PathBuf;
+
+    fn temp_dir() -> PathBuf {
+        let dir = std::env::temp_dir().join(format!(
+            "jules-cli-config-cmd-test-{}-{:?}",
+            std::process::id(),
+            std::thread::current().id()
+        ));
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    /// Proves that `ConfigCommand::Set`'s merge logic preserves a previously-set field when a
+    /// later `Set` call only supplies the other field, rather than clobbering it with `None`.
+    #[test]
+    fn set_preserves_unset_fields() {
+        let dir = temp_dir();
+
+        let set_api_key = ConfigArgs {
+            command: ConfigCommand::Set {
+                api_key: Some("secret-key".to_string()),
+                base_url: None,
+            },
+        };
+        handle(&set_api_key, OutputFormat::Plain, Some(&dir)).unwrap();
+
+        let set_base_url = ConfigArgs {
+            command: ConfigCommand::Set {
+                api_key: None,
+                base_url: Some("https://example.test".to_string()),
+            },
+        };
+        handle(&set_base_url, OutputFormat::Plain, Some(&dir)).unwrap();
+
+        let stored = config::load_file(Some(&dir)).unwrap();
+        assert_eq!(stored.api_key.as_deref(), Some("secret-key"));
+        assert_eq!(stored.base_url.as_deref(), Some("https://example.test"));
+    }
 
     #[test]
     fn config_view_redacts_api_key() {

@@ -49,7 +49,7 @@ pub enum Commands {
 
 async fn run(cli: &Cli) -> Result<String, CliError> {
     match &cli.command {
-        Commands::Config(args) => config_cmd::handle(args, cli.format),
+        Commands::Config(args) => config_cmd::handle(args, cli.format, None),
         Commands::Chat(args) => {
             let resolved = config::resolve(None, None, None)?;
             let client = api::build_client(&resolved)?;
