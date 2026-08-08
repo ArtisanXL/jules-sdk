@@ -226,3 +226,61 @@ impl Render for ActivityListView {
         lines.join("\n")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn activity_summary_plan_generated() {
+        let json = r#"{
+            "id": "act-1",
+            "planGenerated": {
+                "plan": {
+                    "id": "plan-1",
+                    "steps": [
+                        {"id": "s1", "title": "Step one"},
+                        {"id": "s2", "title": "Step two"}
+                    ]
+                }
+            }
+        }"#;
+        let activity: Activity = serde_json::from_str(json).unwrap();
+        assert_eq!(activity_summary(&activity), "plan generated (2 step(s))");
+    }
+
+    #[test]
+    fn activity_summary_empty_extra() {
+        let activity = Activity::builder().id("act-2").build().unwrap();
+        assert_eq!(activity_summary(&activity), "activity");
+    }
+
+    #[test]
+    fn activity_summary_non_empty_extra() {
+        let json = r#"{"id": "act-3", "progressUpdate": {"message": "working"}}"#;
+        let activity: Activity = serde_json::from_str(json).unwrap();
+        assert_eq!(activity_summary(&activity), "progressUpdate");
+    }
+
+    #[test]
+    fn activity_list_view_renders_empty() {
+        let view = ActivityListView {
+            activities: vec![],
+            next_page_token: None,
+        };
+        assert_eq!(view.render_plain(), "No activities found.");
+    }
+
+    #[test]
+    fn activity_list_view_renders_with_next_page_token() {
+        let json = r#"{"id": "act-1", "originator": "AGENT"}"#;
+        let activity: Activity = serde_json::from_str(json).unwrap();
+        let view = ActivityListView {
+            activities: vec![ActivityView::from(&activity)],
+            next_page_token: Some("token-2".to_string()),
+        };
+        let rendered = view.render_plain();
+        assert!(rendered.contains("act-1"));
+        assert!(rendered.contains("(more results available, next page token: token-2)"));
+    }
+}
