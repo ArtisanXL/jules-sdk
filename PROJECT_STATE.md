@@ -441,6 +441,7 @@ When uncertainty exists, contributors SHOULD prioritize clarification over archi
 | Version | Status      |
 | ------- | ----------- |
 | v0.1.0  | ✅ Released (2026-08-08, [crates.io](https://crates.io/crates/jules-sdk), [GitHub release](https://github.com/ArtisanXL/jules-sdk/releases/tag/v0.1.0)) |
+| v0.1.1  | ✅ Released (2026-08-08, [crates.io](https://crates.io/crates/jules-sdk/0.1.1), [GitHub release](https://github.com/ArtisanXL/jules-sdk/releases/tag/v0.1.1)) |
 | v0.2.0  | ⬜ Planned     |
 | v0.5.0  | ⬜ Planned     |
 | v0.9.0  | ⬜ Planned     |
@@ -454,6 +455,7 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-08 | Published v0.1.1: bumped workspace version from `0.1.0` to `0.1.1`, added the CHANGELOG.md v0.1.1 entry (query-param percent-encoding fix, CRLF SSE parsing fix, expanded test coverage), re-ran the full release checklist (fmt/clippy/test/audit/deny all clean), tagged `v0.1.1`, and published `jules-macros`, `jules-core`, `jules-api`, `jules-sdk`, and `jules-cli` to crates.io (all confirmed live via the crates.io API), plus a [GitHub release](https://github.com/ArtisanXL/jules-sdk/releases/tag/v0.1.1). |
 | 2026-08-08 | Published v0.1.0: bumped workspace version from `0.1.0-rc.1` to `0.1.0`, finalized the CHANGELOG.md v0.1.0 entry, re-ran the full release checklist (fmt/clippy/build/test/audit/deny all clean), tagged `v0.1.0`, and published `jules-core`, `jules-macros`, `jules-api`, `jules-sdk`, and `jules-cli` to crates.io (all confirmed live via the crates.io API), plus a [GitHub release](https://github.com/ArtisanXL/jules-sdk/releases/tag/v0.1.0). |
 | 2026-08-08 | Completed PH3-03 (CLI support): implemented `jules-cli` end to end — clap argument parsing, `config`/`chat`/`sessions`/`sources` subcommands wired to the real `JulesClient`, JSON config file with CLI-flag/env/file/default precedence, plain/JSON output formatting, and 26 tests (including handler-level tests against the real client via a local mock HTTP server). Manually live-verified read-only (`sessions list`, `sessions get`, `sources list`) against the real API. |
 | 2026-08-08 | Resolved the PH4-01/PH4-03 flag-for-review (also closes PH4-04.3/.4): verified PH4-03 (performance) as legitimate; found PH4-01 (WASM support) genuinely incomplete (`FetchClient` didn't implement `Transport`; `Transport`'s `Send` bound conflicted with `wasm32` types) and fixed both for real, verified via an executed `wasm-bindgen-test` run in headless Firefox. Also fixed a pre-existing wasm32 test-compilation blocker (dev-only tokio `net`/`io-util` features not being target-gated) found along the way, and fixed `jules_sdk::Client`/`Conversation`/`Tool` not being re-exported from the facade crate despite VERSIONING.md documenting them as supported imports. |
