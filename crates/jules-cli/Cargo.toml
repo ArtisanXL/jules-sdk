@@ -8,6 +8,8 @@ repository.workspace = true
 homepage.workspace = true
 documentation.workspace = true
 description = "Command line interface for Jules-SDK"
+keywords = ["jules", "google", "cli", "sdk"]
+categories = ["command-line-utilities"]
 
 [lints]
 workspace = true

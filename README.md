@@ -2,6 +2,7 @@
 
 > Early-stage (pre-alpha), async-first and idiomatic Rust implementation of Google's Jules SDK.
 
+[![CI](https://github.com/ArtisanXL/jules-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/ArtisanXL/jules-sdk/actions/workflows/ci.yml)
 [![Crates.io](https://img.shields.io/crates/v/jules-sdk)](https://crates.io/crates/jules-sdk)
 [![Docs.rs](https://img.shields.io/docsrs/jules-sdk)](https://docs.rs/jules-sdk)
 [![License](https://img.shields.io/crates/l/jules-sdk)](LICENSE)
@@ -142,7 +143,9 @@ jules-sdk/
 ├── crates/
 │
 │   ├── jules-sdk/
-│   │   -> Public facade crate
+│   │   ├── -> Public facade crate
+│   │   │
+│   │   └── examples/
 │   │
 │   ├── jules-core/
 │   │   -> Core abstractions
@@ -155,8 +158,6 @@ jules-sdk/
 │   │
 │   └── jules-cli/
 │       -> Official CLI
-│
-└── examples/
 ```
 
 Users should only depend on:
@@ -382,6 +383,11 @@ You may choose either license when using this project.
 ## Acknowledgements
 
 Jules-SDK is inspired by the design philosophy of modern Rust libraries and aims to provide an idiomatic Rust experience for developers building applications powered by Jules.
+
+This project's API surface and Rust type shapes were developed with reference to:
+
+* [Jules API REST reference](https://developers.google.com/jules/api/reference/rest) — the authoritative source for `v1alpha` resource shapes and endpoints
+* [google-labs-code/jules-sdk](https://github.com/google-labs-code/jules-sdk) — Google's own SDK, used as a reference for naming and behavior parity
 
 ---
 

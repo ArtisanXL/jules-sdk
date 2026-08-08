@@ -8,6 +8,12 @@ repository.workspace = true
 homepage.workspace = true
 documentation.workspace = true
 description = "Core abstractions and traits for Jules-SDK"
+keywords = ["jules", "google", "sdk", "async"]
+categories = ["api-bindings", "asynchronous"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [lints]
 workspace = true

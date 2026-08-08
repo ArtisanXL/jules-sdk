@@ -8,6 +8,12 @@ repository.workspace = true
 homepage.workspace = true
 documentation.workspace = true
 description = "Facade crate for Google's Jules SDK"
+keywords = ["jules", "google", "sdk", "async", "api-client"]
+categories = ["api-bindings", "asynchronous"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [lints]
 workspace = true
