@@ -165,6 +165,16 @@ mod tests {
     }
 
     #[test]
+    fn load_file_returns_json_error_for_malformed_contents() {
+        let dir = temp_dir();
+        let path = config_file_path(Some(&dir)).unwrap();
+        std::fs::write(&path, "{ this is not valid json").unwrap();
+
+        let err = load_file(Some(&dir)).unwrap_err();
+        assert!(matches!(err, ConfigError::Json(_)));
+    }
+
+    #[test]
     fn save_then_load_round_trips() {
         let dir = temp_dir();
         let config = CliConfig {
