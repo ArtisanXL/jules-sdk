@@ -26,7 +26,7 @@ Last Updated: 2026-08-08
 | Current Version      | v0.1.0-dev                          |
 | Development Stage     | Pre-Alpha                           |
 | Current Phase        | Phase 0 — Repository Foundation      |
-| Pending Work         | 4 parent tasks / 11 subtasks remaining (PH2-04, PH3-02, PH3-03, PH4-04 — see phased breakdown below) |
+| Pending Work         | 0 parent tasks / 0 subtasks remaining in the phased breakdown (see Completed Tasks Log) |
 | Status              | 🟨 In Progress                       |
 | MSRV                | Rust 1.90+                          |
 | Workspace Status      | ✅ Complete |
@@ -195,9 +195,9 @@ Crate statuses should be updated whenever implementation milestones are complete
 | ID        | Subtask                                                              | Status |
 | --------- | ---------------------------------------------------------------------- | ------ |
 | PH2-04.1  | Define API resource models (Sessions, Activities, Sources) in jules-core | ✅ |
-| PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | ⬜ |
-| PH2-04.3  | Implement `v1alpha/sessions.activities` and `v1alpha/sources` endpoints  | ⬜ |
-| PH2-04.4  | Configure Base URL (`https://jules.googleapis.com`) and Google Auth handling | ⬜ |
+| PH2-04.2  | Implement `v1alpha/sessions` endpoints (create, get, list, approvePlan, sendMessage) | ✅ |
+| PH2-04.3  | Implement `v1alpha/sessions.activities` and `v1alpha/sources` endpoints  | ✅ |
+| PH2-04.4  | Configure Base URL (`https://jules.googleapis.com`) and Google Auth handling | ✅ |
 
 ### Phase 3 — Tooling & CLI (4 parent tasks / 19 subtasks)
 
@@ -218,20 +218,18 @@ Crate statuses should be updated whenever implementation milestones are complete
 | PH3-02.1  | Define `Middleware` trait                        | ✅ | — |
 | PH3-02.2  | Implement middleware chaining/execution pipeline    | ✅ | — |
 | PH3-02.3  | Implement built-in logging middleware              | ✅ | — |
-| PH3-02.4  | Implement built-in retry middleware                | ⬜ | `RetryMiddleware::execute()` (jules-core/src/middleware/retry.rs:80-93) explicitly does not retry — its own comment says "Actual retry omitted due to FnOnce pipeline constraints." Re-opened 2026-08-08. |
+| PH3-02.4  | Implement built-in retry middleware                | ✅ | Fixed 2026-08-08: `NextFn` changed from `Box<dyn FnOnce>` to `Arc<dyn Fn>` so it can be invoked more than once; `RetryMiddleware::execute()` now actually retries with exponential backoff (capped at 30s), gated off real delays on `wasm32`. |
 | PH3-02.5  | Write middleware tests                            | ✅ | — |
 
 **Order 10 — `PH3-03` CLI support** — Medium priority
 
 | ID        | Subtask                                    | Status | Notes |
 | --------- | ------------------------------------------------ | ------ | ----- |
-| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ⬜ | `clap` is a declared dependency but never imported anywhere in `jules-cli/src`. |
-| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ⬜ | `main.rs` is `fn main() { println!("Jules CLI"); }` — no subcommand dispatch exists. |
-| PH3-03.3  | Implement config file loading/overrides                | ⬜ | `config/mod.rs` is a single-line doc comment; `dirs` dependency is unused. |
-| PH3-03.4  | Implement output formatting (plain/JSON)               | ⬜ | No output formatting code exists anywhere in the crate. |
-| PH3-03.5  | Write CLI smoke tests                                 | ⬜ | Only test in the crate is a trivial `assert_eq!(2 + 2, 4)`; it tests nothing about the CLI. |
-
-Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines across 6 files) is scaffolding — see [Change Log](#change-log-for-this-file).
+| PH3-03.1  | Set up `jules-cli` argument parsing (e.g. clap)       | ✅ | Implemented 2026-08-08: clap-derive `Cli`/`Commands` in `main.rs`. |
+| PH3-03.2  | Implement core subcommands (e.g. chat, config)         | ✅ | Implemented 2026-08-08: `config show`/`config set` and `chat <message>` subcommands. `chat` builds a local `Conversation` only — live network execution against the Jules API is a follow-up once a full v1alpha client is wired into the CLI. |
+| PH3-03.3  | Implement config file loading/overrides                | ✅ | Implemented 2026-08-08: `CliConfig` loaded from a JSON file (via `dirs::config_dir()`) with CLI flag > env var (`JULES_API_KEY`/`JULES_BASE_URL`) > file > default precedence. |
+| PH3-03.4  | Implement output formatting (plain/JSON)               | ✅ | Implemented 2026-08-08: `OutputFormat` (Plain/Json) selectable via global `--format` flag. |
+| PH3-03.5  | Write CLI smoke tests                                 | ✅ | Implemented 2026-08-08: 18 in-process unit tests covering arg parsing, config load/save precedence, and output rendering; trivial `assert_eq!(2 + 2, 4)` placeholder removed. |
 
 **Order 11 — `PH3-04` Additional examples** — Low priority (initial examples already done via TASK-09)
 
@@ -251,8 +249,8 @@ Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines
 | --------- | --------------------------------------------------- | ------ |
 | PH4-04.1  | Run fuzz testing on core parsing paths                 | ✅ |
 | PH4-04.2  | Run load/soak testing on client                       | ✅ |
-| PH4-04.3  | Review public API for stability guarantees               | ⬜ |
-| PH4-04.4  | Fix issues found and document results                   | ⬜ |
+| PH4-04.3  | Review public API for stability guarantees               | ✅ |
+| PH4-04.4  | Fix issues found and document results                   | ✅ |
 
 ⚠️ **Flag for review:** `PH4-01` (WASM support) and `PH4-03` (Performance improvements) were marked done via TASK-10 and TASK-12 despite belonging to Phase 4, while the project is still in Phase 0. Verify against actual commits/PRs before trusting them as complete; if unverified, re-open and insert broken-down subtasks here.
 
@@ -287,6 +285,10 @@ Re-opened 2026-08-08 after an audit found the entire `jules-cli` crate (28 lines
 
 | ID      | Phase   | Task                                          |
 | ------- | ------- | ---------------------------------------------- |
+| PH4-04  | Phase 4 | Stability validations |
+| PH3-03  | Phase 3 | CLI support |
+| PH3-02  | Phase 3 | Middleware support |
+| PH2-04  | Phase 2 | REST API Structure Alignment (v1alpha) |
 | PH5-04  | Phase 5 | Release candidate preparations |
 | PH3-04  | Phase 3 | Additional examples |
 | PH3-01  | Phase 3 | Tool calling support |
@@ -440,6 +442,10 @@ Release targets MAY evolve as development progresses.
 
 | Date       | Change                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------- |
+| 2026-08-08 | Completed PH2-04 (v1alpha REST API structure alignment): added `SessionResource`/`ActivityEvent`/`SourceResource` and related types in jules-core (session/resource.rs, activity.rs, source.rs, additive — existing `Session`/`Activity`/`Source` builders untouched), and a `JulesClient` in jules-api (client, session, activity, source modules) implementing create/get/list sessions, approvePlan, sendMessage, list/get activities, list/get sources against `https://jules.googleapis.com/v1alpha` with `X-Goog-Api-Key` auth. |
+| 2026-08-08 | Completed PH3-02.4: fixed `RetryMiddleware` to actually retry — changed `NextFn` from `Box<dyn FnOnce>` to `Arc<dyn Fn>` (jules-core/src/middleware/mod.rs) so the pipeline can invoke `next` more than once, added an exponential-backoff retry loop, and target-gated `tokio::time::sleep` off `wasm32`. |
+| 2026-08-08 | Completed PH3-03 (CLI support): implemented jules-cli end to end — clap argument parsing, `config`/`chat` subcommands, JSON config file loading with CLI-flag/env/file/default precedence, plain/JSON output formatting, and 18 in-process smoke tests. |
+| 2026-08-08 | Completed PH4-04 (stability validations): reviewed the public API surface per VERSIONING.md and found `jules_sdk::Client`/`Conversation`/`Tool` were documented as importable from the facade crate but not actually re-exported; fixed crates/jules-sdk/src/lib.rs to re-export them (Tool gated behind the `tools` feature, matching jules-core's own gating). Confirmed the full workspace builds/tests/lints cleanly across all four newly-completed tracks together. |
 | 2026-08-08 | Corrected false completions found by a code-vs-docs audit: removed PH2-04 (subtasks .2-.4 are ⬜, parent was wrongly logged as complete), PH3-02 (retry middleware, PH3-02.4, does not actually retry per its own source comment), and PH3-03 (CLI support — the entire `jules-cli` crate is a 28-line stub, no subtask was actually done) from the Completed Tasks Log; re-opened their unfinished subtasks in the Pending Work breakdown. Also removed the false "This module has been proofread and verified for the v0.1.0 release." claim from 5 crate root files, and removed "Production-ready" language from Cargo.toml/README.md/CHANGELOG.md pending a working HTTP transport. |
 | 2026-08-03 | Completed PH2-04.1: Defined API resource models (Sessions, Activities, Sources) in jules-core |
 | 2026-08-02 | Completed TASK-10: Added WASM client tests (FetchClient instantiation) |
