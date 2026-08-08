@@ -9,11 +9,11 @@ use std::future::Future;
 struct WeatherTool;
 
 impl Tool for WeatherTool {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "get_weather"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "Gets the weather for a location."
     }
 

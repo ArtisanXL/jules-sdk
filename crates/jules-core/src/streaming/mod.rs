@@ -35,14 +35,16 @@ mod tests {
         type Item = StreamEvent;
 
         fn next(&mut self) -> impl Future<Output = Option<Self::Item>> + Send {
-            let res = if self.count < 3 {
-                self.count += 1;
-                Some(StreamEvent::TextChunk(format!("chunk {}", self.count)))
-            } else if self.count == 3 {
-                self.count += 1;
-                Some(StreamEvent::Done)
-            } else {
-                None
+            let res = match self.count {
+                0..=2 => {
+                    self.count += 1;
+                    Some(StreamEvent::TextChunk(format!("chunk {}", self.count)))
+                }
+                3 => {
+                    self.count += 1;
+                    Some(StreamEvent::Done)
+                }
+                _ => None,
             };
             async move { res }
         }

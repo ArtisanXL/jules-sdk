@@ -3,6 +3,7 @@
 use crate::http::HttpResponse;
 use jules_core::errors::{ApiError, SDKError};
 use jules_core::response::ClientResponse;
+use serde::de::DeserializeOwned;
 use serde::Deserialize;
 
 /// Helper struct for deserializing API errors.
@@ -16,6 +17,47 @@ struct ErrorDetail {
     message: String,
 }
 
+/// Maps a non-2xx `HttpResponse` into an `SDKError::Api`, extracting a message from a
+/// `{"error": {"message": ...}}` body when present, falling back to the raw body text.
+pub(crate) fn map_error_response(response: &HttpResponse) -> SDKError {
+    let message = match serde_json::from_slice::<ErrorResponse>(&response.body) {
+        Ok(err_resp) => err_resp.error.map_or_else(
+            || String::from_utf8_lossy(&response.body).into_owned(),
+            |e| e.message,
+        ),
+        Err(_) => String::from_utf8_lossy(&response.body).into_owned(),
+    };
+
+    let mut msg = message.trim().to_string();
+    if msg.is_empty() {
+        msg = format!("HTTP {}", response.status);
+    }
+
+    SDKError::Api(ApiError::with_status(msg, response.status))
+}
+
+/// Deserializes a successful (2xx) `HttpResponse` body as JSON into `R`, or maps a non-2xx
+/// response into an `SDKError::Api`.
+///
+/// # Errors
+///
+/// Returns `SDKError::Api` if the HTTP response status is not successful, or if the JSON
+/// response body fails to deserialize properly.
+pub(crate) fn deserialize_json<R: DeserializeOwned>(
+    response: &HttpResponse,
+) -> Result<R, SDKError> {
+    if response.status >= 200 && response.status < 300 {
+        serde_json::from_slice::<R>(&response.body).map_err(|e| {
+            SDKError::Api(ApiError::with_status(
+                format!("Failed to deserialize response: {e}"),
+                response.status,
+            ))
+        })
+    } else {
+        Err(map_error_response(response))
+    }
+}
+
 /// Deserializes an HTTP response into a `ClientResponse` or an `SDKError`.
 ///
 /// # Errors
@@ -23,31 +65,7 @@ struct ErrorDetail {
 /// Returns `SDKError::Api` if the HTTP response status is not successful,
 /// or if the JSON response body fails to deserialize properly.
 pub fn deserialize_response(response: &HttpResponse) -> Result<ClientResponse, SDKError> {
-    if response.status >= 200 && response.status < 300 {
-        let client_response =
-            serde_json::from_slice::<ClientResponse>(&response.body).map_err(|e| {
-                SDKError::Api(ApiError::with_status(
-                    format!("Failed to deserialize response: {e}"),
-                    response.status,
-                ))
-            })?;
-        Ok(client_response)
-    } else {
-        let message = match serde_json::from_slice::<ErrorResponse>(&response.body) {
-            Ok(err_resp) => err_resp.error.map_or_else(
-                || String::from_utf8_lossy(&response.body).into_owned(),
-                |e| e.message,
-            ),
-            Err(_) => String::from_utf8_lossy(&response.body).into_owned(),
-        };
-
-        let mut msg = message.trim().to_string();
-        if msg.is_empty() {
-            msg = format!("HTTP {}", response.status);
-        }
-
-        Err(SDKError::Api(ApiError::with_status(msg, response.status)))
-    }
+    deserialize_json::<ClientResponse>(response)
 }
 
 #[cfg(test)]

@@ -4,6 +4,14 @@
 
 pub mod auth;
 pub mod client;
+
+/// Re-exports of [`client::JulesClient`] and [`client::JulesClientBuilder`], the real,
+/// network-capable client. Only available when the `middleware` feature is enabled (the
+/// client relies on `jules_core`'s middleware pipeline) and on non-wasm targets (it relies on
+/// [`http::reqwest_transport::ReqwestTransport`]).
+#[cfg(all(feature = "middleware", not(target_arch = "wasm32")))]
+pub use client::{JulesClient, JulesClientBuilder};
+
 pub mod conversation;
 pub mod errors;
 pub mod http;

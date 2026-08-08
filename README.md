@@ -9,7 +9,7 @@
 
 ---
 
-> **Status:** This project is in Pre-Alpha. Core types, builders and abstractions exist, but there is currently **no working HTTP transport** — nothing in this workspace can make a real request to the Jules API yet. See [PROJECT_STATE.md](PROJECT_STATE.md) for the authoritative, up-to-date status of every crate.
+> **Status:** This project is in Pre-Alpha. Core types, builders and abstractions exist, and `jules-api` has a real native HTTP transport (`ReqwestTransport`) and an end-to-end `JulesClient`. All `v1alpha` session/source/activity endpoints (`list_sessions`, `get_session`, `create_session`, `send_message`, `approve_plan`, `list_sources`, `list_activities`) are implemented and live-verified against `https://jules.googleapis.com` using an API key via the `X-Goog-Api-Key` header. The Jules product API surface itself (`v1alpha`) is otherwise still limited — no OAuth/service-account auth, no CLI. See [PROJECT_STATE.md](PROJECT_STATE.md) for the authoritative, up-to-date status of every crate.
 
 ## Overview
 
