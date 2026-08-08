@@ -45,6 +45,19 @@ For more information, please refer to:
 
 ---
 
+## [0.1.1] - 2026-08-08
+
+### Fixed
+
+* `Endpoint::build_url` now percent-encodes query parameter keys/values, so a value containing `&` or `=` (e.g. an opaque `pageToken`) no longer corrupts the query string's delimiter structure.
+* `SseParser` now normalizes CRLF/CR line endings before block detection, so CRLF-terminated SSE streams are parsed correctly instead of silently never yielding events.
+
+### Changed
+
+* Expanded unit and integration test coverage across `jules-core`, `jules-api`, `jules-cli`, and `jules-sdk` (retry middleware edge cases, SSE parsing, facade re-exports, CLI config/session flows, backoff delay capping).
+
+---
+
 ## [0.1.0] - 2026-08-08
 
 > First functional release. Unlike `0.1.0-rc.1`, this release can make real requests

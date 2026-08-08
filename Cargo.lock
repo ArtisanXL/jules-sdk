@@ -589,7 +589,7 @@ dependencies = [
 
 [[package]]
 name = "jules-api"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "getrandom 0.4.3",
  "js-sys",
@@ -609,7 +609,7 @@ dependencies = [
 
 [[package]]
 name = "jules-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "clap",
  "dirs",
@@ -621,7 +621,7 @@ dependencies = [
 
 [[package]]
 name = "jules-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "proptest",
  "serde",
@@ -633,11 +633,11 @@ dependencies = [
 
 [[package]]
 name = "jules-macros"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "jules-sdk"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "jules-api",
  "jules-core",
