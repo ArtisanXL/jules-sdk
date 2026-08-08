@@ -141,6 +141,12 @@ pub fn resolve(
 mod tests {
     use super::*;
 
+    /// Guards access to the `JULES_API_KEY`/`JULES_BASE_URL` process environment variables,
+    /// which `resolve()` reads. Tests run concurrently on separate threads within the same
+    /// process, so any test that sets or relies on the absence of these env vars must hold
+    /// this lock for the duration.
+    static ENV_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
     fn temp_dir() -> PathBuf {
         let dir = std::env::temp_dir().join(format!(
             "jules-cli-test-{}-{:?}",
@@ -189,6 +195,9 @@ mod tests {
 
     #[test]
     fn resolve_falls_back_to_file_when_no_override() {
+        let _guard = ENV_LOCK
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
         let dir = temp_dir();
         save_file(
             Some(&dir),
@@ -202,5 +211,55 @@ mod tests {
         let resolved = resolve(Some(&dir), None, None).unwrap();
         assert_eq!(resolved.api_key.as_deref(), Some("file-key"));
         assert_eq!(resolved.base_url.as_deref(), Some("https://file.example"));
+    }
+
+    /// Removes `JULES_API_KEY` on drop, including on panic, so a failed assertion never leaks
+    /// the env var into subsequently-run tests in the same process.
+    struct EnvVarGuard;
+    impl Drop for EnvVarGuard {
+        fn drop(&mut self) {
+            // SAFETY: only constructed while holding ENV_LOCK.
+            unsafe {
+                std::env::remove_var("JULES_API_KEY");
+            }
+        }
+    }
+
+    /// Proves the documented precedence: explicit override > env var > config file. Guards
+    /// env var mutation with `ENV_LOCK` since tests run concurrently in the same process.
+    #[test]
+    fn resolve_env_var_overrides_file_but_not_explicit_override() {
+        let _guard = ENV_LOCK
+            .lock()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        let dir = temp_dir();
+        save_file(
+            Some(&dir),
+            &CliConfig {
+                api_key: Some("file-key".to_string()),
+                base_url: None,
+            },
+        )
+        .unwrap();
+
+        // SAFETY: serialized by ENV_LOCK; no other thread reads/writes these vars concurrently.
+        unsafe {
+            std::env::set_var("JULES_API_KEY", "env-key");
+        }
+        let _env_guard = EnvVarGuard;
+
+        let resolved = resolve(Some(&dir), None, None).unwrap();
+        assert_eq!(
+            resolved.api_key.as_deref(),
+            Some("env-key"),
+            "env var should override the file value"
+        );
+
+        let resolved = resolve(Some(&dir), Some("flag-key".to_string()), None).unwrap();
+        assert_eq!(
+            resolved.api_key.as_deref(),
+            Some("flag-key"),
+            "explicit override should still win over the env var"
+        );
     }
 }
