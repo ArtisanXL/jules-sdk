@@ -13,8 +13,11 @@ use std::sync::Arc;
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
 /// A function type that represents the execution of the next middleware in the pipeline.
-pub type NextFn<'a> = Box<
-    dyn FnOnce(ClientRequest) -> BoxFuture<'a, Result<ClientResponse, SDKError>> + Send + Sync + 'a,
+///
+/// Backed by an `Arc` (rather than a `Box`) so that it is callable more than once, which allows
+/// middlewares such as retry logic to invoke `next` multiple times for a single incoming request.
+pub type NextFn<'a> = Arc<
+    dyn Fn(ClientRequest) -> BoxFuture<'a, Result<ClientResponse, SDKError>> + Send + Sync + 'a,
 >;
 
 /// A trait for intercepting and modifying requests and responses.
@@ -25,7 +28,9 @@ pub trait Middleware: Send + Sync {
     ///
     /// The middleware is responsible for calling the `next` function to proceed down the pipeline,
     /// passing the potentially modified `request`. It receives a `Future` of the `ClientResponse`,
-    /// which it can await and then potentially modify before returning.
+    /// which it can await and then potentially modify before returning. `next` may be called more
+    /// than once (e.g. by a retry middleware); each call requires its own `ClientRequest`, so
+    /// callers that need the original request across multiple invocations should `clone` it.
     fn execute<'a>(
         &'a self,
         request: ClientRequest,
@@ -80,16 +85,16 @@ impl MiddlewarePipeline {
         final_handler: F,
     ) -> Result<ClientResponse, SDKError>
     where
-        F: FnOnce(ClientRequest) -> Fut + Send + Sync + 'static,
+        F: Fn(ClientRequest) -> Fut + Send + Sync + 'static,
         Fut: Future<Output = Result<ClientResponse, SDKError>> + Send + 'static,
     {
-        let mut next: NextFn<'_> = Box::new(move |req| Box::pin(final_handler(req)));
+        let mut next: NextFn<'_> = Arc::new(move |req| Box::pin(final_handler(req)));
         for middleware in self.middlewares.iter().rev() {
             let next_fn = next;
             // Capture a reference to the middleware instead of cloning the Arc.
             // This is safe because `self` outlives the `NextFn` closures and `execute` call.
             let m: &dyn Middleware = &**middleware;
-            next = Box::new(move |req| m.execute(req, next_fn));
+            next = Arc::new(move |req| m.execute(req, Arc::clone(&next_fn)));
         }
         next(request).await
     }
