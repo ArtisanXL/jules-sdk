@@ -2,6 +2,8 @@
 
 #![deny(missing_docs)]
 
+/// Activity-resource endpoints of the Jules `v1alpha` REST API.
+pub mod activity;
 pub mod auth;
 pub mod client;
 pub mod conversation;
@@ -10,6 +12,8 @@ pub mod http;
 pub mod response;
 pub mod retry;
 pub mod session;
+/// Source-resource endpoints of the Jules `v1alpha` REST API.
+pub mod source;
 /// Streaming API abstractions and response handling.
 /// This module is only available when the `streaming` feature is enabled.
 #[cfg(feature = "streaming")]

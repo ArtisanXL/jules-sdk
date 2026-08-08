@@ -46,6 +46,16 @@ impl std::fmt::Debug for AuthType {
 }
 
 impl AuthType {
+    /// Creates the authentication used by the Jules `v1alpha` REST API: an API
+    /// key sent via the `X-Goog-Api-Key` header.
+    #[must_use]
+    pub fn jules_api_key(key: impl Into<String>) -> Self {
+        Self::ApiKey {
+            header: "X-Goog-Api-Key".to_string(),
+            key: key.into(),
+        }
+    }
+
     /// Applies the authentication to the given HTTP request.
     #[must_use]
     pub fn apply(self, request: HttpRequest) -> HttpRequest {
@@ -100,6 +110,17 @@ mod tests {
         assert_eq!(req.headers.len(), 1);
         assert_eq!(req.headers[0].0, "X-Custom-Auth");
         assert_eq!(req.headers[0].1, "custom-value");
+    }
+
+    #[test]
+    fn test_auth_type_jules_api_key() {
+        let auth = AuthType::jules_api_key("my-jules-key");
+        let req = HttpRequest::new(Method::Get, "https://jules.googleapis.com/v1alpha");
+        let req = auth.apply(req);
+
+        assert_eq!(req.headers.len(), 1);
+        assert_eq!(req.headers[0].0, "X-Goog-Api-Key");
+        assert_eq!(req.headers[0].1, "my-jules-key");
     }
 
     #[test]

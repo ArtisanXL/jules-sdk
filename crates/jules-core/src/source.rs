@@ -3,6 +3,8 @@
 use std::error::Error;
 use std::fmt;
 
+use serde::{Deserialize, Serialize};
+
 /// An error that can occur when building a [`Source`].
 #[derive(Debug)]
 pub struct SourceBuildError(String);
@@ -74,6 +76,83 @@ impl SourceBuilder {
             id: self.id,
             name: self.name,
         })
+    }
+}
+
+/// A `{ displayName: string }` reference to a branch of a GitHub repository.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GitHubBranch {
+    /// The human-readable name of the branch.
+    pub display_name: String,
+}
+
+/// A GitHub repository backing a [`SourceResource`].
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GitHubRepo {
+    /// The GitHub organization or user that owns the repository.
+    pub owner: String,
+    /// The repository name.
+    pub repo: String,
+    /// Whether the repository is private.
+    pub is_private: bool,
+    /// The repository's default branch.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub default_branch: Option<GitHubBranch>,
+    /// The branches available on the repository.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub branches: Option<Vec<GitHubBranch>>,
+}
+
+/// A Jules `v1alpha` source resource, as returned by the REST API.
+///
+/// This is distinct from [`Source`], which is a lightweight builder type
+/// used elsewhere in the SDK. Currently the only supported source variant
+/// is a GitHub repository.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SourceResource {
+    /// The resource name, e.g. `"sources/github/owner/repo"`.
+    pub name: String,
+    /// The unique id of the source, e.g. `"github/owner/repo"`.
+    pub id: String,
+    /// The GitHub repository backing this source, if any.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub github_repo: Option<GitHubRepo>,
+}
+
+#[cfg(test)]
+mod resource_tests {
+    use super::*;
+
+    #[test]
+    fn source_resource_with_github_repo_round_trips() {
+        let json = r#"{
+            "name": "sources/github/owner/repo",
+            "id": "github/owner/repo",
+            "githubRepo": {
+                "owner": "owner",
+                "repo": "repo",
+                "isPrivate": true,
+                "defaultBranch": { "displayName": "main" },
+                "branches": [
+                    { "displayName": "main" },
+                    { "displayName": "dev" }
+                ]
+            }
+        }"#;
+
+        let source: SourceResource = serde_json::from_str(json).unwrap();
+        assert_eq!(source.name, "sources/github/owner/repo");
+        let repo = source.github_repo.as_ref().unwrap();
+        assert_eq!(repo.owner, "owner");
+        assert!(repo.is_private);
+        assert_eq!(repo.branches.as_ref().unwrap().len(), 2);
+
+        let round_tripped: SourceResource =
+            serde_json::from_str(&serde_json::to_string(&source).unwrap()).unwrap();
+        assert_eq!(round_tripped, source);
     }
 }
 

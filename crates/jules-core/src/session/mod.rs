@@ -3,6 +3,9 @@
 use std::error::Error;
 use std::fmt;
 
+/// REST v1alpha `Session` resource models (`SessionResource`, `SessionState`, etc.).
+pub mod resource;
+
 /// An error that can occur when building a [`Session`].
 #[derive(Debug)]
 pub struct SessionBuildError(String);

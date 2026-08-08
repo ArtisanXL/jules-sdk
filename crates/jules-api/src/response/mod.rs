@@ -16,22 +16,22 @@ struct ErrorDetail {
     message: String,
 }
 
-/// Deserializes an HTTP response into a `ClientResponse` or an `SDKError`.
+/// Deserializes an HTTP response body into `T`, or maps it to an `SDKError`.
 ///
 /// # Errors
 ///
 /// Returns `SDKError::Api` if the HTTP response status is not successful,
 /// or if the JSON response body fails to deserialize properly.
-pub fn deserialize_response(response: &HttpResponse) -> Result<ClientResponse, SDKError> {
+pub fn deserialize_json<T: serde::de::DeserializeOwned>(
+    response: &HttpResponse,
+) -> Result<T, SDKError> {
     if response.status >= 200 && response.status < 300 {
-        let client_response =
-            serde_json::from_slice::<ClientResponse>(&response.body).map_err(|e| {
-                SDKError::Api(ApiError::with_status(
-                    format!("Failed to deserialize response: {e}"),
-                    response.status,
-                ))
-            })?;
-        Ok(client_response)
+        serde_json::from_slice::<T>(&response.body).map_err(|e| {
+            SDKError::Api(ApiError::with_status(
+                format!("Failed to deserialize response: {e}"),
+                response.status,
+            ))
+        })
     } else {
         let message = match serde_json::from_slice::<ErrorResponse>(&response.body) {
             Ok(err_resp) => err_resp.error.map_or_else(
@@ -47,6 +47,31 @@ pub fn deserialize_response(response: &HttpResponse) -> Result<ClientResponse, S
         }
 
         Err(SDKError::Api(ApiError::with_status(msg, response.status)))
+    }
+}
+
+/// Deserializes an HTTP response into a `ClientResponse` or an `SDKError`.
+///
+/// # Errors
+///
+/// Returns `SDKError::Api` if the HTTP response status is not successful,
+/// or if the JSON response body fails to deserialize properly.
+pub fn deserialize_response(response: &HttpResponse) -> Result<ClientResponse, SDKError> {
+    deserialize_json::<ClientResponse>(response)
+}
+
+/// Validates that an HTTP response indicates success, without deserializing its body.
+///
+/// Reuses the same status-code / error-body handling as [`deserialize_json`].
+///
+/// # Errors
+///
+/// Returns `SDKError::Api` if the HTTP response status is not successful.
+pub fn check_status(response: &HttpResponse) -> Result<(), SDKError> {
+    if response.status >= 200 && response.status < 300 {
+        Ok(())
+    } else {
+        Err(deserialize_json::<serde_json::Value>(response).unwrap_err())
     }
 }
 
