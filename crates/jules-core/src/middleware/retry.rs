@@ -303,4 +303,33 @@ mod tests {
         assert_eq!(first_gap, Duration::from_millis(10));
         assert_eq!(second_gap, Duration::from_millis(20));
     }
+
+    /// Proves `max_attempts: 0` is clamped up to 1 (via `.max(1)`), so a misconfigured retry
+    /// policy still makes exactly one attempt rather than zero calls or a panic.
+    #[tokio::test]
+    async fn test_retry_middleware_zero_max_attempts_still_calls_once() {
+        let mut pipeline = MiddlewarePipeline::new();
+        pipeline.add(RetryMiddleware::with_config(RetryConfig {
+            max_attempts: 0,
+            delay: Duration::from_millis(1),
+            backoff_multiplier: 1.0,
+        }));
+
+        let request = ClientRequest::new(Conversation::new());
+        let calls = Arc::new(AtomicUsize::new(0));
+        let calls_clone = Arc::clone(&calls);
+
+        let handler = move |_req: ClientRequest| {
+            let calls = Arc::clone(&calls_clone);
+            async move {
+                calls.fetch_add(1, Ordering::SeqCst);
+                Err::<ClientResponse, _>(SDKError::Api(ApiError::with_status("server error", 500)))
+            }
+        };
+
+        let res = pipeline.execute(request, handler).await;
+
+        assert!(res.is_err());
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+    }
 }
