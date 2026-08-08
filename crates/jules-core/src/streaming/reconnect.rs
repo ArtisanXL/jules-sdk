@@ -132,4 +132,26 @@ mod tests {
         assert!(res.is_some());
         assert!(res.unwrap().is_err());
     }
+
+    /// Proves that when `reconnect_fn` itself fails (as opposed to the resumed stream failing),
+    /// the reconnect error is propagated immediately rather than being swallowed or looped on.
+    #[tokio::test]
+    async fn test_reconnect_fails_when_reconnect_fn_errors() {
+        let stream = MockErrorStream {
+            items: vec![Err(StreamingError::new("connection lost"))],
+        };
+
+        let reconnect_fn = || async move {
+            Result::<MockErrorStream, StreamingError>::Err(StreamingError::new("reconnect failed"))
+        };
+
+        let mut recon_stream = ReconnectableStream::new(stream, reconnect_fn, 3);
+
+        let res = recon_stream.next().await;
+        let err = res.expect("stream should yield an item").unwrap_err();
+        assert_eq!(
+            err.to_string(),
+            StreamingError::new("reconnect failed").to_string()
+        );
+    }
 }
