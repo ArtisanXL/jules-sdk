@@ -8,3 +8,6 @@
 ## 2024-08-07 - Optimize Middleware Pipeline Iteration
 **Learning:** Building middleware execution chains recursively wraps the final handler in an `Arc` and incurs multiple heap allocation penalties due to recursive `Fn` closures.
 **Action:** Build the execution chain iteratively in reverse (`iter().rev()`), which allows using `FnOnce` bounds, avoids wrapping the final handler in an `Arc`, and eliminates recursive closure heap allocations.
+## $(date +%Y-%m-%d) - Pre-allocate string capacities in streaming hot paths
+**Learning:** In hot loops like Server-Sent Events (SSE) parsing, `String::new()` followed by repeated `push_str()` (e.g., when accumulating multiple `data:` lines) causes unnecessary O(log N) string capacity reallocations per event. Similarly, initializing a chunk buffer parser with `Default::default()` creates a zero-capacity string, leading to immediate reallocations on the first few chunks.
+**Action:** Always pre-allocate strings in hot paths. For stream parsers, manually implement `Default` to initialize buffers with sensible capacities (e.g., `String::with_capacity(8192)`). For parsed events, use the input slice length (`block.len()`) as a safe upper bound to initialize the string (`String::with_capacity(block.len())`), ensuring O(1) allocation per event.

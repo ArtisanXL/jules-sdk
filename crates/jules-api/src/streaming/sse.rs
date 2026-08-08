@@ -15,9 +15,17 @@ pub struct SseEvent {
 }
 
 /// A parser for buffering and yielding `SseEvent`s from a text stream.
-#[derive(Default)]
 pub struct SseParser {
     buffer: String,
+}
+
+impl Default for SseParser {
+    fn default() -> Self {
+        Self {
+            // Bolt optimization: Pre-allocate 8KB to avoid reallocations on initial streaming chunks.
+            buffer: String::with_capacity(8192),
+        }
+    }
 }
 
 impl SseParser {
@@ -56,7 +64,12 @@ impl SseParser {
             return None;
         }
 
-        let mut event = SseEvent::default();
+        let mut event = SseEvent {
+            // Bolt optimization: Pre-allocate `data` capacity to the block length (the absolute maximum possible size).
+            // This completely eliminates string reallocations when appending multiple `data:` lines in a hot streaming loop.
+            data: String::with_capacity(block.len()),
+            ..Default::default()
+        };
         let mut has_data = false;
 
         for line in block.lines() {
