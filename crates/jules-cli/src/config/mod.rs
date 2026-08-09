@@ -108,7 +108,19 @@ pub fn save_file(config_dir: Option<&Path>, config: &CliConfig) -> Result<(), Co
         std::fs::create_dir_all(parent)?;
     }
     let contents = serde_json::to_string_pretty(config)?;
-    std::fs::write(path, contents)?;
+
+    let mut options = std::fs::OpenOptions::new();
+    options.write(true).create(true).truncate(true);
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.mode(0o600);
+    }
+
+    let mut file = options.open(path)?;
+    std::io::Write::write_all(&mut file, contents.as_bytes())?;
+
     Ok(())
 }
 
