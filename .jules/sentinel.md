@@ -10,3 +10,7 @@
 **Vulnerability:** `HttpRequest::with_header` accepted arbitrary strings for header keys and values without sanitizing CRLF (`\r\n`) characters, leading to HTTP Header Injection (CRLF Injection).
 **Learning:** Always sanitize inputs that become part of HTTP headers. Unvalidated headers can allow attackers to inject custom headers or manipulate the HTTP request.
 **Prevention:** Added sanitization to explicitly strip `\r` and `\n` characters from keys and values in `HttpRequest::with_header`.
+## 2024-08-09 - Prevent Insecure Config File Permissions
+**Vulnerability:** The CLI configuration file (which contains the user's sensitive Jules API key) was being created using `std::fs::write`, which defaults to 0644 permissions (-rw-r--r--). This allowed any other local user on the system to read the API key.
+**Learning:** Default file creation modes do not restrict read access to the file owner. When writing sensitive credentials to the filesystem, explicit permissions must be set to restrict access.
+**Prevention:** Use `std::fs::OpenOptions` combined with `std::os::unix::fs::OpenOptionsExt`'s `.mode(0o600)` to ensure sensitive configuration files are created with read/write access restricted solely to the owner.
