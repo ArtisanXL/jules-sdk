@@ -1,6 +1,7 @@
 //! Core traits and abstractions for Jules-SDK.
 
 #![deny(missing_docs)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 pub mod activity;
 pub mod builder;
