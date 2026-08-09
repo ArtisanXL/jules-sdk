@@ -121,6 +121,20 @@ mod tests {
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::Arc;
 
+    #[test]
+    fn test_retry_middleware_with_config() {
+        let config = RetryConfig {
+            max_attempts: 5,
+            delay: Duration::from_secs(2),
+            backoff_multiplier: 3.0,
+        };
+        let middleware = RetryMiddleware::with_config(config);
+
+        assert_eq!(middleware.config.max_attempts, 5);
+        assert_eq!(middleware.config.delay, Duration::from_secs(2));
+        assert_eq!(middleware.config.backoff_multiplier, 3.0);
+    }
+
     #[tokio::test]
     async fn test_retry_middleware() {
         let mut pipeline = MiddlewarePipeline::new();
