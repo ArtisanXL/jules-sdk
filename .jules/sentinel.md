@@ -14,3 +14,7 @@
 **Vulnerability:** The CLI configuration file (which contains the user's sensitive Jules API key) was being created using `std::fs::write`, which defaults to 0644 permissions (-rw-r--r--). This allowed any other local user on the system to read the API key.
 **Learning:** Default file creation modes do not restrict read access to the file owner. When writing sensitive credentials to the filesystem, explicit permissions must be set to restrict access.
 **Prevention:** Use `std::fs::OpenOptions` combined with `std::os::unix::fs::OpenOptionsExt`'s `.mode(0o600)` to ensure sensitive configuration files are created with read/write access restricted solely to the owner.
+## 2024-08-10 - Prevent Credential Leakage in CLI Config Debug Logs
+**Vulnerability:** The `CliConfig` struct derived `Debug` by default, meaning any logs or console outputs dumping the CLI configuration would leak the user's `api_key` in plaintext.
+**Learning:** Automatically derived `Debug` implementations on structures storing configuration secrets are a primary source of credential leakage, especially in CLI tools where developers might dump config state for debugging.
+**Prevention:** Manually implement `std::fmt::Debug` for `CliConfig` (and similar structures) to explicitly redact sensitive fields like `api_key` using `"***REDACTED***"`.
