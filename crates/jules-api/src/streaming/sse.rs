@@ -46,9 +46,17 @@ impl SseParser {
         if self.buffer.contains('\r') {
             let holdback = self.buffer.ends_with('\r');
             let split_at = self.buffer.len() - usize::from(holdback);
-            let (head, tail) = self.buffer.split_at(split_at);
-            let normalized = head.replace("\r\n", "\n").replace('\r', "\n") + tail;
-            self.buffer = normalized;
+            let normalized = self.buffer[..split_at]
+                .replace("\r\n", "\n")
+                .replace('\r', "\n");
+
+            // Bolt optimization: Retain buffer capacity instead of reassigning
+            // which drops the 8KB pre-allocation and forces continuous memory reallocation.
+            self.buffer.clear();
+            self.buffer.push_str(&normalized);
+            if holdback {
+                self.buffer.push('\r');
+            }
         }
         let mut events = Vec::new();
 
