@@ -50,7 +50,7 @@ impl From<serde_json::Error> for ConfigError {
 }
 
 /// Local CLI configuration, persisted as JSON.
-#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct CliConfig {
     /// The Jules API key to authenticate requests with.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -58,6 +58,15 @@ pub struct CliConfig {
     /// An override for the Jules API base URL (defaults to the real API if unset).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub base_url: Option<String>,
+}
+
+impl fmt::Debug for CliConfig {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("CliConfig")
+            .field("api_key", &self.api_key.as_ref().map(|_| "***REDACTED***"))
+            .field("base_url", &self.base_url)
+            .finish()
+    }
 }
 
 /// Resolves the path to the CLI's config file.
@@ -167,6 +176,29 @@ mod tests {
         ));
         std::fs::create_dir_all(&dir).unwrap();
         dir
+    }
+
+    #[test]
+    fn test_cli_config_debug_redacts_api_key() {
+        let config = CliConfig {
+            api_key: Some("secret-api-key-123".to_string()),
+            base_url: Some("https://example.com".to_string()),
+        };
+
+        let debug_output = format!("{config:?}");
+
+        assert!(
+            !debug_output.contains("secret-api-key-123"),
+            "Debug output should not contain the actual API key"
+        );
+        assert!(
+            debug_output.contains("***REDACTED***"),
+            "Debug output should contain ***REDACTED***"
+        );
+        assert!(
+            debug_output.contains("https://example.com"),
+            "Debug output should still contain other fields like base_url"
+        );
     }
 
     #[test]
