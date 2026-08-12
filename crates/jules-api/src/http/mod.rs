@@ -29,6 +29,7 @@ fn is_sensitive_header(header: &str) -> bool {
     lower == "authorization"
         || lower == "api-key"
         || lower == "x-api-key"
+        || lower == "x-goog-api-key"
         || lower == "set-cookie"
         || lower == "cookie"
         || lower.contains("token")
@@ -264,6 +265,7 @@ mod tests {
             .with_header("Content-Type", "application/json")
             .with_header("Authorization", "Bearer secret-token")
             .with_header("x-api-key", "secret-key")
+            .with_header("X-Goog-Api-Key", "goog-secret-key")
             .with_header("X-Custom-Token", "some-token");
 
         let debug_str = format!("{request:?}");
@@ -277,6 +279,9 @@ mod tests {
 
         assert!(!debug_str.contains("secret-key"));
         assert!(debug_str.contains("\"x-api-key\", \"***REDACTED***\""));
+
+        assert!(!debug_str.contains("goog-secret-key"));
+        assert!(debug_str.contains("\"X-Goog-Api-Key\", \"***REDACTED***\""));
 
         assert!(!debug_str.contains("some-token"));
         assert!(debug_str.contains("\"X-Custom-Token\", \"***REDACTED***\""));

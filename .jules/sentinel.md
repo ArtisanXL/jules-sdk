@@ -18,3 +18,7 @@
 **Vulnerability:** The `CliConfig` struct derived `Debug` by default, meaning any logs or console outputs dumping the CLI configuration would leak the user's `api_key` in plaintext.
 **Learning:** Automatically derived `Debug` implementations on structures storing configuration secrets are a primary source of credential leakage, especially in CLI tools where developers might dump config state for debugging.
 **Prevention:** Manually implement `std::fmt::Debug` for `CliConfig` (and similar structures) to explicitly redact sensitive fields like `api_key` using `"***REDACTED***"`.
+## 2024-08-12 - Prevent Leakage of X-Goog-Api-Key Header
+**Vulnerability:** The `HttpRequest` and `HttpResponse` objects manually implement `std::fmt::Debug` to redact sensitive headers, however they were missing the explicit check for `x-goog-api-key`. This led to the actual API key leaking in debug output when utilizing `AuthType::google_api_key`.
+**Learning:** Hardcoded header check lists are prone to omitting edge cases (like provider-specific key headers). It is crucial to ensure all headers known to contain sensitive keys are explicitly listed in the redaction rules.
+**Prevention:** Explicitly added `x-goog-api-key` to the `is_sensitive_header` redaction block.
