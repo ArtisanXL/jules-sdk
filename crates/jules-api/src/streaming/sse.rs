@@ -44,19 +44,38 @@ impl SseParser {
         // still normalized correctly once both halves have arrived. A trailing lone `\r` is
         // held back from normalization in case the matching `\n` arrives in the next chunk.
         if self.buffer.contains('\r') {
-            let holdback = self.buffer.ends_with('\r');
-            let split_at = self.buffer.len() - usize::from(holdback);
-            let normalized = self.buffer[..split_at]
-                .replace("\r\n", "\n")
-                .replace('\r', "\n");
+            // Bolt optimization: Perform CRLF/CR normalization in-place without allocating intermediate strings.
+            // We only replace \r (ASCII) with \n (ASCII) or remove bytes, so valid UTF-8 remains valid UTF-8.
+            let bytes = unsafe { self.buffer.as_mut_vec() };
+            let holdback = bytes.ends_with(b"\r");
+            let split_at = bytes.len() - usize::from(holdback);
 
-            // Bolt optimization: Retain buffer capacity instead of reassigning
-            // which drops the 8KB pre-allocation and forces continuous memory reallocation.
-            self.buffer.clear();
-            self.buffer.push_str(&normalized);
-            if holdback {
-                self.buffer.push('\r');
+            let mut read_idx = 0;
+            let mut write_idx = 0;
+
+            while read_idx < split_at {
+                let b = bytes[read_idx];
+                if b == b'\r' {
+                    if read_idx + 1 < split_at && bytes[read_idx + 1] == b'\n' {
+                        bytes[write_idx] = b'\n';
+                        write_idx += 1;
+                        read_idx += 2;
+                        continue;
+                    }
+                    bytes[write_idx] = b'\n';
+                } else {
+                    bytes[write_idx] = b;
+                }
+                write_idx += 1;
+                read_idx += 1;
             }
+
+            if holdback {
+                bytes[write_idx] = b'\r';
+                write_idx += 1;
+            }
+
+            bytes.truncate(write_idx);
         }
         let mut events = Vec::new();
 
