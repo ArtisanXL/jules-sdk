@@ -64,11 +64,11 @@ impl HttpRequest {
     /// Adds a header to the request.
     #[must_use]
     pub fn with_header(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
-        let key_str = key.into();
-        let value_str = value.into();
+        let mut sanitized_key = key.into();
+        let mut sanitized_value = value.into();
         // Sanitize CRLF to prevent HTTP Header Injection
-        let sanitized_key = key_str.replace(['\r', '\n'], "");
-        let sanitized_value = value_str.replace(['\r', '\n'], "");
+        sanitized_key.retain(|c| c != '\r' && c != '\n');
+        sanitized_value.retain(|c| c != '\r' && c != '\n');
         self.headers.push((sanitized_key, sanitized_value));
         self
     }
