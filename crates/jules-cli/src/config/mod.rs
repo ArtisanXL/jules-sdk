@@ -114,7 +114,14 @@ pub fn load_file(config_dir: Option<&Path>) -> Result<CliConfig, ConfigError> {
 pub fn save_file(config_dir: Option<&Path>, config: &CliConfig) -> Result<(), ConfigError> {
     let path = config_file_path(config_dir)?;
     if let Some(parent) = path.parent() {
-        std::fs::create_dir_all(parent)?;
+        let mut builder = std::fs::DirBuilder::new();
+        builder.recursive(true);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::DirBuilderExt;
+            builder.mode(0o700);
+        }
+        builder.create(parent)?;
     }
     let contents = serde_json::to_string_pretty(config)?;
 

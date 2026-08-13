@@ -22,3 +22,7 @@
 **Vulnerability:** The `HttpRequest` and `HttpResponse` objects manually implement `std::fmt::Debug` to redact sensitive headers, however they were missing the explicit check for `x-goog-api-key`. This led to the actual API key leaking in debug output when utilizing `AuthType::google_api_key`.
 **Learning:** Hardcoded header check lists are prone to omitting edge cases (like provider-specific key headers). It is crucial to ensure all headers known to contain sensitive keys are explicitly listed in the redaction rules.
 **Prevention:** Explicitly added `x-goog-api-key` to the `is_sensitive_header` redaction block.
+## 2024-08-13 - Prevent Insecure Config Directory Permissions
+**Vulnerability:** The CLI configuration directory, which stores the sensitive `config.json` containing the user's API key, was created using `std::fs::create_dir_all`. On Unix, this creates directories with default permissive access (e.g. 0755), potentially allowing other local users to traverse the directory.
+**Learning:** While the file itself was secured (0600), the parent directory must also be restricted to prevent unauthorized traversal or metadata inspection. Default directory creation functions lack explicit permission controls.
+**Prevention:** Use `std::fs::DirBuilder` with `.mode(0o700)` on Unix platforms to ensure configuration directories containing sensitive files are created with read, write, and execute permissions restricted solely to the owner.
