@@ -21,3 +21,6 @@
 ## 2024-08-14 - Optimize HTTP Header Sanitization Allocations
 **Learning:** Using `.replace()` on a Rust `String` creates a completely new string allocation. In hot paths like HTTP request header construction, this causes unnecessary heap allocations for every single header key and value. When an owned `String` is already available, this is highly inefficient.
 **Action:** When filtering out specific characters (like `\r` and `\n` for header injection prevention) from an owned `String`, use the safe `String::retain` method instead of `.replace()`. This modifies the string in-place, preserving the existing capacity and eliminating redundant allocations, while remaining completely safe.
+## 2026-08-08 - Use String::retain for safe in-place character removal
+**Learning:** Using `unsafe { string.as_mut_vec() }` to manually replace bytes in a hot path is an anti-pattern when dropping characters (like `\r`) achieves the same goal.
+**Action:** Use `String::retain(|c| c != '\r')` to safely remove characters in O(N) time with zero allocations, avoiding `unsafe` blocks.
