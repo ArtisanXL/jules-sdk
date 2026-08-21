@@ -26,3 +26,7 @@
 **Vulnerability:** The CLI configuration directory, which stores the sensitive `config.json` containing the user's API key, was created using `std::fs::create_dir_all`. On Unix, this creates directories with default permissive access (e.g. 0755), potentially allowing other local users to traverse the directory.
 **Learning:** While the file itself was secured (0600), the parent directory must also be restricted to prevent unauthorized traversal or metadata inspection. Default directory creation functions lack explicit permission controls.
 **Prevention:** Use `std::fs::DirBuilder` with `.mode(0o700)` on Unix platforms to ensure configuration directories containing sensitive files are created with read, write, and execute permissions restricted solely to the owner.
+## 2024-08-14 - Prevent Prompt Leakage in Session Creation Params
+**Vulnerability:** The `CreateSessionParams` struct derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content.
+**Learning:** Automatically derived `Debug` implementations on structures storing user prompts can leak sensitive or PII data from conversational sessions.
+**Prevention:** Manually implement `std::fmt::Debug` for types containing user conversational data (like `CreateSessionParams`) to explicitly redact sensitive fields like `prompt` using `"***REDACTED***"`.
