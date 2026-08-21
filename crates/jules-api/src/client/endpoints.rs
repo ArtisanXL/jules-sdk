@@ -56,7 +56,7 @@ struct ActivitiesListResponse {
 /// creation were not confirmed against the real Jules API (creating a real session was
 /// intentionally avoided). This is a best-effort shape based on the fields returned by
 /// `GET`/`LIST` and `ROADMAP.md`'s description of the endpoint.
-#[derive(Debug, Clone, Default)]
+#[derive(Clone, Default)]
 pub struct CreateSessionParams {
     /// A human-readable title for the session.
     pub title: Option<String>,
@@ -64,6 +64,16 @@ pub struct CreateSessionParams {
     pub prompt: Option<String>,
     /// The source (e.g. a GitHub repo) the session should operate on.
     pub source_context: Option<SourceContext>,
+}
+
+impl std::fmt::Debug for CreateSessionParams {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CreateSessionParams")
+            .field("title", &self.title)
+            .field("prompt", &self.prompt.as_ref().map(|_| "***REDACTED***"))
+            .field("source_context", &self.source_context)
+            .finish()
+    }
 }
 
 #[derive(Serialize)]
