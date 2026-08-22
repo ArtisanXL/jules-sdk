@@ -99,7 +99,7 @@ impl SourceContext {
 ///
 /// Field shape matches the real `v1alpha` Jules API `Session` resource (verified against the
 /// live API's `GET /v1alpha/sessions` and `GET /v1alpha/{name}` responses on 2026-08-08).
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Session {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -120,6 +120,22 @@ pub struct Session {
     prompt: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     url: Option<String>,
+}
+
+impl std::fmt::Debug for Session {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Session")
+            .field("id", &self.id)
+            .field("name", &self.name)
+            .field("title", &self.title)
+            .field("create_time", &self.create_time)
+            .field("update_time", &self.update_time)
+            .field("state", &self.state)
+            .field("source_context", &self.source_context)
+            .field("prompt", &self.prompt.as_ref().map(|_| "***REDACTED***"))
+            .field("url", &self.url)
+            .finish()
+    }
 }
 
 impl Session {
@@ -185,7 +201,7 @@ impl Session {
 }
 
 /// A builder for constructing a [`Session`].
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct SessionBuilder {
     id: Option<String>,
     name: Option<String>,
@@ -196,6 +212,22 @@ pub struct SessionBuilder {
     source_context: Option<SourceContext>,
     prompt: Option<String>,
     url: Option<String>,
+}
+
+impl std::fmt::Debug for SessionBuilder {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SessionBuilder")
+            .field("id", &self.id)
+            .field("name", &self.name)
+            .field("title", &self.title)
+            .field("create_time", &self.create_time)
+            .field("update_time", &self.update_time)
+            .field("state", &self.state)
+            .field("source_context", &self.source_context)
+            .field("prompt", &self.prompt.as_ref().map(|_| "***REDACTED***"))
+            .field("url", &self.url)
+            .finish()
+    }
 }
 
 impl SessionBuilder {
