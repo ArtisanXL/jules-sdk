@@ -30,3 +30,7 @@
 **Vulnerability:** The `CreateSessionParams` struct derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content.
 **Learning:** Automatically derived `Debug` implementations on structures storing user prompts can leak sensitive or PII data from conversational sessions.
 **Prevention:** Manually implement `std::fmt::Debug` for types containing user conversational data (like `CreateSessionParams`) to explicitly redact sensitive fields like `prompt` using `"***REDACTED***"`.
+## 2024-08-22 - Prevent Prompt Leakage in Session Data
+**Vulnerability:** The `Session` and `SessionBuilder` structs derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content.
+**Learning:** Automatically derived `Debug` implementations on structures storing user prompts can leak sensitive or PII data from conversational sessions. This was missed when fixing `CreateSessionParams`.
+**Prevention:** Manually implement `std::fmt::Debug` for types containing user conversational data (like `Session` and `SessionBuilder`) to explicitly redact sensitive fields like `prompt` using `"***REDACTED***"`.
