@@ -34,3 +34,7 @@
 **Vulnerability:** The `Session` and `SessionBuilder` structs derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content.
 **Learning:** Automatically derived `Debug` implementations on structures storing user prompts can leak sensitive or PII data from conversational sessions. This was missed when fixing `CreateSessionParams`.
 **Prevention:** Manually implement `std::fmt::Debug` for types containing user conversational data (like `Session` and `SessionBuilder`) to explicitly redact sensitive fields like `prompt` using `"***REDACTED***"`.
+## 2024-08-23 - Prevent Prompt Leakage in Message Objects
+**Vulnerability:** The `Message` and `MessageBuilder` structs in `crates/jules-core` derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content.
+**Learning:** Automatically derived `Debug` implementations on core domain structures storing user prompts can leak sensitive or PII data from conversational sessions. This was missed during previous fixes for HTTP request types and Session configuration.
+**Prevention:** Manually implement `std::fmt::Debug` for core conversational domain objects (like `Message` and `MessageBuilder`) to explicitly redact sensitive fields like `content` using `"***REDACTED***"`.

@@ -1,10 +1,19 @@
 use crate::message::{Message, Role};
 
 /// A builder for creating a `Message`.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct MessageBuilder {
     role: Role,
     content: String,
+}
+
+impl std::fmt::Debug for MessageBuilder {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("MessageBuilder")
+            .field("role", &self.role)
+            .field("content", &"***REDACTED***")
+            .finish()
+    }
 }
 
 impl Default for MessageBuilder {
@@ -65,5 +74,15 @@ mod tests {
 
         assert_eq!(*msg.role(), Role::Assistant);
         assert_eq!(msg.content(), "Hello from assistant");
+    }
+
+    #[test]
+    fn test_message_builder_debug_redacts_content() {
+        let builder = MessageBuilder::new()
+            .role(Role::User)
+            .content("secret builder prompt");
+        let debug_str = format!("{:?}", builder);
+        assert!(!debug_str.contains("secret builder prompt"));
+        assert!(debug_str.contains("***REDACTED***"));
     }
 }
