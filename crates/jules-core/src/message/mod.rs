@@ -18,7 +18,7 @@ pub enum Role {
 }
 
 /// A single message in a conversation.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Message {
     role: Role,
     content: String,
@@ -28,6 +28,20 @@ pub struct Message {
     #[cfg(feature = "tools")]
     #[serde(skip_serializing_if = "Option::is_none")]
     tool_call_id: Option<String>,
+}
+
+impl std::fmt::Debug for Message {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut debug_struct = f.debug_struct("Message");
+        debug_struct.field("role", &self.role);
+        debug_struct.field("content", &"***REDACTED***");
+        #[cfg(feature = "tools")]
+        {
+            debug_struct.field("tool_calls", &self.tool_calls);
+            debug_struct.field("tool_call_id", &self.tool_call_id);
+        }
+        debug_struct.finish()
+    }
 }
 
 impl Message {
@@ -96,6 +110,14 @@ mod tests {
         let msg = Message::new(Role::User, "Hello");
         assert_eq!(*msg.role(), Role::User);
         assert_eq!(msg.content(), "Hello");
+    }
+
+    #[test]
+    fn test_message_debug_redacts_content() {
+        let msg = Message::new(Role::User, "secret prompt");
+        let debug_str = format!("{:?}", msg);
+        assert!(!debug_str.contains("secret prompt"));
+        assert!(debug_str.contains("***REDACTED***"));
     }
 
     #[test]
