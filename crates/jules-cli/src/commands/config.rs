@@ -104,7 +104,14 @@ mod tests {
             std::process::id(),
             std::thread::current().id()
         ));
-        std::fs::create_dir_all(&dir).unwrap();
+        let mut builder = std::fs::DirBuilder::new();
+        builder.recursive(true);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::DirBuilderExt;
+            builder.mode(0o700);
+        }
+        builder.create(&dir).unwrap();
         dir
     }
 
