@@ -38,3 +38,7 @@
 **Vulnerability:** The `Message` and `MessageBuilder` structs in `crates/jules-core` derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content.
 **Learning:** Automatically derived `Debug` implementations on core domain structures storing user prompts can leak sensitive or PII data from conversational sessions. This was missed during previous fixes for HTTP request types and Session configuration.
 **Prevention:** Manually implement `std::fmt::Debug` for core conversational domain objects (like `Message` and `MessageBuilder`) to explicitly redact sensitive fields like `content` using `"***REDACTED***"`.
+## 2024-08-24 - Prevent Insecure Test Directory Permissions
+**Vulnerability:** The test configuration directories were created using `std::fs::create_dir_all`. On Unix, this creates directories with default permissive access (e.g. 0755), potentially allowing other local users to traverse the directory.
+**Learning:** While test directories are temporary, they can contain sensitive data during test execution. They should be protected the same way as production config directories.
+**Prevention:** Use `std::fs::DirBuilder` with `.mode(0o700)` on Unix platforms to ensure test configuration directories are created with restricted permissions.
