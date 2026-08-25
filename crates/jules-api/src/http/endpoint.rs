@@ -60,7 +60,10 @@ impl Endpoint {
             + self
                 .query_params
                 .iter()
-                .map(|(k, v)| k.len() + v.len() + 2)
+                // Bolt optimization: conservatively multiply query parameter lengths by 3
+                // to account for maximum possible expansion during percent encoding (e.g. ` ` -> `%20`),
+                // ensuring no string capacity reallocations occur during the build process.
+                .map(|(k, v)| (k.len() + v.len()) * 3 + 2)
                 .sum::<usize>();
 
         let mut url = String::with_capacity(capacity);

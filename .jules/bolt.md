@@ -24,3 +24,6 @@
 ## 2026-08-08 - Use String::retain for safe in-place character removal
 **Learning:** Using `unsafe { string.as_mut_vec() }` to manually replace bytes in a hot path is an anti-pattern when dropping characters (like `\r`) achieves the same goal.
 **Action:** Use `String::retain(|c| c != '\r')` to safely remove characters in O(N) time with zero allocations, avoiding `unsafe` blocks.
+## 2026-08-08 - String capacity estimation for percent-encoded URLs
+**Learning:** In URL construction loops (`Endpoint::build_url`), estimating string capacity strictly by `key.len() + value.len()` ignores that percent encoding (`%XX`) expands spaces and special characters. This under-allocation causes `String::with_capacity` to silently fail at its purpose, leading to multiple hidden allocations during the `.extend()` operations in a hot path.
+**Action:** When pre-allocating capacity for percent-encoded data, conservatively multiply the unencoded lengths by 3 (the maximum possible expansion factor) to ensure O(1) string capacity behavior.
