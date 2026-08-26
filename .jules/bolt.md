@@ -27,3 +27,6 @@
 ## 2026-08-08 - String capacity estimation for percent-encoded URLs
 **Learning:** In URL construction loops (`Endpoint::build_url`), estimating string capacity strictly by `key.len() + value.len()` ignores that percent encoding (`%XX`) expands spaces and special characters. This under-allocation causes `String::with_capacity` to silently fail at its purpose, leading to multiple hidden allocations during the `.extend()` operations in a hot path.
 **Action:** When pre-allocating capacity for percent-encoded data, conservatively multiply the unencoded lengths by 3 (the maximum possible expansion factor) to ensure O(1) string capacity behavior.
+## 2026-08-26 - Optimize string draining in streaming buffer
+**Learning:** Using `.drain(..).collect()` on a `String` is ~3x slower in Rust compared to slicing and cloning (`string[..idx].to_owned()`) followed by `.drain(..idx)`, because `collect()` iterates over `char`s individually instead of doing a fast memory copy.
+**Action:** Avoid `.drain(..).collect()` for large or frequently accessed `String` buffers in hot loops; use `to_owned()` and then `.drain()` instead to optimize memcpy.
