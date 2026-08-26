@@ -45,7 +45,9 @@ impl ChunkBuffer {
             split_idx -= 1;
         }
 
-        self.buffer.drain(..split_idx).collect()
+        let drained = self.buffer[..split_idx].to_owned();
+        self.buffer.drain(..split_idx);
+        drained
     }
 
     /// Returns the current number of bytes in the buffer.
