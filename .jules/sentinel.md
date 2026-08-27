@@ -42,3 +42,7 @@
 **Vulnerability:** The test configuration directories were created using `std::fs::create_dir_all`. On Unix, this creates directories with default permissive access (e.g. 0755), potentially allowing other local users to traverse the directory.
 **Learning:** While test directories are temporary, they can contain sensitive data during test execution. They should be protected the same way as production config directories.
 **Prevention:** Use `std::fs::DirBuilder` with `.mode(0o700)` on Unix platforms to ensure test configuration directories are created with restricted permissions.
+## 2024-08-25 - Prevent Prompt Leakage in CLI Chat Arguments
+**Vulnerability:** The `ChatArgs` struct in the CLI derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content passed via the `message` field.
+**Learning:** Automatically derived `Debug` implementations on structures storing user prompts can leak sensitive or PII data. This applies not just to core domain objects but also to CLI argument structures.
+**Prevention:** Manually implement `std::fmt::Debug` for CLI argument structs containing user conversational data (like `ChatArgs`) to explicitly redact sensitive fields like `message` using `"***REDACTED***"`.
