@@ -17,7 +17,7 @@ use crate::error::CliError;
 use crate::utils::{OutputFormat, Render};
 
 /// Arguments for the `chat` subcommand.
-#[derive(Debug, Args)]
+#[derive(Args)]
 pub struct ChatArgs {
     /// The message to send, either as a new session's prompt or to an existing session.
     pub message: String,
@@ -39,6 +39,18 @@ pub struct ChatArgs {
     /// An optional title for the new session.
     #[arg(long)]
     pub title: Option<String>,
+}
+
+impl std::fmt::Debug for ChatArgs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ChatArgs")
+            .field("message", &"***REDACTED***")
+            .field("session", &self.session)
+            .field("source", &self.source)
+            .field("branch", &self.branch)
+            .field("title", &self.title)
+            .finish()
+    }
 }
 
 /// The rendered result of a `chat` subcommand invocation.
