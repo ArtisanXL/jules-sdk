@@ -46,3 +46,7 @@
 **Vulnerability:** The `ChatArgs` struct in the CLI derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw prompt content passed via the `message` field.
 **Learning:** Automatically derived `Debug` implementations on structures storing user prompts can leak sensitive or PII data. This applies not just to core domain objects but also to CLI argument structures.
 **Prevention:** Manually implement `std::fmt::Debug` for CLI argument structs containing user conversational data (like `ChatArgs`) to explicitly redact sensitive fields like `message` using `"***REDACTED***"`.
+## 2024-08-26 - Prevent Prompt/Credential Leakage in Tool Call Data
+**Vulnerability:** The `ToolCallInfo` and `ToolResult` structs in `crates/jules-core` derived `Debug` by default. `ToolCallInfo` stores tool arguments (which can contain sensitive user prompts or credentials), and `ToolResult` stores tool call content (which can also contain sensitive API data). These would be printed in plaintext if the structures were logged or dumped during a panic.
+**Learning:** Automatically derived `Debug` implementations on structures storing arbitrary user prompts and tool responses can leak sensitive or PII data. This is another area where automatically generated debug logs can accidentally expose user information.
+**Prevention:** Manually implement `std::fmt::Debug` for structs representing tool payloads (like `ToolCallInfo` and `ToolResult`) to explicitly redact sensitive fields like `arguments` and `content` using `"***REDACTED***"`.
