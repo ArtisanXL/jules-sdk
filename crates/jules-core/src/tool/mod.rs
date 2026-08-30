@@ -123,7 +123,7 @@ impl ToolRegistry {
 }
 
 /// Information about a requested tool call.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ToolCallInfo {
     /// The ID of the tool call.
     pub id: String,
@@ -131,6 +131,16 @@ pub struct ToolCallInfo {
     pub name: String,
     /// The arguments to pass to the tool, usually as a JSON string.
     pub arguments: String,
+}
+
+impl std::fmt::Debug for ToolCallInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ToolCallInfo")
+            .field("id", &self.id)
+            .field("name", &self.name)
+            .field("arguments", &"***REDACTED***")
+            .finish()
+    }
 }
 
 /// A parsed tool call requested by the model.
@@ -144,12 +154,21 @@ pub struct ToolCall {
 }
 
 /// The result of a tool call to be returned to the conversation.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ToolResult {
     /// The ID of the original tool call.
     pub tool_call_id: String,
     /// The result of the tool call, usually as a string.
     pub content: String,
+}
+
+impl std::fmt::Debug for ToolResult {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ToolResult")
+            .field("tool_call_id", &self.tool_call_id)
+            .field("content", &"***REDACTED***")
+            .finish()
+    }
 }
 
 #[cfg(test)]
