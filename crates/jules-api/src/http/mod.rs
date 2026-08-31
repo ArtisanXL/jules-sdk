@@ -112,7 +112,7 @@ impl std::fmt::Debug for HttpRequest {
             .field("method", &self.method)
             .field("url", &self.url)
             .field("headers", &RedactedHeaders(&self.headers))
-            .field("body", &self.body)
+            .field("body", &"***REDACTED***")
             .finish()
     }
 }
@@ -145,7 +145,7 @@ impl std::fmt::Debug for HttpResponse {
         f.debug_struct("HttpResponse")
             .field("status", &self.status)
             .field("headers", &RedactedHeaders(&self.headers))
-            .field("body", &self.body)
+            .field("body", &"***REDACTED***")
             .finish()
     }
 }
