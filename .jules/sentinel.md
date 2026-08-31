@@ -50,3 +50,8 @@
 **Vulnerability:** The `ToolCallInfo` and `ToolResult` structs in `crates/jules-core` derived `Debug` by default. `ToolCallInfo` stores tool arguments (which can contain sensitive user prompts or credentials), and `ToolResult` stores tool call content (which can also contain sensitive API data). These would be printed in plaintext if the structures were logged or dumped during a panic.
 **Learning:** Automatically derived `Debug` implementations on structures storing arbitrary user prompts and tool responses can leak sensitive or PII data. This is another area where automatically generated debug logs can accidentally expose user information.
 **Prevention:** Manually implement `std::fmt::Debug` for structs representing tool payloads (like `ToolCallInfo` and `ToolResult`) to explicitly redact sensitive fields like `arguments` and `content` using `"***REDACTED***"`.
+
+## 2024-05-24 - Redact sensitive body content in HTTP logs
+**Vulnerability:** The HTTP bodies for `HttpRequest` and `HttpResponse` were logged unredacted in their `Debug` implementations, which could potentially leak sensitive user data or authentication credentials.
+**Learning:** Custom `Debug` implementations that redact headers but fail to redact payload bodies still present a significant data exfiltration risk, as payloads often contain PII or session tokens.
+**Prevention:** Ensure that all fields capable of holding sensitive data (like `body`) in types like `HttpRequest` and `HttpResponse` are explicitly redacted in custom `Debug` implementations.
