@@ -18,7 +18,7 @@ pub struct ConfigArgs {
 }
 
 /// `config` subcommands.
-#[derive(Debug, Subcommand)]
+#[derive(Subcommand)]
 pub enum ConfigCommand {
     /// Prints the resolved configuration (API key redacted).
     Show,
@@ -31,6 +31,19 @@ pub enum ConfigCommand {
         #[arg(long)]
         base_url: Option<String>,
     },
+}
+
+impl std::fmt::Debug for ConfigCommand {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Show => write!(f, "Show"),
+            Self::Set { api_key, base_url } => f
+                .debug_struct("Set")
+                .field("api_key", &api_key.as_ref().map(|_| "***REDACTED***"))
+                .field("base_url", base_url)
+                .finish(),
+        }
+    }
 }
 
 /// A renderable view of the resolved configuration, with the API key redacted.
@@ -161,4 +174,16 @@ mod tests {
         let rendered = view.render(OutputFormat::Plain).unwrap();
         assert!(rendered.contains("<not set>"));
     }
+}
+
+#[test]
+fn test_config_args_debug() {
+    let args = ConfigArgs {
+        command: ConfigCommand::Set {
+            api_key: Some("my_super_secret_api_key".to_string()),
+            base_url: None,
+        },
+    };
+    let output = format!("{:?}", args);
+    assert!(!output.contains("my_super_secret_api_key"));
 }

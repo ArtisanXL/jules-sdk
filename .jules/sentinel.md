@@ -55,3 +55,7 @@
 **Vulnerability:** The HTTP bodies for `HttpRequest` and `HttpResponse` were logged unredacted in their `Debug` implementations, which could potentially leak sensitive user data or authentication credentials.
 **Learning:** Custom `Debug` implementations that redact headers but fail to redact payload bodies still present a significant data exfiltration risk, as payloads often contain PII or session tokens.
 **Prevention:** Ensure that all fields capable of holding sensitive data (like `body`) in types like `HttpRequest` and `HttpResponse` are explicitly redacted in custom `Debug` implementations.
+## 2024-09-03 - Prevent Credential Leakage in Config Commands
+**Vulnerability:** The `ConfigCommand` struct in the CLI derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw `api_key` when passed to `config set --api-key`.
+**Learning:** Automatically derived `Debug` implementations on structures storing user credentials can leak sensitive data. This applies not just to core domain objects but also to CLI argument structures representing commands.
+**Prevention:** Manually implement `std::fmt::Debug` for CLI argument structs containing sensitive data (like `ConfigCommand`) to explicitly redact fields like `api_key` using `"***REDACTED***"`.
