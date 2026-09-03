@@ -135,11 +135,10 @@ impl JulesClient {
         path: &str,
         query: &[(&str, String)],
     ) -> Result<R, SDKError> {
-        let base_url = self.base_url().to_string();
         let build = || {
-            let mut endpoint = Endpoint::new(base_url.clone(), path).with_method(Method::Get);
+            let mut endpoint = Endpoint::new(self.base_url(), path).with_method(Method::Get);
             for (k, v) in query {
-                endpoint = endpoint.with_query((*k).to_string(), v.clone());
+                endpoint = endpoint.with_query(*k, v.clone());
             }
             HttpRequest::new(Method::Get, endpoint.build_url())
         };
@@ -152,13 +151,12 @@ impl JulesClient {
         path: &str,
         body: &B,
     ) -> Result<R, SDKError> {
-        let base_url = self.base_url().to_string();
         let bytes = serde_json::to_vec(body).map_err(|e| {
             SDKError::Validation(ValidationError::new(format!(
                 "failed to serialize request: {e}"
             )))
         })?;
-        let url = format!("{base_url}{path}");
+        let url = format!("{}{path}", self.base_url());
         let build = || {
             HttpRequest::new(Method::Post, url.clone())
                 .with_header("Content-Type", "application/json")
@@ -169,13 +167,12 @@ impl JulesClient {
     }
 
     async fn post_no_content<B: Serialize>(&self, path: &str, body: &B) -> Result<(), SDKError> {
-        let base_url = self.base_url().to_string();
         let bytes = serde_json::to_vec(body).map_err(|e| {
             SDKError::Validation(ValidationError::new(format!(
                 "failed to serialize request: {e}"
             )))
         })?;
-        let url = format!("{base_url}{path}");
+        let url = format!("{}{path}", self.base_url());
         let build = || {
             HttpRequest::new(Method::Post, url.clone())
                 .with_header("Content-Type", "application/json")

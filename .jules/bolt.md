@@ -30,3 +30,6 @@
 ## 2026-08-26 - Optimize string draining in streaming buffer
 **Learning:** Using `.drain(..).collect()` on a `String` is ~3x slower in Rust compared to slicing and cloning (`string[..idx].to_owned()`) followed by `.drain(..idx)`, because `collect()` iterates over `char`s individually instead of doing a fast memory copy.
 **Action:** Avoid `.drain(..).collect()` for large or frequently accessed `String` buffers in hot loops; use `to_owned()` and then `.drain()` instead to optimize memcpy.
+## 2024-09-03 - Eliminate unnecessary `to_string()` allocations
+**Learning:** Calling `to_string()` on `&str` references before passing them into string-formatting macros (`format!`) or builder functions that already accept generic `impl Into<String>` forces redundant heap allocations for intermediate strings.
+**Action:** When working with macros like `format!` or functions that accept `impl Into<String>`, use the `&str` reference directly to avoid the intermediate allocation.
