@@ -1,4 +1,3 @@
-
 ## 2024-08-11 - Prevent capacity reset during String reassignment in buffer drain
 **Learning:** Assigning a substring back to a `String` variable (`buffer = buffer[idx..].to_string()`) creates a new String, completely dropping the carefully pre-allocated capacity. In hot paths like a streaming chunk buffer, this leads to continuous reallocation on every single read.
 **Action:** Use `String::drain(..idx)` instead of reassignment to remove a prefix while preserving the buffer's existing capacity, significantly reducing allocations in hot loops.
@@ -33,3 +32,7 @@
 ## 2024-09-03 - Eliminate unnecessary `to_string()` allocations
 **Learning:** Calling `to_string()` on `&str` references before passing them into string-formatting macros (`format!`) or builder functions that already accept generic `impl Into<String>` forces redundant heap allocations for intermediate strings.
 **Action:** When working with macros like `format!` or functions that accept `impl Into<String>`, use the `&str` reference directly to avoid the intermediate allocation.
+
+## 2024-10-24 - O(N²) String::retain() on accumulating buffers
+**Learning:** Using `String::retain()` to normalize line endings on the entire accumulated stream buffer in every `push()` call creates an O(N²) complexity bottleneck (N being total bytes received), causing catastrophic performance degradation for large payloads (e.g. 11.8s vs 4.6ms for 10k chunks).
+**Action:** Avoid scanning and mutating accumulated buffers for properties that can be normalized on the incoming chunks before they are appended.

@@ -37,22 +37,30 @@ impl SseParser {
 
     /// Pushes a chunk of text into the parser, returning any complete `SseEvent`s parsed.
     pub fn push(&mut self, chunk: &str) -> Vec<SseEvent> {
-        self.buffer.push_str(chunk);
+        if chunk.is_empty() {
+            return Vec::new();
+        }
+
         // Normalize CRLF/CR line endings to LF so block-boundary detection (`\n\n`) also
         // matches CRLF-terminated events (`\r\n\r\n`), as permitted by the SSE spec. Done over
-        // the whole buffer (not just the new chunk) so a CRLF split across two `push` calls is
-        // still normalized correctly once both halves have arrived. A trailing lone `\r` is
-        // held back from normalization in case the matching `\n` arrives in the next chunk.
-        if self.buffer.contains('\r') {
-            let holdback = self.buffer.ends_with('\r');
+        // the new chunk only to avoid O(N^2) complexity, handling holdback for CRLF split across pushes.
+        let holdback = self.buffer.ends_with('\r');
+        if chunk.contains('\r') || holdback {
             if holdback {
-                self.buffer.pop();
+                self.buffer.pop(); // Remove the trailing '\r' from previous push
             }
-            self.buffer.retain(|c| c != '\r');
-            if holdback {
+            for c in chunk.chars() {
+                if c != '\r' {
+                    self.buffer.push(c);
+                }
+            }
+            if chunk.ends_with('\r') {
                 self.buffer.push('\r');
             }
+        } else {
+            self.buffer.push_str(chunk);
         }
+
         let mut events = Vec::new();
 
         let mut last_pos = 0;
