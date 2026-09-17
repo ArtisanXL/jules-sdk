@@ -96,6 +96,14 @@ struct SendMessageRequest<'a> {
     prompt: &'a str,
 }
 
+impl std::fmt::Debug for SendMessageRequest<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SendMessageRequest")
+            .field("prompt", &"***REDACTED***")
+            .finish()
+    }
+}
+
 fn page_size_str(page_size: Option<i32>) -> Option<String> {
     page_size.map(|n| n.to_string())
 }

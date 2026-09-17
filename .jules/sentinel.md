@@ -59,3 +59,8 @@
 **Vulnerability:** The `ConfigCommand` struct in the CLI derived `Debug` by default, meaning that any logging or debugging output could leak the user's raw `api_key` when passed to `config set --api-key`.
 **Learning:** Automatically derived `Debug` implementations on structures storing user credentials can leak sensitive data. This applies not just to core domain objects but also to CLI argument structures representing commands.
 **Prevention:** Manually implement `std::fmt::Debug` for CLI argument structs containing sensitive data (like `ConfigCommand`) to explicitly redact fields like `api_key` using `"***REDACTED***"`.
+
+## 2026-09-17 - Redact PII in SendMessageRequest Debug
+**Vulnerability:** The `SendMessageRequest` struct lacked a manual `Debug` implementation. Had a generic `derive(Debug)` been added later, it would have leaked user conversational data (`prompt`) into logs.
+**Learning:** Even internal API structs need manual `Debug` implementations if they hold sensitive data, enforcing defense-in-depth against accidental logging leaks.
+**Prevention:** Always proactively implement custom `std::fmt::Debug` for structs handling PII or credentials, explicitly redacting those fields.
