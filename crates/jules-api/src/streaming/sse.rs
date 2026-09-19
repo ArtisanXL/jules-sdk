@@ -49,10 +49,8 @@ impl SseParser {
             if holdback {
                 self.buffer.pop(); // Remove the trailing '\r' from previous push
             }
-            for c in chunk.chars() {
-                if c != '\r' {
-                    self.buffer.push(c);
-                }
+            for part in chunk.split('\r') {
+                self.buffer.push_str(part);
             }
             if chunk.ends_with('\r') {
                 self.buffer.push('\r');
