@@ -36,3 +36,7 @@
 ## 2024-10-24 - O(N²) String::retain() on accumulating buffers
 **Learning:** Using `String::retain()` to normalize line endings on the entire accumulated stream buffer in every `push()` call creates an O(N²) complexity bottleneck (N being total bytes received), causing catastrophic performance degradation for large payloads (e.g. 11.8s vs 4.6ms for 10k chunks).
 **Action:** Avoid scanning and mutating accumulated buffers for properties that can be normalized on the incoming chunks before they are appended.
+## 2024-05-18 - Optimize string normalization by replacing chars iteration with split
+
+**Learning:** Normalizing characters (like dropping `\r`) in hot loops by iterating over `.chars()` and `.push()`ing one-by-one is significantly slower than using `.split()` and `.push_str()`, because character iteration prevents the underlying string buffer from utilizing fast `memcpy` operations for bulk string manipulation.
+**Action:** Instead of filtering characters iteratively (`for c in str.chars() { buf.push(c) }`), use `.split()` to divide the string on the unwanted character, and `.push_str()` the resulting chunks to enable efficient block memory copies.
