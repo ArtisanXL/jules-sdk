@@ -104,10 +104,6 @@ impl std::fmt::Debug for SendMessageRequest<'_> {
     }
 }
 
-fn page_size_str(page_size: Option<i32>) -> Option<String> {
-    page_size.map(|n| n.to_string())
-}
-
 impl JulesClient {
     /// Sends a single HTTP request built by `build`, retrying on retriable errors using
     /// [`ExponentialBackoff`], and returns the raw successful [`HttpResponse`].
@@ -141,12 +137,12 @@ impl JulesClient {
     async fn get_json<R: DeserializeOwned>(
         &self,
         path: &str,
-        query: &[(&str, String)],
+        query: &[(&str, &str)],
     ) -> Result<R, SDKError> {
         let build = || {
             let mut endpoint = Endpoint::new(self.base_url(), path).with_method(Method::Get);
             for (k, v) in query {
-                endpoint = endpoint.with_query(*k, v.clone());
+                endpoint = endpoint.with_query(*k, *v);
             }
             HttpRequest::new(Method::Get, endpoint.build_url())
         };
@@ -198,12 +194,15 @@ impl JulesClient {
         page_size: Option<i32>,
         page_token: Option<&str>,
     ) -> Result<Page<Session>, SDKError> {
-        let mut query = Vec::new();
-        if let Some(size) = page_size_str(page_size) {
-            query.push(("pageSize", size));
+        // Bolt optimization: use Vec<(&str, &str)> to prevent redundant to_string()
+        // heap allocations on the page_token strings which are already string slices.
+        let mut query: Vec<(&str, &str)> = Vec::new();
+        let size_str = page_size.map(|s| s.to_string());
+        if let Some(size) = &size_str {
+            query.push(("pageSize", size.as_str()));
         }
         if let Some(token) = page_token {
-            query.push(("pageToken", token.to_string()));
+            query.push(("pageToken", token));
         }
         let response: SessionsListResponse = self.get_json("/v1alpha/sessions", &query).await?;
         Ok(Page::new(response.sessions, response.next_page_token))
@@ -271,12 +270,15 @@ impl JulesClient {
         page_size: Option<i32>,
         page_token: Option<&str>,
     ) -> Result<Page<Source>, SDKError> {
-        let mut query = Vec::new();
-        if let Some(size) = page_size_str(page_size) {
-            query.push(("pageSize", size));
+        // Bolt optimization: use Vec<(&str, &str)> to prevent redundant to_string()
+        // heap allocations on the page_token strings which are already string slices.
+        let mut query: Vec<(&str, &str)> = Vec::new();
+        let size_str = page_size.map(|s| s.to_string());
+        if let Some(size) = &size_str {
+            query.push(("pageSize", size.as_str()));
         }
         if let Some(token) = page_token {
-            query.push(("pageToken", token.to_string()));
+            query.push(("pageToken", token));
         }
         let response: SourcesListResponse = self.get_json("/v1alpha/sources", &query).await?;
         Ok(Page::new(response.sources, response.next_page_token))
@@ -292,12 +294,15 @@ impl JulesClient {
         page_size: Option<i32>,
         page_token: Option<&str>,
     ) -> Result<Page<Activity>, SDKError> {
-        let mut query = Vec::new();
-        if let Some(size) = page_size_str(page_size) {
-            query.push(("pageSize", size));
+        // Bolt optimization: use Vec<(&str, &str)> to prevent redundant to_string()
+        // heap allocations on the page_token strings which are already string slices.
+        let mut query: Vec<(&str, &str)> = Vec::new();
+        let size_str = page_size.map(|s| s.to_string());
+        if let Some(size) = &size_str {
+            query.push(("pageSize", size.as_str()));
         }
         if let Some(token) = page_token {
-            query.push(("pageToken", token.to_string()));
+            query.push(("pageToken", token));
         }
         let response: ActivitiesListResponse = self
             .get_json(&format!("/v1alpha/{session_name}/activities"), &query)
