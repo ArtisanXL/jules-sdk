@@ -132,7 +132,7 @@ mod tests {
 
         assert_eq!(middleware.config.max_attempts, 5);
         assert_eq!(middleware.config.delay, Duration::from_secs(2));
-        assert_eq!(middleware.config.backoff_multiplier, 3.0);
+        assert!((middleware.config.backoff_multiplier - 3.0).abs() < f32::EPSILON);
     }
 
     #[tokio::test]

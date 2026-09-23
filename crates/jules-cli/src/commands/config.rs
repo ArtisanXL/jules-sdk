@@ -184,6 +184,6 @@ fn test_config_args_debug() {
             base_url: None,
         },
     };
-    let output = format!("{:?}", args);
+    let output = format!("{args:?}");
     assert!(!output.contains("my_super_secret_api_key"));
 }

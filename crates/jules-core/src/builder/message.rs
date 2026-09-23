@@ -81,7 +81,7 @@ mod tests {
         let builder = MessageBuilder::new()
             .role(Role::User)
             .content("secret builder prompt");
-        let debug_str = format!("{:?}", builder);
+        let debug_str = format!("{builder:?}");
         assert!(!debug_str.contains("secret builder prompt"));
         assert!(debug_str.contains("***REDACTED***"));
     }

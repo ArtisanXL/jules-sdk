@@ -87,8 +87,24 @@ struct CreateSessionRequest<'a> {
     source_context: Option<&'a SourceContext>,
 }
 
+impl std::fmt::Debug for CreateSessionRequest<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CreateSessionRequest")
+            .field("title", &self.title)
+            .field("prompt", &self.prompt.as_ref().map(|_| "***REDACTED***"))
+            .field("source_context", &self.source_context)
+            .finish()
+    }
+}
+
 #[derive(Serialize)]
 struct ApprovePlanRequest {}
+
+impl std::fmt::Debug for ApprovePlanRequest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ApprovePlanRequest").finish()
+    }
+}
 
 #[derive(Serialize)]
 #[serde(rename_all = "camelCase")]
