@@ -64,3 +64,7 @@
 **Vulnerability:** The `SendMessageRequest` struct lacked a manual `Debug` implementation. Had a generic `derive(Debug)` been added later, it would have leaked user conversational data (`prompt`) into logs.
 **Learning:** Even internal API structs need manual `Debug` implementations if they hold sensitive data, enforcing defense-in-depth against accidental logging leaks.
 **Prevention:** Always proactively implement custom `std::fmt::Debug` for structs handling PII or credentials, explicitly redacting those fields.
+## 2026-09-17 - Redact PII in Internal Request Structs Debug
+**Vulnerability:** The internal `CreateSessionRequest` and `ApprovePlanRequest` structs lacked manual `Debug` implementations. Had a generic `derive(Debug)` been added later, `CreateSessionRequest` would have leaked user conversational data (`prompt`) into logs.
+**Learning:** Even internal API structs need manual `Debug` implementations if they hold sensitive data, enforcing defense-in-depth against accidental logging leaks. Empty structs like `ApprovePlanRequest` should also have manual `Debug` to prevent future leaks if fields are added.
+**Prevention:** Always proactively implement custom `std::fmt::Debug` for structs handling PII or credentials, explicitly redacting those fields, and apply this pattern consistently across all related request structs.

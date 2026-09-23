@@ -115,7 +115,7 @@ mod tests {
     #[test]
     fn test_message_debug_redacts_content() {
         let msg = Message::new(Role::User, "secret prompt");
-        let debug_str = format!("{:?}", msg);
+        let debug_str = format!("{msg:?}");
         assert!(!debug_str.contains("secret prompt"));
         assert!(debug_str.contains("***REDACTED***"));
     }
