@@ -43,3 +43,6 @@
 ## 2024-11-20 - Prevent redundant string allocations in HTTP query construction
 **Learning:** Using `Vec<(&str, String)>` to pass query parameters into an HTTP builder forces redundant heap allocations. If a parameter is already a string slice (`&str`), calling `.to_string()` just to satisfy the type signature wastes memory. Furthermore, when the request builder closure needs to copy these values on retry attempts, `.clone()` incurs even more allocations.
 **Action:** Use `Vec<(&str, &str)>` for query parameter lists. For values that originate as integers, convert them to `String` locally and hold ownership in the caller's scope, then pass the borrowed `&str` into the vector. This prevents unnecessary string copies in retry closures and eliminates arbitrary allocations for data that is already available as a slice.
+## 2024-05-18 - Avoid cloning in retry loop
+**Learning:** Calling `clone()` inside a loop for something that could be avoided on the final attempt causes unnecessary heap allocations. In the `retry` middleware, we were unconditionally cloning `ClientRequest` (which contains `Conversation` -> `Vec<Message>`), even on the last attempt where we could just consume ownership.
+**Action:** Use an `Option` to conditionally pass ownership (`req.take().unwrap()`) on the last attempt and clone (`req.as_ref().unwrap().clone()`) on earlier attempts.
