@@ -78,6 +78,7 @@ impl Middleware for RetryMiddleware {
         Box::pin(async move {
             let max_attempts = self.config.max_attempts.max(1);
             let mut attempt = 0u32;
+            let mut req = Some(request);
 
             loop {
                 attempt += 1;
@@ -86,7 +87,13 @@ impl Middleware for RetryMiddleware {
                     max_attempts, "Executing request via retry middleware"
                 );
 
-                let result = next(request.clone()).await;
+                let result = if attempt < max_attempts {
+                    // Bolt optimization: For attempts before the last one, clone the request so we can use it again.
+                    next(req.as_ref().unwrap().clone()).await
+                } else {
+                    // Bolt optimization: For the final attempt, pass ownership to avoid cloning an expensive `ClientRequest`.
+                    next(req.take().unwrap()).await
+                };
 
                 match &result {
                     Err(e) if attempt < max_attempts && Self::is_retriable(e) => {

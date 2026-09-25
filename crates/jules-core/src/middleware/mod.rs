@@ -127,11 +127,10 @@ mod tests {
             Box::pin(async move {
                 let mut res = next(request).await?;
                 // Modify the response string to prove we intercepted it
-                let mut new_msg = res.message.clone();
+                let new_msg = res.message.clone();
                 let mut content = new_msg.content().to_string();
                 content.push_str(" (modified)");
-                new_msg = crate::message::Message::new(new_msg.role().clone(), content);
-                res.message = new_msg;
+                res.message = crate::message::Message::new(new_msg.role().clone(), content);
                 Ok(res)
             })
         }
