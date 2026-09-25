@@ -2,7 +2,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Represents a single Server-Sent Event (SSE).
-#[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct SseEvent {
     /// The event type (e.g., "message").
     pub event: Option<String>,
@@ -12,6 +12,17 @@ pub struct SseEvent {
     pub id: Option<String>,
     /// The retry time in milliseconds.
     pub retry: Option<u64>,
+}
+
+impl std::fmt::Debug for SseEvent {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("SseEvent")
+            .field("event", &self.event)
+            .field("data", &"***REDACTED***")
+            .field("id", &self.id)
+            .field("retry", &self.retry)
+            .finish()
+    }
 }
 
 /// A parser for buffering and yielding `SseEvent`s from a text stream.

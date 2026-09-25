@@ -68,3 +68,7 @@
 **Vulnerability:** The internal `CreateSessionRequest` and `ApprovePlanRequest` structs lacked manual `Debug` implementations. Had a generic `derive(Debug)` been added later, `CreateSessionRequest` would have leaked user conversational data (`prompt`) into logs.
 **Learning:** Even internal API structs need manual `Debug` implementations if they hold sensitive data, enforcing defense-in-depth against accidental logging leaks. Empty structs like `ApprovePlanRequest` should also have manual `Debug` to prevent future leaks if fields are added.
 **Prevention:** Always proactively implement custom `std::fmt::Debug` for structs handling PII or credentials, explicitly redacting those fields, and apply this pattern consistently across all related request structs.
+## 2026-09-25 - Redact PII in SseEvent Debug
+**Vulnerability:** The `SseEvent` struct in `crates/jules-api` derived `Debug` by default, meaning that any logging or debugging output could leak the raw Server-Sent Event `data` payload. This payload often contains sensitive streaming model responses or user interaction data.
+**Learning:** Automatically derived `Debug` implementations on network payloads handling streams can leak PII or chat content, even if the primary HTTP abstractions (like `HttpResponse`) are properly redacted.
+**Prevention:** Manually implement `std::fmt::Debug` for structs representing streaming protocol payloads (like `SseEvent`) to explicitly redact fields like `data` using `"***REDACTED***"`.
