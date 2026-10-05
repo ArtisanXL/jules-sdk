@@ -72,3 +72,7 @@
 **Vulnerability:** The `SseEvent` struct in `crates/jules-api` derived `Debug` by default, meaning that any logging or debugging output could leak the raw Server-Sent Event `data` payload. This payload often contains sensitive streaming model responses or user interaction data.
 **Learning:** Automatically derived `Debug` implementations on network payloads handling streams can leak PII or chat content, even if the primary HTTP abstractions (like `HttpResponse`) are properly redacted.
 **Prevention:** Manually implement `std::fmt::Debug` for structs representing streaming protocol payloads (like `SseEvent`) to explicitly redact fields like `data` using `"***REDACTED***"`.
+## 2024-10-27 - Redact PII in Activity Debug
+**Vulnerability:** The `Activity` struct in `crates/jules-core` derived `Debug` by default. It contains an `extra` catch-all map for unmodeled JSON fields (e.g., `userMessaged`), which can contain sensitive conversational data (PII) like the user's prompt.
+**Learning:** Even fields not explicitly typed (like catch-all maps for forward compatibility) can capture sensitive payload data. Derived Debug implementations on these structures leak this data into application logs or console output.
+**Prevention:** Manually implement `std::fmt::Debug` for structs that use `#[serde(flatten)]` on open-ended map fields, explicitly redacting the map field using `"***REDACTED***"` to prevent accidental exposure of untyped PII data.
