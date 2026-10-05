@@ -96,7 +96,7 @@ impl PlanGenerated {
 /// `planGenerated` activity kind was observed live; other kinds (e.g. messages, progress
 /// updates, completion events) are UNVERIFIED and preserved via `extra` rather than dropped, so
 /// no activity data is silently lost for kinds this model doesn't explicitly know about yet.
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize, Default)]
+#[derive(Clone, PartialEq, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct Activity {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -113,6 +113,19 @@ pub struct Activity {
     /// verbatim rather than dropped.
     #[serde(flatten)]
     extra: serde_json::Map<String, serde_json::Value>,
+}
+
+impl std::fmt::Debug for Activity {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Activity")
+            .field("id", &self.id)
+            .field("name", &self.name)
+            .field("create_time", &self.create_time)
+            .field("originator", &self.originator)
+            .field("plan_generated", &self.plan_generated)
+            .field("extra", &"***REDACTED***")
+            .finish()
+    }
 }
 
 impl Activity {
@@ -288,5 +301,19 @@ mod tests {
             activity.extra()["userMessaged"]["message"],
             serde_json::Value::String("hello".to_string())
         );
+    }
+
+    #[test]
+    fn test_activity_debug_redacts_extra() {
+        let json = r#"{
+            "name": "sessions/000/activities/002",
+            "userMessaged": {
+                "message": "secret password"
+            }
+        }"#;
+        let activity: Activity = serde_json::from_str(json).unwrap();
+        let debug_output = format!("{activity:?}");
+        assert!(!debug_output.contains("secret password"));
+        assert!(debug_output.contains("***REDACTED***"));
     }
 }
