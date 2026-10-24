@@ -3,9 +3,17 @@ use crate::conversation::Conversation;
 use crate::message::Message;
 
 /// A builder for creating a `ClientRequest`.
-#[derive(Debug, Clone, Default)]
+#[derive(Clone, Default)]
 pub struct RequestBuilder {
     conversation: Conversation,
+}
+
+impl std::fmt::Debug for RequestBuilder {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("RequestBuilder")
+            .field("conversation", &"***REDACTED***")
+            .finish()
+    }
 }
 
 impl RequestBuilder {

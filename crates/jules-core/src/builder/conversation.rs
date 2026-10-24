@@ -2,9 +2,17 @@ use crate::conversation::Conversation;
 use crate::message::Message;
 
 /// A builder for creating a `Conversation`.
-#[derive(Debug, Clone, Default)]
+#[derive(Clone, Default)]
 pub struct ConversationBuilder {
     conversation: Conversation,
+}
+
+impl std::fmt::Debug for ConversationBuilder {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ConversationBuilder")
+            .field("conversation", &"***REDACTED***")
+            .finish()
+    }
 }
 
 impl ConversationBuilder {
