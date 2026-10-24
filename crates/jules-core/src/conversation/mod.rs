@@ -3,9 +3,17 @@
 use crate::message::Message;
 
 /// A conversation consisting of a sequence of messages.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Clone, Default, PartialEq, Eq)]
 pub struct Conversation {
     messages: Vec<Message>,
+}
+
+impl std::fmt::Debug for Conversation {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Conversation")
+            .field("messages", &"***REDACTED***")
+            .finish()
+    }
 }
 
 impl Conversation {

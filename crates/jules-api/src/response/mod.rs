@@ -7,14 +7,30 @@ use serde::de::DeserializeOwned;
 use serde::Deserialize;
 
 /// Helper struct for deserializing API errors.
-#[derive(Debug, Deserialize)]
+#[derive(Deserialize)]
 struct ErrorResponse {
     error: Option<ErrorDetail>,
 }
 
-#[derive(Debug, Deserialize)]
+impl std::fmt::Debug for ErrorResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ErrorResponse")
+            .field("error", &"***REDACTED***")
+            .finish()
+    }
+}
+
+#[derive(Deserialize)]
 struct ErrorDetail {
     message: String,
+}
+
+impl std::fmt::Debug for ErrorDetail {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ErrorDetail")
+            .field("message", &"***REDACTED***")
+            .finish()
+    }
 }
 
 /// Maps a non-2xx `HttpResponse` into an `SDKError::Api`, extracting a message from a

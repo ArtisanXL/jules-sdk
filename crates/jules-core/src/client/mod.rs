@@ -3,10 +3,18 @@
 use crate::conversation::Conversation;
 
 /// A request to be sent by a client.
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Clone, Default, PartialEq, Eq)]
 pub struct ClientRequest {
     /// The conversation containing messages to send.
     pub conversation: Conversation,
+}
+
+impl std::fmt::Debug for ClientRequest {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ClientRequest")
+            .field("conversation", &"***REDACTED***")
+            .finish()
+    }
 }
 
 impl ClientRequest {
