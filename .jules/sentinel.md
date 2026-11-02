@@ -80,3 +80,8 @@
 **Vulnerability:** Core wrapper structs like `ClientRequest`, `RequestBuilder`, `Conversation`, and `ConversationBuilder` derived `Debug` automatically. While their inner `Message` contents were redacted, automatically deriving `Debug` on any structure that wraps or handles conversational data (PII) risks structural leaks or future data exposure if new fields are added.
 **Learning:** Defense-in-depth requires that not just the innermost data-bearing structs, but all intermediate wrapping structures that handle PII or credentials, must manually implement `std::fmt::Debug` to prevent accidental logging leaks.
 **Prevention:** Manually implement `std::fmt::Debug` for all structs in the request and conversation building chains, explicitly redacting fields like `conversation` and `messages` using `"***REDACTED***"`.
+
+## 2026-11-02 - Redact sensitive data in Debug implementations
+**Vulnerability:** Default `Debug` implementations on structures containing sensitive data (e.g. `ClientResponse`, `PlanStep`, `Plan`, `PlanGenerated`, `ToolCall`) risk leaking secrets, PII, or internal logic to application logs.
+**Learning:** The memory instructed to avoid deriving `Debug` on structs wrapping sensitive data structures and proactively implement `std::fmt::Debug` manually as a defense-in-depth measure. Several models in `jules-core` such as `PlanStep`, `Plan`, `PlanGenerated`, `ClientResponse`, and `ToolCall` still derived `Debug` implicitly.
+**Prevention:** Avoid `#[derive(Debug)]` on models that contain user-generated content or open-ended structures; manually implement `std::fmt::Debug` instead and explicitly use `f.debug_struct().field(..., &"***REDACTED***")` on fields that could potentially hold sensitive data.

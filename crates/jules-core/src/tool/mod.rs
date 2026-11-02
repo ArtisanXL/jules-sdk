@@ -144,13 +144,22 @@ impl std::fmt::Debug for ToolCallInfo {
 }
 
 /// A parsed tool call requested by the model.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ToolCall {
     /// Information about the tool call.
     pub function: ToolCallInfo,
     /// The type of tool call (e.g., "function").
     #[serde(rename = "type")]
     pub tool_type: String,
+}
+
+impl std::fmt::Debug for ToolCall {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ToolCall")
+            .field("function", &self.function)
+            .field("tool_type", &self.tool_type)
+            .finish()
+    }
 }
 
 /// The result of a tool call to be returned to the conversation.
