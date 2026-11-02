@@ -4,10 +4,18 @@ use crate::message::Message;
 use serde::{Deserialize, Serialize};
 
 /// A response received from a client.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ClientResponse {
     /// The generated message.
     pub message: Message,
+}
+
+impl std::fmt::Debug for ClientResponse {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("ClientResponse")
+            .field("message", &self.message)
+            .finish()
+    }
 }
 
 impl ClientResponse {
